@@ -20,10 +20,7 @@ function getBackendBaseUrl(): string {
   return baseUrl;
 }
 
-export async function serverApiRequest<T>(
-  path: string,
-  init: RequestInit = {},
-): Promise<T> {
+export async function serverApiRequest<T>(path: string, init: RequestInit = {}): Promise<T> {
   const url = new URL(path, getBackendBaseUrl());
 
   const headers = new Headers(init.headers);

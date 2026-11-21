@@ -31,8 +31,8 @@ export default function HomePage() {
           사찰에서 만나는 새로운 경험
         </h1>
         <p className="mt-6 max-w-2xl text-base leading-7 text-zinc-600">
-          너바나 프론트엔드 프로젝트의 시작 화면입니다.
-          이 페이지를 바탕으로 서비스 화면을 만들어 보세요.
+          너바나 프론트엔드 프로젝트의 시작 화면입니다. 이 페이지를 바탕으로 서비스 화면을 만들어
+          보세요.
         </p>
       </section>
 
@@ -40,10 +40,7 @@ export default function HomePage() {
         <h2 className="text-xl font-semibold text-zinc-900">서비스 영역</h2>
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           {projectAreas.map((area) => (
-            <article
-              key={area.name}
-              className="rounded-2xl border border-zinc-200 bg-white p-6"
-            >
+            <article key={area.name} className="rounded-2xl border border-zinc-200 bg-white p-6">
               <h3 className="font-semibold text-zinc-900">{area.name}</h3>
               <p className="mt-2 text-sm text-zinc-600">{area.description}</p>
             </article>
