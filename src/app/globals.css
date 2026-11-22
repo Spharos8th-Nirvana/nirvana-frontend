@@ -1,17 +1,61 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+@import url("https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/variable/woff2/SUIT-Variable.css");
 @import "tailwindcss";
 
+/* 너바나 디자인 시스템: Modern Editorial */
 :root {
-  color-scheme: light;
-  background: #fafafa;
-  color: #18181b;
+  /* Brand */
+  --color-primary: #173f35;
+  --color-primary-dark: #102f28;
+
+  /* Text */
+  --color-ink: #333a35;
+  --color-muted: #777777;
+  --color-subtle: #999999;
+
+  /* Background */
+  --color-background: #fafaf8;
+  --color-surface: #ffffff;
+
+  /* Border */
+  --color-border: #eaeae5;
+
+  /* Accent */
+  --color-accent: #b75d32;
+
+  /* Radius */
+  --radius-default: 4px;
 }
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  background: var(--color-background);
+  scroll-behavior: smooth;
+}
+
 body {
   min-height: 100vh;
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-ink);
+  font-family: "SUIT Variable", sans-serif;
+}
+
+/* 기존 font-serif 클래스도 SUIT로 통일 */
+.font-serif {
+  font-family: "SUIT Variable", sans-serif;
+}
+
+/* 기본 링크 스타일 */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 버튼 기본 글꼴 */
+button {
+  font-family: inherit;
 }

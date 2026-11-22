@@ -1,0 +1,97 @@
+"use client";
+
+import { useState } from "react";
+import TempleIntroduction from "@/components/features/temples/temple-introduction";
+import TempleFacilities from "@/components/features/temples/temple-facilities";
+import type { TempleFacility } from "@/data/temple-facilities";
+import TemplePrograms from "@/components/features/temples/temple-programs";
+import type { Program } from "@/data/programs";
+import TempleReviews from "@/components/features/temples/temple-reviews";
+import type { TempleReview } from "@/data/temple-reviews";
+import TempleNotices from "@/components/features/temples/temple-notices";
+import type { TempleNotice } from "@/data/temple-notices";
+
+const tabs = [
+  { id: "intro", label: "사찰 소개" },
+  { id: "facilities", label: "시설 안내" },
+  { id: "programs", label: "체험 프로그램" },
+  { id: "reviews", label: "체험 리뷰" },
+  { id: "notices", label: "공지사항" },
+];
+
+type TempleDetailTabsProps = {
+  templeId: number;
+  templeName: string;
+  description: string;
+  address: string;
+  phone: string;
+  introduction: string;
+  directions: string;
+  tags: string[];
+  facilities: TempleFacility[];
+  programs: Program[];
+  reviews: TempleReview[];
+  initialTab?: string;
+  notices: TempleNotice[];
+};
+
+export default function TempleDetailTabs({
+  templeId,
+  initialTab,
+  templeName,
+  description,
+  address,
+  phone,
+  introduction,
+  directions,
+  tags,
+  facilities,
+  programs,
+  reviews,
+  notices,
+}: TempleDetailTabsProps) {
+  const [activeTab, setActiveTab] = useState(initialTab || "intro");
+
+  return (
+    <section id="reviews-section" className="mt-16">
+      {/* 탭 메뉴 */}
+      <div className="flex overflow-x-auto border-b border-[#D8CCB8]">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            onClick={() => setActiveTab(tab.id)}
+            className={`shrink-0 px-5 py-4 text-sm transition-all ${
+              activeTab === tab.id
+                ? "border-b-2 border-[#173F35] font-bold text-[#173F35]"
+                : "text-[#8A8173] hover:font-bold hover:text-[#173F35]"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* 탭 콘텐츠 */}
+      <div className="min-h-[300px] py-10">
+        {activeTab === "intro" && (
+          <TempleIntroduction
+            name={templeName}
+            address={address}
+            phone={phone}
+            introduction={introduction}
+            directions={directions}
+          />
+        )}
+
+        {activeTab === "facilities" && <TempleFacilities facilities={facilities} />}
+
+        {activeTab === "programs" && <TemplePrograms programs={programs} />}
+
+        {activeTab === "reviews" && <TempleReviews reviews={reviews} />}
+
+        {activeTab === "notices" && <TempleNotices templeId={Number(templeId)} notices={notices} />}
+      </div>
+    </section>
+  );
+}
