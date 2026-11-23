@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import ReservationCalendar from "@/features/program/components/molecules/reservation-calendar";
+import ReservationCalendar from "@/features/program/components/molecules/ReservationCalendar";
 
 type ReservationPanelProps = {
   price: number;

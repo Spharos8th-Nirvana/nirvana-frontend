@@ -1,5 +1,5 @@
 import Link from "next/link";
-import PageHero from "@/shared/components/layout/page-hero";
+import PageHero from "@/shared/components/layout/PageHero";
 import { communityNotices } from "@/features/community/data/community-notices";
 import { sortCommunityNotices } from "@/features/community/utils/sort-notices";
 

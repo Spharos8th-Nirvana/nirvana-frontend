@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { temples } from "@/features/temple/data/temples";
-import PageHero from "@/shared/components/layout/page-hero";
+import PageHero from "@/shared/components/layout/PageHero";
 
 export default function TemplesPage() {
   return (

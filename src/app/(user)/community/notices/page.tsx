@@ -1,4 +1,4 @@
-import PageHero from "@/shared/components/layout/page-hero";
+import PageHero from "@/shared/components/layout/PageHero";
 import CommunityNavigation from "@/features/community/components/molecules/CommunityNavigation";
 import CommunityNoticeList from "@/features/community/components/organisms/CommunityNoticeList";
 import { communityNotices } from "@/features/community/data/community-notices";

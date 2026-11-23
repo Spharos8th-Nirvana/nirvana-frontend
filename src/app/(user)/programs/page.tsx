@@ -1,6 +1,6 @@
 import { programs } from "@/features/program/data/programs";
-import PageHero from "@/shared/components/layout/page-hero";
-import ProgramFilter from "@/features/program/components/organisms/program-filter";
+import PageHero from "@/shared/components/layout/PageHero";
+import ProgramFilter from "@/features/program/components/organisms/ProgramFilter";
 
 type ProgramsPageProps = {
   searchParams: Promise<{

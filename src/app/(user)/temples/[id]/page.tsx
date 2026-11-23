@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import { temples } from "@/features/temple/data/temples";
-import PageHero from "@/shared/components/layout/page-hero";
-import TempleImageSlider from "@/features/temple/components/organisms/temple-image-slider";
-import TempleDetailTabs from "@/features/temple/components/organisms/temple-detail-tabs";
+import PageHero from "@/shared/components/layout/PageHero";
+import TempleImageSlider from "@/features/temple/components/organisms/TempleImageSlider";
+import TempleDetailTabs from "@/features/temple/components/organisms/TempleDetailTabs";
 import { templeFacilities } from "@/features/temple/data/temple-facilities";
 import { programs } from "@/features/program/data/programs";
 import { templeReviews } from "@/features/temple/data/temple-reviews";

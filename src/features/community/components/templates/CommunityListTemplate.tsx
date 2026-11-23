@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import PageHero from "@/shared/components/layout/page-hero";
+import PageHero from "@/shared/components/layout/PageHero";
 import { communityNotices } from "@/features/community/data/community-notices";
 import { communityPosts } from "@/features/community/data/community-posts";
 import CommunityNavigation from "@/features/community/components/molecules/CommunityNavigation";

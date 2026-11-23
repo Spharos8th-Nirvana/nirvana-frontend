@@ -1,8 +1,8 @@
-import { HeroSection } from "@/features/home/components/organisms/hero-section";
-import { PopularPrograms } from "@/features/home/components/organisms/popular-programs";
-import { RecommendedTemples } from "@/features/home/components/organisms/recommended-temples";
-import { CommunityStories } from "@/features/home/components/organisms/community-stories";
-import { NoticeEvents } from "@/features/home/components/organisms/notice-events";
+import { HeroSection } from "@/features/home/components/organisms/HeroSection";
+import { PopularPrograms } from "@/features/home/components/organisms/PopularPrograms";
+import { RecommendedTemples } from "@/features/home/components/organisms/RecommendedTemples";
+import { CommunityStories } from "@/features/home/components/organisms/CommunityStories";
+import { NoticeEvents } from "@/features/home/components/organisms/NoticeEvents";
 
 export default function HomePage() {
   return (

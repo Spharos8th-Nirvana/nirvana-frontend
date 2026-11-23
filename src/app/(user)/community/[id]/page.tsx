@@ -1,5 +1,5 @@
 import Link from "next/link";
-import PageHero from "@/shared/components/layout/page-hero";
+import PageHero from "@/shared/components/layout/PageHero";
 import { communityPosts } from "@/features/community/data/community-posts";
 import CommunityPostEngagement from "@/features/community/components/organisms/CommunityPostEngagement";
 

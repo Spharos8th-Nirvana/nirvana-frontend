@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import TempleIntroduction from "@/features/temple/components/organisms/temple-introduction";
-import TempleFacilities from "@/features/temple/components/organisms/temple-facilities";
+import TempleIntroduction from "@/features/temple/components/organisms/TempleIntroduction";
+import TempleFacilities from "@/features/temple/components/organisms/TempleFacilities";
 import type { TempleFacility } from "@/features/temple/data/temple-facilities";
-import TemplePrograms from "@/features/temple/components/organisms/temple-programs";
+import TemplePrograms from "@/features/temple/components/organisms/TemplePrograms";
 import type { Program } from "@/features/program/data/programs";
-import TempleReviews from "@/features/temple/components/organisms/temple-reviews";
+import TempleReviews from "@/features/temple/components/organisms/TempleReviews";
 import type { TempleReview } from "@/features/temple/data/temple-reviews";
-import TempleNotices from "@/features/temple/components/organisms/temple-notices";
+import TempleNotices from "@/features/temple/components/organisms/TempleNotices";
 import type { TempleNotice } from "@/features/temple/data/temple-notices";
 
 const tabs = [

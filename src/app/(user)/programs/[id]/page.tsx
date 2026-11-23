@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import { programs } from "@/features/program/data/programs";
-import PageHero from "@/shared/components/layout/page-hero";
-import ReservationPanel from "@/features/program/components/organisms/reservation-panel";
-import ProgramReviews from "@/features/program/components/organisms/program-reviews";
+import PageHero from "@/shared/components/layout/PageHero";
+import ReservationPanel from "@/features/program/components/organisms/ReservationPanel";
+import ProgramReviews from "@/features/program/components/organisms/ProgramReviews";
 
 type ProgramDetailPageProps = {
   params: Promise<{
