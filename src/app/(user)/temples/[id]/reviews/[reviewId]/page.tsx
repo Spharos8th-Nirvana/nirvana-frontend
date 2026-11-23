@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { temples } from "@/features/temple/data/temples";
 import { templeReviews } from "@/features/temple/data/temple-reviews";
+import { sanitizeContentHtml } from "@/lib/sanitize-html";
 
 type ReviewDetailPageProps = {
   params: Promise<{
@@ -48,7 +49,7 @@ export default async function ReviewDetailPage({
         <div
           className="review-content text-primary leading-8"
           dangerouslySetInnerHTML={{
-            __html: review.content,
+            __html: sanitizeContentHtml(review.content),
           }}
         />
       </article>

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { temples } from "@/features/temple/data/temples";
 import { templeNotices } from "@/features/temple/data/temple-notices";
+import { sanitizeContentHtml } from "@/lib/sanitize-html";
 
 type NoticeDetailPageProps = {
   params: Promise<{
@@ -48,7 +49,7 @@ export default async function NoticeDetailPage({
         <div
           className="notice-content text-primary leading-8"
           dangerouslySetInnerHTML={{
-            __html: notice.content,
+            __html: sanitizeContentHtml(notice.content),
           }}
         />
       </article>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import PageHero from "@/shared/components/layout/PageHero";
 import { communityPosts } from "@/features/community/data/community-posts";
+import { sanitizeContentHtml } from "@/lib/sanitize-html";
 import CommunityPostEngagement from "@/features/community/components/organisms/CommunityPostEngagement";
 
 type CommunityPostDetailPageProps = {
@@ -50,7 +51,7 @@ export default async function CommunityPostDetailPage({ params }: CommunityPostD
 
         <section
           className="min-h-80 border-b border-border py-10 leading-8 text-ink [&_h2]:mb-3 [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-semibold [&_li]:ml-6 [&_li]:list-disc [&_p]:mb-4"
-          dangerouslySetInnerHTML={{ __html: post.content }}
+          dangerouslySetInnerHTML={{ __html: sanitizeContentHtml(post.content) }}
         />
 
         <CommunityPostEngagement postId={post.id} initialLikeCount={post.likes} />

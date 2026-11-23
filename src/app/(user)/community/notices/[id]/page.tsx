@@ -2,6 +2,7 @@ import Link from "next/link";
 import PageHero from "@/shared/components/layout/PageHero";
 import { communityNotices } from "@/features/community/data/community-notices";
 import { sortCommunityNotices } from "@/features/community/utils/sort-notices";
+import { sanitizeContentHtml } from "@/lib/sanitize-html";
 
 type NoticeDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -56,7 +57,7 @@ export default async function NoticeDetailPage({ params }: NoticeDetailPageProps
 
         <section
           className="min-h-80 border-b border-border py-10 text-ink"
-          dangerouslySetInnerHTML={{ __html: notice.content }}
+          dangerouslySetInnerHTML={{ __html: sanitizeContentHtml(notice.content) }}
         />
 
         <section className="mt-8 divide-y divide-border border-y border-border">
