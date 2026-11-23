@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
-import { SiteHeader } from "@/components/layout/site-header";
-import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteHeader } from "@/shared/components/layout/site-header";
+import { SiteFooter } from "@/shared/components/layout/site-footer";
 
 export const metadata: Metadata = {
   title: {

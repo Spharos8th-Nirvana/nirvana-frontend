@@ -98,20 +98,19 @@ pnpm dev
 
 ```text
 src/
-├── app/          # App Router 페이지, 레이아웃, 전역 스타일
-├── actions/      # Server Actions (변경 작업)
-├── components/   # 공통 UI
-│   ├── layout/   # Header, Footer 등 공통 레이아웃
-│   └── ui/       # Button, Modal 등 범용 UI
-├── dal/          # 서버 전용 데이터 접근 계층
-├── features/     # 기능별 모듈
-├── hooks/        # 공통 Client Hooks
-├── lib/          # 공통 라이브러리 설정
-├── schemas/      # 입력값 검증 스키마
-├── services/     # API Client 및 서비스 계층
-├── types/        # 공통 TypeScript 타입
-└── utils/        # 범용 순수 함수
+├── app/          # App Router 페이지, 라우트 그룹, 전역 스타일
+├── features/     # 기능별 컴포넌트, Hook, 데이터, 타입, 유틸리티
+│   ├── community/
+│   │   └── components/{atoms,molecules,organisms,templates}/
+│   ├── home/
+│   ├── program/
+│   └── temple/
+├── shared/       # 기능 간 공통 컴포넌트, Hook, 타입, 유틸리티
+└── lib/          # 공통 API와 기반 설정
 ```
+
+`app/(user)`는 URL에 포함되지 않는 라우트 그룹입니다. 페이지는 라우팅과 기능 조립을 담당하고, 기능 코드는 해당 `features/<기능>/`에 둡니다.
+컴포넌트 계층과 의존 방향은 [Feature 구조 가이드](src/features/README.md)를 따릅니다. Atomic Design은 재사용 경계가 명확한 UI에 적용하고, 단일 사용 컴포넌트의 불필요한 분해는 피합니다.
 
 ## 개발 원칙
 
