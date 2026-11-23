@@ -3,7 +3,7 @@ import { temples } from "@/data/temples";
 
 export function RecommendedTemples() {
   return (
-    <section className="bg-[#F7F3EA] px-4 py-14 sm:px-6 sm:py-16 md:px-10 md:py-20 lg:py-28">
+    <section className="bg-background px-4 py-14 sm:px-6 sm:py-16 md:px-10 md:py-20 lg:py-28">
       <div className="mx-auto max-w-6xl">
         {/* 섹션 제목 */}
         <div>
@@ -12,7 +12,7 @@ export function RecommendedTemples() {
           </p>
 
           <div className="mt-3 flex items-end justify-between text-left">
-            <h2 className="font-serif text-2xl font-bold text-[#173F35] sm:text-3xl md:text-4xl">
+            <h2 className="font-serif text-2xl font-bold text-primary sm:text-3xl md:text-4xl">
               추천 사찰
             </h2>
           </div>
@@ -25,7 +25,7 @@ export function RecommendedTemples() {
 
             <Link
               href="/temples"
-              className="shrink-0 text-xs font-medium text-[#173F35] transition-all duration-200 hover:font-bold sm:text-sm"
+              className="shrink-0 text-xs font-medium text-primary transition-all duration-200 hover:font-bold sm:text-sm"
             >
               모두 둘러보기 →
             </Link>
@@ -37,7 +37,7 @@ export function RecommendedTemples() {
           {temples.map((temple) => (
             <article
               key={temple.id}
-              className="group relative overflow-hidden border border-[#D8D0C0] bg-white shadow-sm transition-shadow duration-300 hover:shadow-lg"
+              className="group relative overflow-hidden border border-border bg-white shadow-sm transition-shadow duration-300 hover:shadow-lg"
             >
               <Link
                 href={`/temples/${temple.id}`}
@@ -45,7 +45,7 @@ export function RecommendedTemples() {
                 className="absolute inset-0 z-10"
               />
               {/* 이미지 자리 */}
-              <div className="flex h-44 items-center justify-center bg-[#EEE5D3] sm:h-48 lg:h-52">
+              <div className="flex h-44 items-center justify-center bg-[#F5F5F5] sm:h-48 lg:h-52">
                 <span className="font-serif text-base text-[#8A8173] sm:text-lg">
                   {temple.name} 이미지
                 </span>
@@ -53,7 +53,7 @@ export function RecommendedTemples() {
 
               {/* 사찰 정보 */}
               <div className="p-4 sm:p-5">
-                <h3 className="font-serif text-lg font-semibold text-[#173F35] sm:text-xl">
+                <h3 className="font-serif text-lg font-semibold text-primary sm:text-xl">
                   {temple.name}
                 </h3>
 
@@ -66,7 +66,7 @@ export function RecommendedTemples() {
                   {temple.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="bg-[#EEE5D3] px-2 py-1 text-[10px] text-[#173F35] sm:text-xs"
+                      className="bg-[#EEE5D3] px-2 py-1 text-[10px] text-primary sm:text-xs"
                     >
                       {tag}
                     </span>

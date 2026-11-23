@@ -56,20 +56,20 @@ export default function ReservationCalendar({
         <button
           type="button"
           onClick={previousMonth}
-          className="px-3 py-2 text-lg text-[#333A35] transition hover:bg-[#F5F5F3]"
+          className="px-3 py-2 text-lg text-ink transition hover:bg-[#F5F5F3]"
           aria-label="이전 달"
         >
           ‹
         </button>
 
-        <h3 className="font-semibold text-[#333A35]">
+        <h3 className="font-semibold text-ink">
           {year}년 {month + 1}월
         </h3>
 
         <button
           type="button"
           onClick={nextMonth}
-          className="px-3 py-2 text-lg text-[#333A35] transition hover:bg-[#F5F5F3]"
+          className="px-3 py-2 text-lg text-ink transition hover:bg-[#F5F5F3]"
           aria-label="다음 달"
         >
           ›
@@ -91,29 +91,31 @@ export default function ReservationCalendar({
           <div key={`empty-${index}`} />
         ))}
 
-        {Array.from({ length: lastDate }, (_, index) => index + 1).map((day) => {
-          const dateValue = formatDate(day);
-          const disabled = isPastDate(day);
-          const selected = selectedDate === dateValue;
+        {Array.from({ length: lastDate }, (_, index) => index + 1).map(
+          (day) => {
+            const dateValue = formatDate(day);
+            const disabled = isPastDate(day);
+            const selected = selectedDate === dateValue;
 
-          return (
-            <button
-              key={day}
-              type="button"
-              disabled={disabled}
-              onClick={() => onDateChange(dateValue)}
-              className={`mx-auto flex h-9 w-9 items-center justify-center text-sm transition-colors ${
-                selected
-                  ? "bg-[#173F35] font-semibold text-white"
-                  : disabled
-                    ? "cursor-not-allowed text-[#D5D5D0]"
-                    : "text-[#333A35] hover:bg-[#F0F1EE]"
-              }`}
-            >
-              {day}
-            </button>
-          );
-        })}
+            return (
+              <button
+                key={day}
+                type="button"
+                disabled={disabled}
+                onClick={() => onDateChange(dateValue)}
+                className={`mx-auto flex h-9 w-9 items-center justify-center text-sm transition-colors ${
+                  selected
+                    ? "bg-primary font-semibold text-white"
+                    : disabled
+                      ? "cursor-not-allowed text-[#D5D5D0]"
+                      : "text-ink hover:bg-[#F0F1EE]"
+                }`}
+              >
+                {day}
+              </button>
+            );
+          },
+        )}
       </div>
     </section>
   );

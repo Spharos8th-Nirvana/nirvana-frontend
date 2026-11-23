@@ -4,11 +4,13 @@ type TempleFacilitiesProps = {
   facilities: TempleFacility[];
 };
 
-export default function TempleFacilities({ facilities }: TempleFacilitiesProps) {
+export default function TempleFacilities({
+  facilities,
+}: TempleFacilitiesProps) {
   return (
     <section>
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-[#173F35]">시설 안내</h2>
+        <h2 className="text-2xl font-bold text-primary">시설 안내</h2>
         <p className="mt-2 text-sm text-[#756F62]">
           사찰에서 이용할 수 있는 주요 시설을 소개합니다.
         </p>
@@ -31,16 +33,20 @@ export default function TempleFacilities({ facilities }: TempleFacilitiesProps) 
               />
 
               <div className="p-5">
-                <h3 className="text-lg font-bold text-[#173F35]">{facility.name}</h3>
+                <h3 className="text-lg font-bold text-primary">
+                  {facility.name}
+                </h3>
 
-                <p className="mt-3 text-sm leading-7 text-[#756F62]">{facility.description}</p>
+                <p className="mt-3 text-sm leading-7 text-[#756F62]">
+                  {facility.description}
+                </p>
               </div>
             </article>
           ))}
         </div>
       ) : (
         <div className="rounded-lg border border-dashed border-[#D8CCB8] px-5 py-16 text-center">
-          <p className="text-[#173F35]">등록된 시설 정보가 없습니다.</p>
+          <p className="text-primary">등록된 시설 정보가 없습니다.</p>
         </div>
       )}
     </section>

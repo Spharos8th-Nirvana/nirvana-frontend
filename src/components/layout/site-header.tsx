@@ -51,7 +51,7 @@ export function SiteHeader() {
     };
   }, []);
 
-  const textColor = isScrolled ? "text-[#173F35]" : "text-white";
+  const textColor = isScrolled ? "text-primary" : "text-white";
 
   return (
     <header
@@ -59,13 +59,16 @@ export function SiteHeader() {
         isHeaderVisible ? "translate-y-0" : "-translate-y-full"
       } ${
         isScrolled
-          ? "border-b border-[#EAEAE5] bg-white/95 text-[#173F35] shadow-sm backdrop-blur-lg"
+          ? "border-b border-border bg-white/95 text-primary shadow-sm backdrop-blur-lg"
           : "border-b border-white/20 bg-transparent text-white"
       }`}
     >
       <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-6 md:px-10">
         {/* 로고 */}
-        <Link href="/" className={`font-serif text-2xl font-bold tracking-wide ${textColor}`}>
+        <Link
+          href="/"
+          className={`font-serif text-2xl font-bold tracking-wide ${textColor}`}
+        >
           NIRVANA
         </Link>
 
@@ -85,12 +88,19 @@ export function SiteHeader() {
         {/* 오른쪽 메뉴 */}
         <div className="flex items-center gap-3">
           {/* 언어 선택 */}
-          <div className={`hidden items-center gap-2 text-xs sm:flex ${textColor}`}>
+          <div
+            className={`hidden items-center gap-2 text-xs sm:flex ${textColor}`}
+          >
             <button type="button" className="font-semibold">
               KR
             </button>
-            <span className={isScrolled ? "text-[#EEE5D3]" : "text-white/50"}>|</span>
-            <button type="button" className={isScrolled ? "text-[#173F35]/60" : "text-white/60"}>
+            <span className={isScrolled ? "text-[#EEE5D3]" : "text-white/50"}>
+              |
+            </span>
+            <button
+              type="button"
+              className={isScrolled ? "text-primary/60" : "text-white/60"}
+            >
               EN
             </button>
           </div>
@@ -100,8 +110,8 @@ export function SiteHeader() {
             href="/login"
             className={`rounded-full border px-4 py-2 text-xs transition-[color,border-color,background-color] duration-1000 ease-in-out ${textColor} ${
               isScrolled
-                ? "border-[#173F35] hover:bg-[#173F35] hover:!text-white"
-                : "border-white hover:bg-white hover:!text-[#173F35]"
+                ? "border-primary hover:bg-primary hover:!text-white"
+                : "border-white hover:bg-white hover:!text-primary"
             }`}
           >
             로그인
@@ -127,8 +137,8 @@ export function SiteHeader() {
           id="mobile-menu"
           className={`border-t px-6 py-4 md:hidden ${
             isScrolled
-              ? "border-[#EEE5D3] bg-[#F7F3EA]"
-              : "border-white/20 bg-[#173F35]/95 backdrop-blur-md"
+              ? "border-[#EEE5D3] bg-[bg-background]"
+              : "border-white/20 bg-primary/95 backdrop-blur-md"
           }`}
         >
           <div className="flex flex-col gap-4">

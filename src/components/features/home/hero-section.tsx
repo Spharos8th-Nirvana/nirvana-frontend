@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const heroImage = "https://www.bulkwang.co.kr/news/photo/202209/37881_20706_4159.jpg";
+const heroImage =
+  "https://www.bulkwang.co.kr/news/photo/202209/37881_20706_4159.jpg";
 
 export function HeroSection() {
   const [selectedDate, setSelectedDate] = useState("");
@@ -53,11 +54,13 @@ export function HeroSection() {
       </section>
 
       {/* 프로그램 검색 */}
-      <section className="bg-[#F7F3EA] px-4 py-8 sm:px-6 sm:py-10">
+      <section className="bg-[bg-background] px-4 py-8 sm:px-6 sm:py-10">
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-3 rounded-lg bg-white p-4 shadow-[0_12px_35px_rgba(23,63,53,0.10)] sm:p-5 md:grid-cols-[1fr_1fr_1fr_auto] md:items-center md:gap-0 md:p-3">
           {/* 지역 및 사찰 검색 */}
           <label className="min-w-0 px-3 py-2 md:px-5">
-            <span className="mb-3 block text-xs font-bold text-[#A36A49]">어디로 떠날까요?</span>
+            <span className="mb-3 block text-xs font-bold text-[#A36A49]">
+              어디로 떠날까요?
+            </span>
 
             <div className="flex items-center gap-3">
               <svg
@@ -66,7 +69,7 @@ export function HeroSection() {
                 height="21"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="#173F35"
+                stroke="var(--color-primary)"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -81,14 +84,16 @@ export function HeroSection() {
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 placeholder="지역 또는 사찰 이름"
-                className="min-w-0 w-full bg-transparent text-sm text-[#173F35] outline-none placeholder:text-[#929A96]"
+                className="min-w-0 w-full bg-transparent text-sm text-primary outline-none placeholder:text-[#929A96]"
               />
             </div>
           </label>
 
           {/* 날짜 선택 */}
           <label className="min-w-0 border-t border-[#EEE5D3] px-3 py-4 md:border-l md:border-t-0 md:px-5 md:py-2">
-            <span className="mb-3 block text-xs font-bold text-[#A36A49]">언제 떠날까요?</span>
+            <span className="mb-3 block text-xs font-bold text-[#A36A49]">
+              언제 떠날까요?
+            </span>
 
             <div className="flex items-center gap-3">
               <svg
@@ -112,14 +117,16 @@ export function HeroSection() {
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
                 aria-label="체험 날짜 선택"
-                className="min-w-0 w-full cursor-pointer bg-transparent text-sm text-[#173F35] outline-none"
+                className="min-w-0 w-full cursor-pointer bg-transparent text-sm text-primary outline-none"
               />
             </div>
           </label>
 
           {/* 인원 선택 */}
           <label className="min-w-0 border-t border-[#EEE5D3] px-3 py-4 md:border-l md:border-t-0 md:px-5 md:py-2">
-            <span className="mb-3 block text-xs font-bold text-[#A36A49]">누구와 함께?</span>
+            <span className="mb-3 block text-xs font-bold text-[#A36A49]">
+              누구와 함께?
+            </span>
 
             <div className="flex items-center gap-3">
               <svg
@@ -143,7 +150,7 @@ export function HeroSection() {
                 value={selectedPeople}
                 onChange={(e) => setSelectedPeople(e.target.value)}
                 aria-label="참여 인원 선택"
-                className="min-w-0 w-full bg-transparent text-sm text-[#173F35] outline-none"
+                className="min-w-0 w-full bg-transparent text-sm text-primary outline-none"
               >
                 <option value="" disabled>
                   인원 선택

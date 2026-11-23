@@ -26,7 +26,7 @@ const events = [
 
 export function NoticeEvents() {
   return (
-    <section className="bg-[#F7F3EA] px-4 py-14 sm:px-6 sm:py-16 md:px-10 md:py-20 lg:py-24">
+    <section className="bg-[bg-background] px-4 py-14 sm:px-6 sm:py-16 md:px-10 md:py-20 lg:py-24">
       <div className="mx-auto max-w-6xl">
         {/* 섹션 제목 */}
         <div className="text-center">
@@ -34,7 +34,7 @@ export function NoticeEvents() {
             NOTICE & EVENT
           </p>
 
-          <h2 className="mt-3 font-serif text-2xl font-bold text-[#173F35] sm:text-3xl md:text-4xl">
+          <h2 className="mt-3 font-serif text-2xl font-bold text-primary sm:text-3xl md:text-4xl">
             새로운 소식, 특별한 경험
           </h2>
 
@@ -48,7 +48,7 @@ export function NoticeEvents() {
           {/* 공지사항 */}
           <div className="min-w-0">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="font-serif text-lg font-semibold text-[#173F35] sm:text-xl">
+              <h3 className="font-serif text-lg font-semibold text-primary sm:text-xl">
                 공지사항
               </h3>
 
@@ -72,7 +72,7 @@ export function NoticeEvents() {
                       공지
                     </span>
 
-                    <span className="truncate text-xs text-[#173F35] sm:text-sm">
+                    <span className="truncate text-xs text-primary sm:text-sm">
                       {notice.title}
                     </span>
                   </div>
@@ -88,7 +88,7 @@ export function NoticeEvents() {
           {/* 이벤트 배너 */}
           <div className="min-w-0">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="font-serif text-lg font-semibold text-[#173F35] sm:text-xl">
+              <h3 className="font-serif text-lg font-semibold text-primary sm:text-xl">
                 추천 이벤트
               </h3>
 

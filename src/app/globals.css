@@ -3,7 +3,7 @@
 @import "tailwindcss";
 
 /* 너바나 디자인 시스템: Modern Editorial */
-:root {
+@theme {
   /* Brand */
   --color-primary: #173f35;
   --color-primary-dark: #102f28;
@@ -14,7 +14,7 @@
   --color-subtle: #999999;
 
   /* Background */
-  --color-background: #fafaf8;
+  --color-background: #fafafa;
   --color-surface: #ffffff;
 
   /* Border */

@@ -10,7 +10,9 @@ type ProgramsPageProps = {
   }>;
 };
 
-export default async function ProgramsPage({ searchParams }: ProgramsPageProps) {
+export default async function ProgramsPage({
+  searchParams,
+}: ProgramsPageProps) {
   const params = await searchParams;
 
   const keyword = params.keyword ?? "";
@@ -32,7 +34,7 @@ export default async function ProgramsPage({ searchParams }: ProgramsPageProps) 
   });
 
   return (
-    <main className="min-h-screen bg-[#F7F3EA]">
+    <main className="min-h-screen bg-[bg-background]">
       {/* 공통 메인 비주얼 */}
       <PageHero
         title="체험 프로그램 찾기"
@@ -50,7 +52,9 @@ export default async function ProgramsPage({ searchParams }: ProgramsPageProps) 
             <div className="text-center">
               <p className="text-sm font-semibold text-[#B75D32]">FILTER</p>
 
-              <h2 className="mt-4 text-3xl font-bold text-[#173F35]">조건으로 체험 찾기</h2>
+              <h2 className="mt-4 text-3xl font-bold text-primary">
+                조건으로 체험 찾기
+              </h2>
 
               <p className="mt-5 text-sm text-[#756F62]">
                 지역, 날짜, 인원, 가격, 1박/당일을 선택하세요.

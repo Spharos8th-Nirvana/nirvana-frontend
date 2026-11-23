@@ -55,7 +55,7 @@ export default function TempleDetailTabs({
   return (
     <section id="reviews-section" className="mt-16">
       {/* 탭 메뉴 */}
-      <div className="flex overflow-x-auto border-b border-[#D8CCB8]">
+      <div className="flex overflow-x-auto border-b border-border">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -63,8 +63,8 @@ export default function TempleDetailTabs({
             onClick={() => setActiveTab(tab.id)}
             className={`shrink-0 px-5 py-4 text-sm transition-all ${
               activeTab === tab.id
-                ? "border-b-2 border-[#173F35] font-bold text-[#173F35]"
-                : "text-[#8A8173] hover:font-bold hover:text-[#173F35]"
+                ? "border-b-2 border-primary font-bold text-primary"
+                : "text-muted hover:font-bold hover:text-primary"
             }`}
           >
             {tab.label}

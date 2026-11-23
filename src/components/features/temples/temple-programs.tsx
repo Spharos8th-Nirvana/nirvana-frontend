@@ -22,10 +22,7 @@ export default function TemplePrograms({ programs }: TempleProgramsProps) {
     <section>
       {/* 프로그램 종류 선택 */}
       <div className="mb-10">
-        <label
-          htmlFor="program-category"
-          className="mb-3 block text-sm font-semibold text-[#173F35]"
-        >
+        <label htmlFor="program-category" className="mb-3 block text-sm font-semibold text-primary">
           프로그램 종류
         </label>
 
@@ -33,7 +30,7 @@ export default function TemplePrograms({ programs }: TempleProgramsProps) {
           id="program-category"
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="w-full max-w-xl rounded-lg bg-[#EEE5D3] px-5 py-4 text-sm text-[#173F35] outline-none focus:ring-2 focus:ring-[#173F35]"
+          className="w-full max-w-xl rounded-sm border border-border bg-white px-5 py-4 text-sm text-ink outline-none focus:ring-2 focus:ring-primary"
         >
           {categories.map((category) => (
             <option key={category} value={category}>
@@ -49,7 +46,7 @@ export default function TemplePrograms({ programs }: TempleProgramsProps) {
           filteredPrograms.map((program) => (
             <article
               key={program.id}
-              className="relative flex flex-col overflow-hidden bg-[#EEE5D3] sm:flex-row"
+              className="relative flex flex-col overflow-hidden border border-border bg-white sm:flex-row"
             >
               {/* 프로그램 이미지 */}
               <div
@@ -63,13 +60,13 @@ export default function TemplePrograms({ programs }: TempleProgramsProps) {
 
               {/* 프로그램 정보 */}
               <div className="relative flex flex-1 flex-col p-5 sm:p-7">
-                <span className="absolute right-0 top-0 bg-[#F7F3EA] px-4 py-2 text-xs font-semibold text-[#173F35]">
+                <span className="absolute right-0 top-0 bg-background px-4 py-2 text-xs font-semibold text-primary">
                   체험형
                 </span>
 
                 <span className="text-xs font-semibold text-[#B75D32]">{program.category}</span>
 
-                <h3 className="mt-2 pr-16 text-xl font-bold text-[#173F35]">{program.name}</h3>
+                <h3 className="mt-2 pr-16 text-xl font-bold text-primary">{program.name}</h3>
 
                 <p className="mt-3 text-sm font-semibold text-[#756F62]">{program.date}</p>
 
@@ -80,7 +77,7 @@ export default function TemplePrograms({ programs }: TempleProgramsProps) {
                 <div className="mt-4 flex justify-end">
                   <Link
                     href={`/programs/${program.id}`}
-                    className="rounded-sm bg-[#F7F3EA] px-5 py-3 text-sm font-semibold text-[#173F35] transition hover:font-bold"
+                    className="rounded-sm bg-primary px-5 py-3 text-sm font-semibold !text-white transition-colors hover:bg-primary-dark"
                   >
                     예약하러 가기
                   </Link>
@@ -90,7 +87,7 @@ export default function TemplePrograms({ programs }: TempleProgramsProps) {
           ))
         ) : (
           <div className="border border-dashed border-[#D8CCB8] px-5 py-16 text-center">
-            <p className="text-[#173F35]">해당 종류의 프로그램이 없습니다.</p>
+            <p className="text-primary">해당 종류의 프로그램이 없습니다.</p>
           </div>
         )}
       </div>

@@ -25,14 +25,14 @@ export default function TempleReviews({ reviews }: TempleReviewsProps) {
 
   return (
     <section>
-      <h2 className="mb-8 text-2xl font-bold text-[#173F35]">체험 리뷰</h2>
+      <h2 className="mb-8 text-2xl font-bold text-primary">체험 리뷰</h2>
 
       {/* 리뷰 필터 */}
       <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label
             htmlFor="review-category"
-            className="mb-2 block text-sm font-semibold text-[#173F35]"
+            className="mb-2 block text-sm font-semibold text-primary"
           >
             체험 종류
           </label>
@@ -40,7 +40,7 @@ export default function TempleReviews({ reviews }: TempleReviewsProps) {
             id="review-category"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full rounded-lg bg-[#EEE5D3] px-4 py-3 text-sm text-[#173F35]"
+            className="w-full rounded-sm border border-border bg-white px-4 py-3 text-sm text-ink outline-none focus:ring-2 focus:ring-primary"
           >
             {categories.map((category) => (
               <option key={category} value={category}>
@@ -51,7 +51,7 @@ export default function TempleReviews({ reviews }: TempleReviewsProps) {
         </div>
 
         <div>
-          <label htmlFor="review-date" className="mb-2 block text-sm font-semibold text-[#173F35]">
+          <label htmlFor="review-date" className="mb-2 block text-sm font-semibold text-primary">
             작성 날짜
           </label>
           <input
@@ -59,7 +59,7 @@ export default function TempleReviews({ reviews }: TempleReviewsProps) {
             type="date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="w-full rounded-lg bg-[#EEE5D3] px-4 py-3 text-sm text-[#173F35]"
+            className="w-full rounded-sm border border-border bg-white px-4 py-3 text-sm text-ink outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
       </div>
@@ -70,19 +70,19 @@ export default function TempleReviews({ reviews }: TempleReviewsProps) {
           filteredReviews.map((review) => (
             <article
               key={review.id}
-              className="flex flex-col-reverse overflow-hidden rounded-xl bg-[#EEE5D3] sm:flex-row"
+              className="flex flex-col-reverse overflow-hidden border border-border bg-white sm:flex-row"
             >
               <div className="flex-1 p-5 md:p-7">
                 <span className="text-xs font-semibold text-[#B75D32]">{review.category}</span>
 
-                <h3 className="mt-2 text-lg font-bold text-[#173F35]">{review.title}</h3>
+                <h3 className="mt-2 text-lg font-bold text-primary">{review.title}</h3>
 
-                <p className="mt-2 text-xs text-[#8A8173]">
+                <p className="mt-2 text-xs 	text-muted">
                   {review.nickname} · {review.createdAt}
                 </p>
 
                 <div className="mt-5 rounded-lg bg-white p-4">
-                  <p className="text-sm leading-7 text-[#756F62]">
+                  <p className="text-sm leading-7 text-muted">
                     {review.content
                       .replace(/<[^>]*>/g, " ")
                       .replace(/\s+/g, " ")
@@ -99,8 +99,8 @@ export default function TempleReviews({ reviews }: TempleReviewsProps) {
             </article>
           ))
         ) : (
-          <div className="rounded-lg border border-dashed border-[#D8CCB8] px-5 py-16 text-center">
-            <p className="text-[#173F35]">해당 조건의 리뷰가 없습니다.</p>
+          <div className="rounded-sm border border-dashed border-border px-5 py-16 text-center">
+            <p className="text-primary">해당 조건의 리뷰가 없습니다.</p>
           </div>
         )}
       </div>
@@ -113,7 +113,7 @@ function ReviewThumbnail({ content }: { content: string }) {
 
   if (!imageUrl) {
     return (
-      <div className="flex h-full min-h-48 items-center justify-center text-sm text-[#8A8173]">
+      <div className="flex h-full min-h-48 items-center justify-center text-sm 	text-muted">
         이미지 없음
       </div>
     );

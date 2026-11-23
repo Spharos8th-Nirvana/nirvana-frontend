@@ -10,7 +10,9 @@ type ReviewDetailPageProps = {
   }>;
 };
 
-export default async function ReviewDetailPage({ params }: ReviewDetailPageProps) {
+export default async function ReviewDetailPage({
+  params,
+}: ReviewDetailPageProps) {
   const { id, reviewId } = await params;
 
   const temple = temples.find((item) => item.id === Number(id));
@@ -24,14 +26,14 @@ export default async function ReviewDetailPage({ params }: ReviewDetailPageProps
   }
 
   return (
-    <main className="min-h-screen bg-[#F7F3EA] px-4 py-12">
+    <main className="min-h-screen bg-[bg-background] px-4 py-12">
       <article className="mx-auto max-w-[900px] rounded-lg bg-white p-6 shadow-sm md:p-10">
         <div className="mb-6 flex items-center justify-between gap-4">
-          <h1 className="text-2xl font-bold text-[#173F35]">{review.title}</h1>
+          <h1 className="text-2xl font-bold text-primary">{review.title}</h1>
 
           <Link
             href={`/temples/${temple.id}?tab=reviews#reviews-section`}
-            className="shrink-0 rounded-md border border-[#D8D1C5] px-5 py-2 text-sm text-[#173F35] hover:font-bold"
+            className="shrink-0 rounded-md border border-[#D8D1C5] px-5 py-2 text-sm text-primary hover:font-bold"
           >
             목록으로
           </Link>
@@ -44,7 +46,7 @@ export default async function ReviewDetailPage({ params }: ReviewDetailPageProps
         </div>
 
         <div
-          className="review-content text-[#173F35] leading-8"
+          className="review-content text-primary leading-8"
           dangerouslySetInnerHTML={{
             __html: review.content,
           }}

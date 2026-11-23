@@ -31,13 +31,16 @@ const footerMenus = [
 
 export function SiteFooter() {
   return (
-    <footer className="bg-[#F7F3EA] px-4 pb-6 pt-12 sm:px-6 sm:pb-8 sm:pt-14 md:px-10 md:pt-16">
+    <footer className="bg-[bg-background] px-4 pb-6 pt-12 sm:px-6 sm:pb-8 sm:pt-14 md:px-10 md:pt-16">
       <div className="mx-auto max-w-6xl">
         {/* 푸터 상단 */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-8 border-b border-[#D8D0C0] pb-8 sm:grid-cols-4 sm:gap-8 sm:pb-10 md:pb-12">
           {/* 로고 및 소개 */}
           <div className="col-span-2 sm:col-span-1">
-            <Link href="/" className="font-serif text-2xl font-bold tracking-wide text-[#173F35]">
+            <Link
+              href="/"
+              className="font-serif text-2xl font-bold tracking-wide text-primary"
+            >
               NIRVANA
             </Link>
 
@@ -51,7 +54,7 @@ export function SiteFooter() {
           {/* 메뉴 */}
           {footerMenus.map((menu) => (
             <div key={menu.title}>
-              <h3 className="mb-3 text-xs font-semibold text-[#173F35] sm:mb-4 sm:text-sm">
+              <h3 className="mb-3 text-xs font-semibold text-primary sm:mb-4 sm:text-sm">
                 {menu.title}
               </h3>
 
@@ -91,7 +94,9 @@ export function SiteFooter() {
 
         {/* 저작권 */}
         <div className="mt-4 border-t border-[#D8D0C0] pt-4 sm:mt-5 sm:pt-5">
-          <p className="text-[10px] text-[#9A9184]">© 2026 NIRVANA. All rights reserved.</p>
+          <p className="text-[10px] text-[#9A9184]">
+            © 2026 NIRVANA. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

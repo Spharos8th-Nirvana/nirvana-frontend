@@ -13,7 +13,10 @@ type TempleDetailPageProps = {
   searchParams: Promise<{ tab?: string }>;
 };
 
-export default async function TempleDetailPage({ params, searchParams }: TempleDetailPageProps) {
+export default async function TempleDetailPage({
+  params,
+  searchParams,
+}: TempleDetailPageProps) {
   const { id } = await params;
   const { tab } = await searchParams;
 
@@ -22,13 +25,21 @@ export default async function TempleDetailPage({ params, searchParams }: TempleD
   if (!temple) {
     notFound();
   }
-  const facilities = templeFacilities.filter((facility) => facility.templeId === temple.id);
-  const templePrograms = programs.filter((program) => program.templeId === temple.id);
-  const reviews = templeReviews.filter((review) => review.templeId === temple.id);
-  const notices = templeNotices.filter((notice) => notice.templeId === temple.id);
+  const facilities = templeFacilities.filter(
+    (facility) => facility.templeId === temple.id,
+  );
+  const templePrograms = programs.filter(
+    (program) => program.templeId === temple.id,
+  );
+  const reviews = templeReviews.filter(
+    (review) => review.templeId === temple.id,
+  );
+  const notices = templeNotices.filter(
+    (notice) => notice.templeId === temple.id,
+  );
 
   return (
-    <main className="min-h-screen bg-[#F7F3EA]">
+    <main className="min-h-screen bg-[bg-background]">
       <PageHero
         title={temple.name}
         description={temple.description}
