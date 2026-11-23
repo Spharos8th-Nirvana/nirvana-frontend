@@ -39,7 +39,7 @@ export default async function TempleDetailPage({
   );
 
   return (
-    <main className="min-h-screen bg-[bg-background]">
+    <main className="min-h-screen bg-background">
       <PageHero
         title={temple.name}
         description={temple.description}

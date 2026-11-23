@@ -137,7 +137,7 @@ export function SiteHeader() {
           id="mobile-menu"
           className={`border-t px-6 py-4 md:hidden ${
             isScrolled
-              ? "border-border bg-[bg-background]"
+              ? "border-border bg-background"
               : "border-white/20 bg-primary/95 backdrop-blur-md"
           }`}
         >

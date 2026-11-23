@@ -31,7 +31,7 @@ const footerMenus = [
 
 export function SiteFooter() {
   return (
-    <footer className="bg-[bg-background] px-4 pb-6 pt-12 sm:px-6 sm:pb-8 sm:pt-14 md:px-10 md:pt-16">
+    <footer className="bg-background px-4 pb-6 pt-12 sm:px-6 sm:pb-8 sm:pt-14 md:px-10 md:pt-16">
       <div className="mx-auto max-w-6xl">
         {/* 푸터 상단 */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-8 border-b border-border pb-8 sm:grid-cols-4 sm:gap-8 sm:pb-10 md:pb-12">

@@ -34,7 +34,7 @@ export default async function ProgramsPage({
   });
 
   return (
-    <main className="min-h-screen bg-[bg-background]">
+    <main className="min-h-screen bg-background">
       {/* 공통 메인 비주얼 */}
       <PageHero
         title="체험 프로그램 찾기"

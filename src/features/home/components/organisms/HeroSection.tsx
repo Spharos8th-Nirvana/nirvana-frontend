@@ -54,7 +54,7 @@ export function HeroSection() {
       </section>
 
       {/* 프로그램 검색 */}
-      <section className="bg-[bg-background] px-4 py-8 sm:px-6 sm:py-10">
+      <section className="bg-background px-4 py-8 sm:px-6 sm:py-10">
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-3 rounded-lg bg-white p-4 shadow-[0_12px_35px_rgba(23,63,53,0.10)] sm:p-5 md:grid-cols-[1fr_1fr_1fr_auto] md:items-center md:gap-0 md:p-3">
           {/* 지역 및 사찰 검색 */}
           <label className="min-w-0 px-3 py-2 md:px-5">

@@ -16,7 +16,7 @@ export function PopularPrograms() {
       : programs.filter((program) => program.category === selectedCategory);
 
   return (
-    <section className="bg-[bg-background] px-4 py-14 sm:px-6 sm:py-16 md:px-10 md:py-20 lg:py-28">
+    <section className="bg-background px-4 py-14 sm:px-6 sm:py-16 md:px-10 md:py-20 lg:py-28">
       <div className="mx-auto max-w-6xl">
         {/* 섹션 제목 */}
         <div>
@@ -118,7 +118,7 @@ export function PopularPrograms() {
                     </svg>
                   </button>
 
-                  <span className="absolute left-3 top-3 rounded bg-[bg-background] px-3 py-1 text-xs text-primary">
+                  <span className="absolute left-3 top-3 rounded bg-background px-3 py-1 text-xs text-primary">
                     {program.category}
                   </span>
                 </div>

@@ -27,7 +27,7 @@ export default function TempleNotices({
             <Link
               key={notice.id}
               href={`/temples/${templeId}/notices/${notice.id}`}
-              className="flex items-center justify-between gap-4 px-4 py-6 transition-colors hover:bg-[bg-background]"
+              className="flex items-center justify-between gap-4 px-4 py-6 transition-colors hover:bg-background"
             >
               <div className="min-w-0">
                 <h3 className="truncate font-semibold text-primary">

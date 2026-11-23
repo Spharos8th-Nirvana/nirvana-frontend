@@ -26,7 +26,7 @@ const events = [
 
 export function NoticeEvents() {
   return (
-    <section className="bg-[bg-background] px-4 py-14 sm:px-6 sm:py-16 md:px-10 md:py-20 lg:py-24">
+    <section className="bg-background px-4 py-14 sm:px-6 sm:py-16 md:px-10 md:py-20 lg:py-24">
       <div className="mx-auto max-w-6xl">
         {/* 섹션 제목 */}
         <div className="text-center">

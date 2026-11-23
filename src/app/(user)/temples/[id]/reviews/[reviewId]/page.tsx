@@ -27,7 +27,7 @@ export default async function ReviewDetailPage({
   }
 
   return (
-    <main className="min-h-screen bg-[bg-background] px-4 py-12">
+    <main className="min-h-screen bg-background px-4 py-12">
       <article className="mx-auto max-w-[900px] rounded-lg bg-white p-6 shadow-sm md:p-10">
         <div className="mb-6 flex items-center justify-between gap-4">
           <h1 className="text-2xl font-bold text-primary">{review.title}</h1>
