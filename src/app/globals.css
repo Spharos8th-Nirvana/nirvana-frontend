@@ -1,17 +1,104 @@
 @import "tailwindcss";
 
-:root {
-  color-scheme: light;
-  background: #fafafa;
-  color: #18181b;
+/*
+ * 너바나 디자인 시스템
+ * 출처: Figma "nirvana-app-design" › Nirvana · Design system (node 2:266)
+ * 기존 토큰 이름(primary, ink, muted …)은 그대로 두고 값만 피그마에 맞췄습니다.
+ * 각 줄 주석은 대응하는 피그마 변수 이름입니다.
+ */
+@theme {
+  /* ── Fonts ───────────────────────────── */
+  --font-sans: var(--font-noto-sans-kr), "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-display: var(--font-inter), var(--font-noto-sans-kr), sans-serif;
+
+  /* ── Brand ───────────────────────────── */
+  --color-primary: #192d22; /* surface/inverse · 딥 그린 (보조 액션, 강조) */
+  --color-primary-hover: #314238; /* text/control · 딥 그린 hover */
+  --color-action: #d7ef90; /* action/primary · 주요 액션(라임) */
+
+  /* ── Text ────────────────────────────── */
+  --color-ink: #19291f; /* text/primary · 기본 텍스트 */
+  --color-muted: #677268; /* text/secondary · 보조 텍스트 */
+  --color-ink-nav: #536057; /* text/navigation */
+  --color-ink-control: #314238; /* text/control */
+
+  /* ── Background / Surface ────────────── */
+  --color-background: #fafbf8; /* background/page · 페이지 배경 */
+  --color-background-nav: #fbfcf8; /* background/navigation */
+  --color-surface: #ffffff; /* surface/card · 카드 */
+  --color-subtle: #f0f3eb; /* surface/subtle · 보조 표면 */
+
+  /* ── Border / Status ─────────────────── */
+  --color-border: #dce2d8; /* border/default · 경계선 */
+  --color-error: #a6291f; /* status/error */
+
+  /* ── Support palette ─────────────────── */
+  --color-sage-01: #d3ddce; /* palette/support-01 */
+  --color-sage-02: #cfd8cc; /* palette/support-02 */
+  --color-sage-03: #b9c6b2; /* palette/support-03 */
+  --color-sage-04: #dfe5dc; /* palette/support-04 */
+  --color-sage-05: #e8eee3; /* palette/support-05 */
+  --color-sage-06: #c5d1bf; /* palette/support-06 */
+  --color-sage-07: #41513e; /* palette/support-07 */
+
+  /* ── Typography (size / line-height) ─── */
+  /* Heading · Inter (font-display) */
+  --text-display-38: 38px;
+  --text-display-38--line-height: 1.1;
+  --text-display-38--letter-spacing: -1.8px;
+  --text-display-30: 30px;
+  --text-display-30--line-height: 40px;
+  --text-display-30--letter-spacing: -0.04em;
+
+  /* Heading · Noto Sans KR */
+  --text-heading-36: 36px;
+  --text-heading-36--line-height: 1.18;
+
+  /* Label / Body · Noto Sans KR */
+  --text-body-15: 15px;
+  --text-body-15--line-height: 24px;
+  --text-label-14: 14px;
+  --text-label-14--line-height: 1.5;
+  --text-label-13: 13px;
+  --text-label-13--line-height: 20px;
+  --text-label-12: 12px;
+  --text-label-12--line-height: 20px;
+  --text-label-11: 11px;
+  --text-label-11--line-height: 1.5;
+
+  /* ── Radius ──────────────────────────── */
+  --radius-default: 4px;
 }
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  background: var(--color-background);
+  scroll-behavior: smooth;
+}
+
 body {
   min-height: 100vh;
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+/* 기존 font-serif 클래스도 본문 글꼴(Noto Sans KR)로 통일 */
+.font-serif {
+  font-family: var(--font-sans);
+}
+
+/* 기본 링크 스타일 */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 버튼 기본 글꼴 */
+button {
+  font-family: inherit;
 }

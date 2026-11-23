@@ -20,6 +20,7 @@
     "next": "16.4.6",
     "react": "19.3.1",
     "react-dom": "19.3.1",
+    "sanitize-html": "2.18.2",
     "server-only": "0.0.1"
   },
   "devDependencies": {
@@ -27,6 +28,7 @@
     "@types/node": "24.19.2",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
+    "@types/sanitize-html": "2.16.2",
     "eslint": "10.15.0",
     "eslint-config-next": "16.4.6",
     "eslint-config-prettier": "10.1.8",
