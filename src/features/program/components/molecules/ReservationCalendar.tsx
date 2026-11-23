@@ -56,7 +56,7 @@ export default function ReservationCalendar({
         <button
           type="button"
           onClick={previousMonth}
-          className="px-3 py-2 text-lg text-ink transition hover:bg-[#F5F5F3]"
+          className="px-3 py-2 text-lg text-ink transition hover:bg-subtle"
           aria-label="이전 달"
         >
           ‹
@@ -69,7 +69,7 @@ export default function ReservationCalendar({
         <button
           type="button"
           onClick={nextMonth}
-          className="px-3 py-2 text-lg text-ink transition hover:bg-[#F5F5F3]"
+          className="px-3 py-2 text-lg text-ink transition hover:bg-subtle"
           aria-label="다음 달"
         >
           ›
@@ -79,7 +79,7 @@ export default function ReservationCalendar({
       {/* 요일 */}
       <div className="mt-5 grid grid-cols-7 text-center">
         {weekDays.map((day) => (
-          <div key={day} className="py-2 text-xs font-medium text-[#999999]">
+          <div key={day} className="py-2 text-xs font-medium text-muted/70">
             {day}
           </div>
         ))}
@@ -107,8 +107,8 @@ export default function ReservationCalendar({
                   selected
                     ? "bg-primary font-semibold text-white"
                     : disabled
-                      ? "cursor-not-allowed text-[#D5D5D0]"
-                      : "text-ink hover:bg-[#F0F1EE]"
+                      ? "cursor-not-allowed text-sage-03"
+                      : "text-ink hover:bg-subtle"
                 }`}
               >
                 {day}

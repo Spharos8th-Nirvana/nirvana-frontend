@@ -94,7 +94,7 @@ export function SiteHeader() {
             <button type="button" className="font-semibold">
               KR
             </button>
-            <span className={isScrolled ? "text-[#EEE5D3]" : "text-white/50"}>
+            <span className={isScrolled ? "text-sage-05" : "text-white/50"}>
               |
             </span>
             <button
@@ -137,7 +137,7 @@ export function SiteHeader() {
           id="mobile-menu"
           className={`border-t px-6 py-4 md:hidden ${
             isScrolled
-              ? "border-[#EEE5D3] bg-[bg-background]"
+              ? "border-border bg-[bg-background]"
               : "border-white/20 bg-primary/95 backdrop-blur-md"
           }`}
         >

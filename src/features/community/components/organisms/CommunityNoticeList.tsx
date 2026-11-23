@@ -9,7 +9,7 @@ export default function CommunityNoticeList({ notices }: CommunityNoticeListProp
   return (
     <div className="overflow-x-auto">
       <div className="min-w-[700px]">
-        <div className="grid grid-cols-[80px_minmax(320px,1fr)_140px_100px] border-y border-border bg-[#F5F5F5] py-4 text-center text-sm font-semibold text-ink">
+        <div className="grid grid-cols-[80px_minmax(320px,1fr)_140px_100px] border-y border-border bg-subtle py-4 text-center text-sm font-semibold text-ink">
           <span>번호</span>
           <span>제목</span>
           <span>날짜</span>

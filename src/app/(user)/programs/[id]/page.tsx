@@ -33,7 +33,7 @@ export default async function ProgramDetailPage({
         {/* 프로그램 기본 정보 */}
         <div className="grid grid-cols-1 gap-8 border-b border-border pb-12 md:grid-cols-2 md:items-center md:gap-12">
           {/* 왼쪽: 프로그램 대표 사진 */}
-          <div className="h-[280px] overflow-hidden bg-[#EEEAE5] md:h-[360px]">
+          <div className="h-[280px] overflow-hidden bg-subtle md:h-[360px]">
             <img
               src={program.image}
               alt={program.name}
@@ -43,7 +43,7 @@ export default async function ProgramDetailPage({
 
           {/* 오른쪽: 프로그램 간략 정보 */}
           <div>
-            <p className="text-sm font-semibold text-[#B75D32]">
+            <p className="text-sm font-semibold text-primary">
               {program.category}
             </p>
 
@@ -114,7 +114,7 @@ export default async function ProgramDetailPage({
             <section id="introduction" className="scroll-mt-36 pt-8">
               <h2 className="text-2xl font-bold text-primary">프로그램 소개</h2>
 
-              <p className="mt-5 leading-8 text-[#756F62]">
+              <p className="mt-5 leading-8 text-muted">
                 {program.description}
               </p>
             </section>
@@ -130,7 +130,7 @@ export default async function ProgramDetailPage({
                     프로그램 진행 순서와 상세 시간을 확인해 주세요.
                   </p>
                 </div>
-                <span className="hidden text-xs tracking-wider text-[#999999] sm:block">
+                <span className="hidden text-xs tracking-wider text-muted/70 sm:block">
                   PROGRAM SCHEDULE
                 </span>
               </div>
@@ -139,13 +139,13 @@ export default async function ProgramDetailPage({
                 <table className="w-full min-w-[480px] border-collapse text-left text-sm">
                   <thead>
                     <tr className="border-y border-border">
-                      <th className="w-[20%] px-5 py-4 font-medium text-[#999999]">
+                      <th className="w-[20%] px-5 py-4 font-medium text-muted/70">
                         일
                       </th>
-                      <th className="w-[35%] px-5 py-4 font-medium text-[#999999]">
+                      <th className="w-[35%] px-5 py-4 font-medium text-muted/70">
                         시간
                       </th>
-                      <th className="px-5 py-4 font-medium text-[#999999]">
+                      <th className="px-5 py-4 font-medium text-muted/70">
                         일정명
                       </th>
                     </tr>
@@ -181,7 +181,7 @@ export default async function ProgramDetailPage({
                 </table>
               </div>
 
-              <p className="mt-4 text-xs text-[#999999]">
+              <p className="mt-4 text-xs text-muted/70">
                 ※ 실제 운영 일정은 사찰 및 프로그램별로 다를 수 있습니다.
               </p>
             </section>
@@ -195,7 +195,7 @@ export default async function ProgramDetailPage({
                     프로그램 참가에 필요한 비용을 확인해 주세요.
                   </p>
                 </div>
-                <span className="hidden text-xs tracking-wider text-[#999999] sm:block">
+                <span className="hidden text-xs tracking-wider text-muted/70 sm:block">
                   PROGRAM FEE
                 </span>
               </div>
@@ -204,7 +204,7 @@ export default async function ProgramDetailPage({
                 <div className="flex items-center justify-between gap-4">
                   <div>
                     <p className="text-sm text-muted">1인 참가 비용</p>
-                    <p className="mt-2 text-xs text-[#999999]">
+                    <p className="mt-2 text-xs text-muted/70">
                       기본 참가 비용 기준
                     </p>
                   </div>

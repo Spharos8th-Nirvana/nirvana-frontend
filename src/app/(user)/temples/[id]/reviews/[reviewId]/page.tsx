@@ -34,13 +34,13 @@ export default async function ReviewDetailPage({
 
           <Link
             href={`/temples/${temple.id}?tab=reviews#reviews-section`}
-            className="shrink-0 rounded-md border border-[#D8D1C5] px-5 py-2 text-sm text-primary hover:font-bold"
+            className="shrink-0 rounded-md border border-border px-5 py-2 text-sm text-primary hover:font-bold"
           >
             목록으로
           </Link>
         </div>
 
-        <div className="mb-8 flex flex-wrap gap-3 text-sm text-[#756F62]">
+        <div className="mb-8 flex flex-wrap gap-3 text-sm text-muted">
           <span>{review.nickname}</span>
           <span>·</span>
           <span>{review.createdAt}</span>

@@ -38,7 +38,7 @@ export default function ReservationPanel({ price }: ReservationPanelProps) {
         <div className="flex items-center justify-between py-3">
           <div>
             <p className="font-medium text-ink">성인</p>
-            <p className="mt-1 text-xs text-[#999999]">만 19세 이상</p>
+            <p className="mt-1 text-xs text-muted/70">만 19세 이상</p>
           </div>
 
           <div className="flex items-center gap-3">
@@ -46,7 +46,7 @@ export default function ReservationPanel({ price }: ReservationPanelProps) {
               type="button"
               onClick={() => setAdultCount((count) => Math.max(0, count - 1))}
               disabled={adultCount === 0}
-              className="h-8 w-8 border border-border text-primary transition hover:bg-[#F5F5F3] disabled:opacity-30"
+              className="h-8 w-8 border border-border text-primary transition hover:bg-subtle disabled:opacity-30"
             >
               -
             </button>
@@ -58,7 +58,7 @@ export default function ReservationPanel({ price }: ReservationPanelProps) {
             <button
               type="button"
               onClick={() => setAdultCount((count) => count + 1)}
-              className="h-8 w-8 border border-border text-primary transition hover:bg-[#F5F5F3]"
+              className="h-8 w-8 border border-border text-primary transition hover:bg-subtle"
             >
               +
             </button>
@@ -69,7 +69,7 @@ export default function ReservationPanel({ price }: ReservationPanelProps) {
         <div className="flex items-center justify-between border-t border-border py-3">
           <div>
             <p className="font-medium text-ink">미성년자</p>
-            <p className="mt-1 text-xs text-[#999999]">만 19세 미만</p>
+            <p className="mt-1 text-xs text-muted/70">만 19세 미만</p>
           </div>
 
           <div className="flex items-center gap-3">
@@ -77,7 +77,7 @@ export default function ReservationPanel({ price }: ReservationPanelProps) {
               type="button"
               onClick={() => setMinorCount((count) => Math.max(0, count - 1))}
               disabled={minorCount === 0}
-              className="h-8 w-8 border border-border text-primary transition hover:bg-[#F5F5F3] disabled:opacity-30"
+              className="h-8 w-8 border border-border text-primary transition hover:bg-subtle disabled:opacity-30"
             >
               -
             </button>
@@ -89,7 +89,7 @@ export default function ReservationPanel({ price }: ReservationPanelProps) {
             <button
               type="button"
               onClick={() => setMinorCount((count) => count + 1)}
-              className="h-8 w-8 border border-border text-primary transition hover:bg-[#F5F5F3]"
+              className="h-8 w-8 border border-border text-primary transition hover:bg-subtle"
             >
               +
             </button>
@@ -117,7 +117,7 @@ export default function ReservationPanel({ price }: ReservationPanelProps) {
         <p className="mt-2 text-xl font-bold text-primary">
           ₩{price.toLocaleString("ko-KR")}
         </p>
-        <p className="mt-1 text-xs text-[#999999]">
+        <p className="mt-1 text-xs text-muted/70">
           성인·미성년자별 요금은 추후 연결 예정입니다.
         </p>
       </div>
@@ -126,7 +126,7 @@ export default function ReservationPanel({ price }: ReservationPanelProps) {
       <button
         type="button"
         disabled={!selectedDate || totalCount === 0}
-        className="mt-6 w-full bg-primary py-4 font-semibold text-white transition hover:bg-[#102F28] disabled:cursor-not-allowed disabled:opacity-40"
+        className="mt-6 w-full bg-primary py-4 font-semibold text-white transition hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40"
       >
         예약하기
       </button>

@@ -64,20 +64,20 @@ export default function TemplePrograms({ programs }: TempleProgramsProps) {
                   체험형
                 </span>
 
-                <span className="text-xs font-semibold text-[#B75D32]">{program.category}</span>
+                <span className="text-xs font-semibold text-primary">{program.category}</span>
 
                 <h3 className="mt-2 pr-16 text-xl font-bold text-primary">{program.name}</h3>
 
-                <p className="mt-3 text-sm font-semibold text-[#756F62]">{program.date}</p>
+                <p className="mt-3 text-sm font-semibold text-muted">{program.date}</p>
 
                 <div className="mt-3 flex-1 bg-white p-4">
-                  <p className="text-sm leading-7 text-[#756F62]">{program.description}</p>
+                  <p className="text-sm leading-7 text-muted">{program.description}</p>
                 </div>
 
                 <div className="mt-4 flex justify-end">
                   <Link
                     href={`/programs/${program.id}`}
-                    className="rounded-sm bg-primary px-5 py-3 text-sm font-semibold !text-white transition-colors hover:bg-primary-dark"
+                    className="rounded-sm bg-primary px-5 py-3 text-sm font-semibold !text-white transition-colors hover:bg-primary-hover"
                   >
                     예약하러 가기
                   </Link>
@@ -86,7 +86,7 @@ export default function TemplePrograms({ programs }: TempleProgramsProps) {
             </article>
           ))
         ) : (
-          <div className="border border-dashed border-[#D8CCB8] px-5 py-16 text-center">
+          <div className="border border-dashed border-border px-5 py-16 text-center">
             <p className="text-primary">해당 종류의 프로그램이 없습니다.</p>
           </div>
         )}

@@ -11,7 +11,7 @@ export default function TempleFacilities({
     <section>
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-primary">시설 안내</h2>
-        <p className="mt-2 text-sm text-[#756F62]">
+        <p className="mt-2 text-sm text-muted">
           사찰에서 이용할 수 있는 주요 시설을 소개합니다.
         </p>
       </div>
@@ -37,7 +37,7 @@ export default function TempleFacilities({
                   {facility.name}
                 </h3>
 
-                <p className="mt-3 text-sm leading-7 text-[#756F62]">
+                <p className="mt-3 text-sm leading-7 text-muted">
                   {facility.description}
                 </p>
               </div>
@@ -45,7 +45,7 @@ export default function TempleFacilities({
           ))}
         </div>
       ) : (
-        <div className="rounded-lg border border-dashed border-[#D8CCB8] px-5 py-16 text-center">
+        <div className="rounded-lg border border-dashed border-border px-5 py-16 text-center">
           <p className="text-primary">등록된 시설 정보가 없습니다.</p>
         </div>
       )}

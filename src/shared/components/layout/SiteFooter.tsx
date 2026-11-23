@@ -34,7 +34,7 @@ export function SiteFooter() {
     <footer className="bg-[bg-background] px-4 pb-6 pt-12 sm:px-6 sm:pb-8 sm:pt-14 md:px-10 md:pt-16">
       <div className="mx-auto max-w-6xl">
         {/* 푸터 상단 */}
-        <div className="grid grid-cols-2 gap-x-6 gap-y-8 border-b border-[#D8D0C0] pb-8 sm:grid-cols-4 sm:gap-8 sm:pb-10 md:pb-12">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8 border-b border-border pb-8 sm:grid-cols-4 sm:gap-8 sm:pb-10 md:pb-12">
           {/* 로고 및 소개 */}
           <div className="col-span-2 sm:col-span-1">
             <Link
@@ -44,7 +44,7 @@ export function SiteFooter() {
               NIRVANA
             </Link>
 
-            <p className="mt-3 text-xs leading-6 text-[#756F62] sm:mt-4">
+            <p className="mt-3 text-xs leading-6 text-muted sm:mt-4">
               일상과 산사 사이,
               <br />
               나를 위한 작은 여행.
@@ -63,7 +63,7 @@ export function SiteFooter() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-[11px] text-[#756F62] transition-colors hover:text-[#B75D32] sm:text-xs"
+                      className="text-[11px] text-muted transition-colors hover:text-sage-07 sm:text-xs"
                     >
                       {link.label}
                     </Link>
@@ -76,7 +76,7 @@ export function SiteFooter() {
 
         {/* 푸터 하단 */}
         <div className="flex flex-col gap-4 pt-5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:pt-6">
-          <div className="flex flex-wrap gap-x-4 gap-y-2 text-[10px] text-[#756F62] sm:text-[11px]">
+          <div className="flex flex-wrap gap-x-4 gap-y-2 text-[10px] text-muted sm:text-[11px]">
             <Link href="/terms">이용약관</Link>
 
             <Link href="/privacy" className="font-semibold">
@@ -86,15 +86,15 @@ export function SiteFooter() {
             <Link href="/support/inquiry">문의하기</Link>
           </div>
 
-          <div className="flex items-center gap-4 text-[11px] text-[#756F62] sm:text-xs">
+          <div className="flex items-center gap-4 text-[11px] text-muted sm:text-xs">
             <span>Instagram</span>
             <span>Blog</span>
           </div>
         </div>
 
         {/* 저작권 */}
-        <div className="mt-4 border-t border-[#D8D0C0] pt-4 sm:mt-5 sm:pt-5">
-          <p className="text-[10px] text-[#9A9184]">
+        <div className="mt-4 border-t border-border pt-4 sm:mt-5 sm:pt-5">
+          <p className="text-[10px] text-muted/70">
             © 2026 NIRVANA. All rights reserved.
           </p>
         </div>

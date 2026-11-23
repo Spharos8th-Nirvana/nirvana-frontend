@@ -30,7 +30,7 @@ export function NoticeEvents() {
       <div className="mx-auto max-w-6xl">
         {/* 섹션 제목 */}
         <div className="text-center">
-          <p className="text-[10px] font-semibold tracking-[0.2em] text-[#B75D32] sm:text-xs sm:tracking-[0.25em]">
+          <p className="text-[10px] font-semibold tracking-[0.2em] text-primary sm:text-xs sm:tracking-[0.25em]">
             NOTICE & EVENT
           </p>
 
@@ -38,7 +38,7 @@ export function NoticeEvents() {
             새로운 소식, 특별한 경험
           </h2>
 
-          <p className="mt-3 text-xs leading-6 text-[#756F62] sm:mt-4 sm:text-sm">
+          <p className="mt-3 text-xs leading-6 text-muted sm:mt-4 sm:text-sm">
             너바나의 새로운 소식과 특별한 사찰 체험을 만나보세요.
           </p>
         </div>
@@ -54,21 +54,21 @@ export function NoticeEvents() {
 
               <Link
                 href="/community/notices"
-                className="shrink-0 text-[10px] text-[#8A8173] hover:text-[#B75D32] sm:text-xs"
+                className="shrink-0 text-[10px] text-muted hover:text-sage-07 sm:text-xs"
               >
                 전체 보기 →
               </Link>
             </div>
 
-            <div className="border-t border-[#D8D0C0]">
+            <div className="border-t border-border">
               {notices.map((notice) => (
                 <Link
                   key={notice.id}
                   href={`/community/notices/${notice.id}`}
-                  className="flex min-h-12 items-center justify-between gap-2 border-b border-[#E5DDCF] py-3 transition-colors hover:text-[#B75D32] sm:gap-3"
+                  className="flex min-h-12 items-center justify-between gap-2 border-b border-border py-3 transition-colors hover:text-sage-07 sm:gap-3"
                 >
                   <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-                    <span className="shrink-0 bg-[#EEE5D3] px-2 py-1 text-[10px] text-[#756F62]">
+                    <span className="shrink-0 bg-sage-05 px-2 py-1 text-[10px] text-muted">
                       공지
                     </span>
 
@@ -77,7 +77,7 @@ export function NoticeEvents() {
                     </span>
                   </div>
 
-                  <time className="shrink-0 text-[10px] text-[#9A9184] sm:text-xs">
+                  <time className="shrink-0 text-[10px] text-muted/70 sm:text-xs">
                     {notice.date}
                   </time>
                 </Link>
@@ -94,7 +94,7 @@ export function NoticeEvents() {
 
               <Link
                 href="/events"
-                className="shrink-0 text-[10px] text-[#8A8173] hover:text-[#B75D32] sm:text-xs"
+                className="shrink-0 text-[10px] text-muted hover:text-sage-07 sm:text-xs"
               >
                 전체 보기 →
               </Link>

@@ -71,7 +71,7 @@ export default function CommunityPostControls({
           />
           <button
             type="submit"
-            className="bg-primary px-5 text-sm font-semibold !text-white transition-colors hover:bg-primary-dark"
+            className="bg-primary px-5 text-sm font-semibold !text-white transition-colors hover:bg-primary-hover"
           >
             검색
           </button>

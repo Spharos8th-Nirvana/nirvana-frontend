@@ -34,7 +34,7 @@ export default function ProgramReviews({ programId }: ProgramReviewsProps) {
     <section className="mt-20 grid grid-cols-1 gap-8 border-t border-border pt-12 md:grid-cols-[0.8fr_1.2fr]">
       {/* 왼쪽: 후기 제목과 설명 */}
       <div>
-        <span className="text-xs tracking-wider text-[#999999]">
+        <span className="text-xs tracking-wider text-muted/70">
           USER REVIEWS
         </span>
 
@@ -46,7 +46,7 @@ export default function ProgramReviews({ programId }: ProgramReviewsProps) {
           솔직한 이야기를 확인해 보세요.
         </p>
 
-        <p className="mt-6 text-sm text-[#999999]">
+        <p className="mt-6 text-sm text-muted/70">
           총 {reviews.length}개의 후기
         </p>
       </div>
@@ -76,7 +76,7 @@ export default function ProgramReviews({ programId }: ProgramReviewsProps) {
                   </div>
 
                   <div className="mt-6 flex items-center justify-between border-t border-border pt-4">
-                    <span className="text-xs text-[#999999]">작성자</span>
+                    <span className="text-xs text-muted/70">작성자</span>
                     <span className="text-sm font-medium text-primary">
                       {review.nickname}
                     </span>
@@ -93,7 +93,7 @@ export default function ProgramReviews({ programId }: ProgramReviewsProps) {
                   onClick={previousReviews}
                   disabled={currentIndex === 0}
                   aria-label="이전 후기"
-                  className="flex h-9 w-9 items-center justify-center border border-border text-primary transition hover:bg-[#F5F5F3] disabled:cursor-not-allowed disabled:opacity-30"
+                  className="flex h-9 w-9 items-center justify-center border border-border text-primary transition hover:bg-subtle disabled:cursor-not-allowed disabled:opacity-30"
                 >
                   ←
                 </button>
@@ -103,7 +103,7 @@ export default function ProgramReviews({ programId }: ProgramReviewsProps) {
                   onClick={nextReviews}
                   disabled={currentIndex >= maxIndex}
                   aria-label="다음 후기"
-                  className="flex h-9 w-9 items-center justify-center border border-border text-primary transition hover:bg-[#F5F5F3] disabled:cursor-not-allowed disabled:opacity-30"
+                  className="flex h-9 w-9 items-center justify-center border border-border text-primary transition hover:bg-subtle disabled:cursor-not-allowed disabled:opacity-30"
                 >
                   →
                 </button>
@@ -117,7 +117,7 @@ export default function ProgramReviews({ programId }: ProgramReviewsProps) {
                     onClick={() => setCurrentIndex(index)}
                     aria-label={`${index + 1}번째 후기 페이지`}
                     className={`h-1.5 w-1.5 transition-colors ${
-                      currentIndex === index ? "bg-primary" : "bg-[#D5D5D0]"
+                      currentIndex === index ? "bg-primary" : "bg-sage-04"
                     }`}
                   />
                 ))}

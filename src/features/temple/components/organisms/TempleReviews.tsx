@@ -73,7 +73,7 @@ export default function TempleReviews({ reviews }: TempleReviewsProps) {
               className="flex flex-col-reverse overflow-hidden border border-border bg-white sm:flex-row"
             >
               <div className="flex-1 p-5 md:p-7">
-                <span className="text-xs font-semibold text-[#B75D32]">{review.category}</span>
+                <span className="text-xs font-semibold text-primary">{review.category}</span>
 
                 <h3 className="mt-2 text-lg font-bold text-primary">{review.title}</h3>
 

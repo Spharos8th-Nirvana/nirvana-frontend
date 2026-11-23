@@ -20,7 +20,7 @@ export function PopularPrograms() {
       <div className="mx-auto max-w-6xl">
         {/* 섹션 제목 */}
         <div>
-          <p className="text-[10px] font-semibold tracking-[0.2em] text-[#B75D32] sm:text-xs sm:tracking-[0.25em]">
+          <p className="text-[10px] font-semibold tracking-[0.2em] text-primary sm:text-xs sm:tracking-[0.25em]">
             CURATED FOR YOU
           </p>
 
@@ -37,7 +37,7 @@ export function PopularPrograms() {
             </Link>
           </div>
 
-          <p className="mt-3 text-xs leading-6 text-[#756F62] sm:text-sm">
+          <p className="mt-3 text-xs leading-6 text-muted sm:text-sm">
             많은 이들이 찾는 특별한 사찰 체험을 만나보세요.
           </p>
         </div>
@@ -53,7 +53,7 @@ export function PopularPrograms() {
                 className={`shrink-0 rounded-full border px-4 py-2 text-xs transition-colors duration-200 sm:px-5 ${
                   selectedCategory === category
                     ? "border-primary bg-primary text-white"
-                    : "border-[#D8D0C0] bg-transparent text-primary hover:border-primary"
+                    : "border-border bg-transparent text-primary hover:border-primary"
                 }`}
               >
                 {category}
@@ -125,16 +125,16 @@ export function PopularPrograms() {
 
                 {/* 프로그램 정보 */}
                 <div className="p-4 sm:p-5">
-                  <p className="text-xs text-[#8A8173]">{program.temple}</p>
+                  <p className="text-xs text-muted">{program.temple}</p>
 
                   <h3 className="mt-2 h-14 overflow-hidden line-clamp-2 font-serif text-base font-semibold leading-7 text-primary sm:text-lg">
                     {program.name}
                   </h3>
 
-                  <div className="mt-5 flex items-center justify-between border-t border-[#EEE5D3] pt-4">
+                  <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
                     <p className="font-semibold text-primary">
                       ₩{Number(program.price).toLocaleString("ko-KR")}
-                      <span className="ml-1 text-xs font-normal text-[#8A8173]">
+                      <span className="ml-1 text-xs font-normal text-muted">
                         / 1인
                       </span>
                     </p>
@@ -142,7 +142,7 @@ export function PopularPrograms() {
                     <Link
                       href={`/programs/${program.id}`}
                       aria-label={`${program.name} 상세 페이지로 이동`}
-                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#EEE5D3] text-primary transition-all duration-200 hover:border-primary hover:bg-primary hover:text-white"
+                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border text-primary transition-all duration-200 hover:border-primary hover:bg-primary hover:text-white"
                     >
                       →
                     </Link>
@@ -155,7 +155,7 @@ export function PopularPrograms() {
               <p className="text-lg font-semibold text-primary">
                 준비 중인 프로그램입니다.
               </p>
-              <p className="mt-2 text-sm text-[#8A8173]">
+              <p className="mt-2 text-sm text-muted">
                 새로운 프로그램을 준비하고 있어요. 조금만 기다려 주세요.
               </p>
             </div>

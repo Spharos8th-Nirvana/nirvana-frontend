@@ -30,7 +30,7 @@ export function CommunityStories() {
       <div className="mx-auto max-w-6xl">
         {/* 섹션 제목 */}
         <div>
-          <p className="text-[10px] font-semibold tracking-[0.2em] text-[#B75D32] sm:text-xs sm:tracking-[0.25em]">
+          <p className="text-[10px] font-semibold tracking-[0.2em] text-primary sm:text-xs sm:tracking-[0.25em]">
             COMMUNITY
           </p>
 
@@ -39,7 +39,7 @@ export function CommunityStories() {
           </h2>
 
           <div className="mt-3 flex items-end justify-between gap-4 sm:mt-4">
-            <p className="text-xs leading-6 text-[#756F62] sm:text-sm">
+            <p className="text-xs leading-6 text-muted sm:text-sm">
               사찰음식, 아름다운 사찰, 체험 후기 등
               <br />
               커뮤니티에서 오간 깊은 이야기를 만나보세요.
@@ -69,8 +69,8 @@ export function CommunityStories() {
               />
 
               {/* 이미지 영역 */}
-              <div className="flex h-44 shrink-0 items-center justify-center bg-[#F5F5F5] sm:h-48 lg:h-52">
-                <span className="font-serif text-xs text-[#8A8173] sm:text-sm">
+              <div className="flex h-44 shrink-0 items-center justify-center bg-subtle sm:h-48 lg:h-52">
+                <span className="font-serif text-xs text-muted sm:text-sm">
                   COMMUNITY IMAGE
                 </span>
               </div>
@@ -78,8 +78,8 @@ export function CommunityStories() {
               {/* 게시글 정보 */}
               <div className="relative z-20 flex flex-1 flex-col p-4 sm:p-5 pointer-events-none">
                 <div>
-                  <div className="flex flex-wrap items-center gap-2 text-[10px] text-[#8A8173] sm:text-xs">
-                    <span className="bg-[#EEE5D3] px-2 py-1 text-primary">{story.category}</span>
+                  <div className="flex flex-wrap items-center gap-2 text-[10px] text-muted sm:text-xs">
+                    <span className="bg-sage-05 px-2 py-1 text-primary">{story.category}</span>
                     <span>{story.date}</span>
                   </div>
 
@@ -87,7 +87,7 @@ export function CommunityStories() {
                     {story.title}
                   </h3>
 
-                  <p className="mt-3 min-h-12 line-clamp-2 text-xs leading-6 text-[#756F62] sm:text-sm">
+                  <p className="mt-3 min-h-12 line-clamp-2 text-xs leading-6 text-muted sm:text-sm">
                     {story.description}
                   </p>
                 </div>

@@ -17,27 +17,27 @@ export default function TemplesPage() {
       <section className="px-5 py-20 md:px-10">
         <div className="mx-auto max-w-6xl">
           <div className="text-center">
-            <p className="text-sm font-semibold text-[#B75D32]">FILTER</p>
+            <p className="text-sm font-semibold text-primary">FILTER</p>
 
             <h2 className="mt-4 text-3xl font-bold text-primary">조건으로 사찰 찾기</h2>
 
-            <p className="mt-5 text-sm text-[#756F62]">지역과 키워드로 원하는 사찰을 찾아보세요.</p>
+            <p className="mt-5 text-sm text-muted">지역과 키워드로 원하는 사찰을 찾아보세요.</p>
           </div>
 
           <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-2">
             <button
               type="button"
-              className="flex items-center gap-3 rounded-lg border border-[#EEE5D3] px-5 py-5 text-left text-sm text-[#929A96] transition-colors hover:border-primary"
+              className="flex items-center gap-3 rounded-lg border border-border px-5 py-5 text-left text-sm text-muted/70 transition-colors hover:border-primary"
             >
               <span className="text-lg">♧</span>
               지역 선택
             </button>
 
-            <div className="flex items-center rounded-lg border border-[#EEE5D3] px-5 py-2">
+            <div className="flex items-center rounded-lg border border-border px-5 py-2">
               <input
                 type="text"
                 placeholder="키워드 검색"
-                className="min-w-0 flex-1 bg-transparent py-3 text-sm outline-none placeholder:text-[#929A96]"
+                className="min-w-0 flex-1 bg-transparent py-3 text-sm outline-none placeholder:text-muted/70"
               />
 
               <button
@@ -55,22 +55,22 @@ export default function TemplesPage() {
       {/* 사찰 목록 */}
       <section className="px-5 pb-24 md:px-10">
         <div className="mx-auto max-w-6xl">
-          <div className="flex items-center justify-between border-b border-[#EEE5D3] pb-4">
+          <div className="flex items-center justify-between border-b border-border pb-4">
             <h2 className="text-xl font-bold text-primary">사찰 목록</h2>
 
-            <p className="text-sm text-[#756F62]">총 {temples.length}개</p>
+            <p className="text-sm text-muted">총 {temples.length}개</p>
           </div>
 
           <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
             {temples.map((temple) => (
               <Link key={temple.id} href={`/temples/${temple.id}`} className="group">
                 {/* 이미지 영역 */}
-                <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-[#F5F5F5] transition-all duration-300 group-hover:shadow-lg">
-                  <span className="text-5xl text-[#B8AD9A]">▧</span>
+                <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-subtle transition-all duration-300 group-hover:shadow-lg">
+                  <span className="text-5xl text-sage-03">▧</span>
 
                   {/* 즐겨찾기 아이콘 */}
                   <span
-                    className="absolute left-4 top-4 text-2xl text-[#B75D32]"
+                    className="absolute left-4 top-4 text-2xl text-primary"
                     aria-label="즐겨찾기"
                   >
                     ☆
@@ -83,20 +83,20 @@ export default function TemplesPage() {
                     {temple.name}
                   </h3>
 
-                  <p className="mt-2 text-sm leading-6 text-[#756F62]">{temple.description}</p>
+                  <p className="mt-2 text-sm leading-6 text-muted">{temple.description}</p>
 
                   <div className="mt-3 flex flex-wrap gap-2">
                     {temple.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-full bg-background px-3 py-1 text-xs text-[#756F62]"
+                        className="rounded-full bg-background px-3 py-1 text-xs text-muted"
                       >
                         {tag}
                       </span>
                     ))}
                   </div>
 
-                  <p className="mt-3 text-xs text-[#929A96]">주소 및 전화번호 정보 준비 중</p>
+                  <p className="mt-3 text-xs text-muted/70">주소 및 전화번호 정보 준비 중</p>
                 </div>
               </Link>
             ))}
@@ -104,9 +104,9 @@ export default function TemplesPage() {
 
           {/* 페이지네이션 */}
           <div className="mt-16 flex items-center justify-center gap-5 text-sm text-primary">
-            <span className="text-[#B8AD9A]">〈</span>
+            <span className="text-sage-03">〈</span>
             <span className="font-bold">1</span>
-            <span className="text-[#929A96]">〉</span>
+            <span className="text-muted/70">〉</span>
           </div>
         </div>
       </section>

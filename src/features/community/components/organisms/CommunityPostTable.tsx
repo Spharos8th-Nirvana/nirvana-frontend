@@ -20,7 +20,7 @@ export default function CommunityPostTable({
     <div className="mt-6 overflow-x-auto">
       <div className="min-w-[900px]">
         <div
-          className={`${gridClassName} border-y border-border bg-[#F5F5F5] py-4 text-center text-sm font-semibold text-ink`}
+          className={`${gridClassName} border-y border-border bg-subtle py-4 text-center text-sm font-semibold text-ink`}
         >
           <span>번호</span>
           <span>분류</span>
@@ -33,7 +33,7 @@ export default function CommunityPostTable({
         {pinnedNotices.map((notice) => (
           <div
             key={notice.id}
-            className={`${gridClassName} items-center border-b border-border bg-[#F5F5F5] py-5 text-center text-sm`}
+            className={`${gridClassName} items-center border-b border-border bg-subtle py-5 text-center text-sm`}
           >
             <span className="font-semibold text-primary">공지</span>
             <span className="text-primary">공지사항</span>
@@ -56,7 +56,7 @@ export default function CommunityPostTable({
                 {post.title}
               </Link>
               {post.likes >= 10 && (
-                <span className="shrink-0 text-xs font-bold text-accent">BEST</span>
+                <span className="shrink-0 text-xs font-bold text-primary">BEST</span>
               )}
             </span>
             <span>{post.nickname}</span>

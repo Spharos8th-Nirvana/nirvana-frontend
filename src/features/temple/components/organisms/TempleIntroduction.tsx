@@ -16,7 +16,7 @@ export default function TempleIntroduction({
   return (
     <div className="space-y-24">
       {/* 사찰 기본 정보 */}
-      <div className="text-center text-sm leading-7 text-[#756F62]">
+      <div className="text-center text-sm leading-7 text-muted">
         <p>주소</p>
         <p className="font-medium text-primary">{address || "주소 정보 준비 중"}</p>
 
@@ -29,7 +29,7 @@ export default function TempleIntroduction({
         <div className="max-w-3xl text-center">
           <h2 className="text-2xl font-bold text-primary">{name} 소개</h2>
 
-          <p className="mt-6 whitespace-pre-line leading-8 text-[#756F62]">
+          <p className="mt-6 whitespace-pre-line leading-8 text-muted">
             {introduction || "사찰 소개글을 준비하고 있습니다."}
           </p>
         </div>
@@ -46,7 +46,7 @@ export default function TempleIntroduction({
         </p>
 
         {/* 지도 영역 */}
-        <div className="mt-10 flex h-[300px] items-center justify-center border border-border bg-[#F5F5F5] md:h-[420px]">
+        <div className="mt-10 flex h-[300px] items-center justify-center border border-border bg-subtle md:h-[420px]">
           <span className="text-lg font-semibold text-muted">지도 영역</span>
         </div>
       </section>

@@ -58,7 +58,7 @@ export function HeroSection() {
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-3 rounded-lg bg-white p-4 shadow-[0_12px_35px_rgba(23,63,53,0.10)] sm:p-5 md:grid-cols-[1fr_1fr_1fr_auto] md:items-center md:gap-0 md:p-3">
           {/* 지역 및 사찰 검색 */}
           <label className="min-w-0 px-3 py-2 md:px-5">
-            <span className="mb-3 block text-xs font-bold text-[#A36A49]">
+            <span className="mb-3 block text-xs font-bold text-primary">
               어디로 떠날까요?
             </span>
 
@@ -84,14 +84,14 @@ export function HeroSection() {
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 placeholder="지역 또는 사찰 이름"
-                className="min-w-0 w-full bg-transparent text-sm text-primary outline-none placeholder:text-[#929A96]"
+                className="min-w-0 w-full bg-transparent text-sm text-primary outline-none placeholder:text-muted/70"
               />
             </div>
           </label>
 
           {/* 날짜 선택 */}
-          <label className="min-w-0 border-t border-[#EEE5D3] px-3 py-4 md:border-l md:border-t-0 md:px-5 md:py-2">
-            <span className="mb-3 block text-xs font-bold text-[#A36A49]">
+          <label className="min-w-0 border-t border-border px-3 py-4 md:border-l md:border-t-0 md:px-5 md:py-2">
+            <span className="mb-3 block text-xs font-bold text-primary">
               언제 떠날까요?
             </span>
 
@@ -102,7 +102,7 @@ export function HeroSection() {
                 height="21"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="#858F89"
+                stroke="var(--color-muted)"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -123,8 +123,8 @@ export function HeroSection() {
           </label>
 
           {/* 인원 선택 */}
-          <label className="min-w-0 border-t border-[#EEE5D3] px-3 py-4 md:border-l md:border-t-0 md:px-5 md:py-2">
-            <span className="mb-3 block text-xs font-bold text-[#A36A49]">
+          <label className="min-w-0 border-t border-border px-3 py-4 md:border-l md:border-t-0 md:px-5 md:py-2">
+            <span className="mb-3 block text-xs font-bold text-primary">
               누구와 함께?
             </span>
 
@@ -135,7 +135,7 @@ export function HeroSection() {
                 height="21"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="#858F89"
+                stroke="var(--color-muted)"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -164,12 +164,12 @@ export function HeroSection() {
           </label>
 
           {/* 검색 버튼 */}
-          <div className="border-t border-[#EEE5D3] pt-3 md:border-l md:border-t-0 md:pl-3 md:pt-0">
+          <div className="border-t border-border pt-3 md:border-l md:border-t-0 md:pl-3 md:pt-0">
             <button
               type="button"
               onClick={handleSearch}
               aria-label="프로그램 검색"
-              className="flex h-14 w-full items-center justify-center rounded-md bg-[#B75D32] text-white transition-colors hover:bg-[#914223] md:w-14"
+              className="flex h-14 w-full items-center justify-center rounded-md bg-primary text-white transition-colors hover:bg-primary-hover md:w-14"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

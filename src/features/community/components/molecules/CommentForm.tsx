@@ -25,7 +25,7 @@ export default function CommentForm({
           type="button"
           onClick={handleAddComment}
           disabled={!newComment.trim()}
-          className="bg-primary px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-40"
+          className="bg-primary px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40"
         >
           등록
         </button>

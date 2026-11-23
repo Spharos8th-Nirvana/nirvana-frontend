@@ -7,7 +7,7 @@ export function RecommendedTemples() {
       <div className="mx-auto max-w-6xl">
         {/* 섹션 제목 */}
         <div>
-          <p className="text-[10px] font-semibold tracking-[0.2em] text-[#B75D32] sm:text-xs sm:tracking-[0.25em]">
+          <p className="text-[10px] font-semibold tracking-[0.2em] text-primary sm:text-xs sm:tracking-[0.25em]">
             TEMPLE
           </p>
 
@@ -18,7 +18,7 @@ export function RecommendedTemples() {
           </div>
 
           <div className="mt-3 flex items-end justify-between gap-4 sm:mt-4">
-            <p className="text-xs leading-6 text-[#756F62] sm:text-sm">
+            <p className="text-xs leading-6 text-muted sm:text-sm">
               한국의 아름다운 사찰을 만나보세요.
               <br />각 사찰이 이야기를 가진 특별한 체험을 확인하세요.
             </p>
@@ -45,8 +45,8 @@ export function RecommendedTemples() {
                 className="absolute inset-0 z-10"
               />
               {/* 이미지 자리 */}
-              <div className="flex h-44 items-center justify-center bg-[#F5F5F5] sm:h-48 lg:h-52">
-                <span className="font-serif text-base text-[#8A8173] sm:text-lg">
+              <div className="flex h-44 items-center justify-center bg-subtle sm:h-48 lg:h-52">
+                <span className="font-serif text-base text-muted sm:text-lg">
                   {temple.name} 이미지
                 </span>
               </div>
@@ -57,7 +57,7 @@ export function RecommendedTemples() {
                   {temple.name}
                 </h3>
 
-                <p className="mt-2 min-h-12 text-xs leading-6 text-[#756F62] sm:text-sm">
+                <p className="mt-2 min-h-12 text-xs leading-6 text-muted sm:text-sm">
                   {temple.description}
                 </p>
 
@@ -66,7 +66,7 @@ export function RecommendedTemples() {
                   {temple.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="bg-[#EEE5D3] px-2 py-1 text-[10px] text-primary sm:text-xs"
+                      className="bg-sage-05 px-2 py-1 text-[10px] text-primary sm:text-xs"
                     >
                       {tag}
                     </span>

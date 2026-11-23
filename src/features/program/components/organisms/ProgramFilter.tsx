@@ -33,7 +33,7 @@ export default function ProgramFilter({ programs }: ProgramFilterProps) {
         <div className="flex items-center justify-between border-b border-border pb-4">
           <h2 className="text-xl font-bold text-primary">프로그램 검색 결과</h2>
 
-          <p className="text-sm text-[#999999]">
+          <p className="text-sm text-muted/70">
             총 {filteredPrograms.length}개
           </p>
         </div>
@@ -58,7 +58,7 @@ export default function ProgramFilter({ programs }: ProgramFilterProps) {
 
                 {/* 프로그램 정보 */}
                 <div className="flex flex-1 flex-col p-5">
-                  <span className="text-xs font-semibold text-[#B75D32]">
+                  <span className="text-xs font-semibold text-primary">
                     {program.category}
                   </span>
 
