@@ -22,12 +22,10 @@ const tabs = [
 type TempleDetailTabsProps = {
   templeId: number;
   templeName: string;
-  description: string;
   address: string;
   phone: string;
   introduction: string;
   directions: string;
-  tags: string[];
   facilities: TempleFacility[];
   programs: Program[];
   reviews: TempleReview[];
@@ -39,12 +37,10 @@ export default function TempleDetailTabs({
   templeId,
   initialTab,
   templeName,
-  description,
   address,
   phone,
   introduction,
   directions,
-  tags,
   facilities,
   programs,
   reviews,

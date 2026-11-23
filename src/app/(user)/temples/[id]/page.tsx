@@ -53,12 +53,10 @@ export default async function TempleDetailPage({
           templeId={temple.id}
           initialTab={tab}
           templeName={temple.name}
-          description={temple.description}
           address={temple.address}
           phone={temple.phone}
           introduction={temple.introduction}
           directions={temple.directions}
-          tags={temple.tags}
           facilities={facilities}
           programs={templePrograms}
           reviews={reviews}
