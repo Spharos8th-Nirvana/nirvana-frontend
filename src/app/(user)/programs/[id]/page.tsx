@@ -10,6 +10,13 @@ import {
   parseCountParam,
   RESERVATION_PANEL_ID,
 } from "@/features/program/utils/booking";
+import {
+  formatDayLabel,
+  formatDuration,
+  formatTimetableTime,
+  getTotalDuration,
+  sortTimetable,
+} from "@/features/program/utils/timetable";
 import { cancellationPolicies } from "@/features/temple/data/cancellation-policies";
 import PageHero from "@/shared/components/layout/PageHero";
 import BackToListLink from "@/features/program/components/molecules/BackToListLink";
@@ -89,6 +96,12 @@ export default async function ProgramDetailPage({
 
   const reviewCount = programReviews.filter((review) => review.programId === program.id).length;
 
+  // 하루 일정표 (날짜·순서대로)
+  const timetable = sortTimetable(program.timetable);
+  const totalDuration = getTotalDuration(timetable);
+  // 회차 시작 시각 (하루 여러 회차 프로그램 안내용)
+  const sessionStartTimes = [...new Set(schedules.map((schedule) => schedule.startTime))].sort();
+
   const stay = formatStay(program.nights);
   const programTitle = `${program.temple} ${program.name}`;
   const highlights = [
@@ -160,20 +173,23 @@ export default async function ProgramDetailPage({
                   <thead className="bg-subtle">
                     <tr className="border-y border-ink/40">
                       <th className="w-[20%] px-4 py-3.5 font-bold text-ink">일정</th>
-                      <th className="w-[35%] px-4 py-3.5 font-bold text-ink">시간</th>
+                      {/* 시각으로 적힌 일정은 "시간", 걸리는 시간으로 적힌 일정(하루 여러 회차)은 "소요 시간" */}
+                      <th className="w-[35%] px-4 py-3.5 font-bold text-ink">
+                        {totalDuration !== null ? "소요 시간" : "시간"}
+                      </th>
                       <th className="px-4 py-3.5 font-bold text-ink">함께하는 일</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border border-b border-ink/40 bg-white">
-                    {program.timetable.length > 0 ? (
-                      program.timetable.map((item, index) => {
-                        const isFirstOfDay = program.timetable[index - 1]?.day !== item.day;
+                    {timetable.length > 0 ? (
+                      timetable.map((item, index) => {
+                        const isFirstOfDay = timetable[index - 1]?.dayNo !== item.dayNo;
                         return (
-                          <tr key={`${item.day}-${item.time}`}>
+                          <tr key={`${item.dayNo}-${item.sortOrder}`}>
                             <td className="px-4 py-4 font-bold text-ink">
-                              {isFirstOfDay ? item.day : ""}
+                              {isFirstOfDay ? formatDayLabel(item.dayNo, program.nights) : ""}
                             </td>
-                            <td className="px-4 py-4 text-ink/80">{item.time}</td>
+                            <td className="px-4 py-4 text-ink/80">{formatTimetableTime(item)}</td>
                             <td className="px-4 py-4 text-ink">{item.activity}</td>
                           </tr>
                         );
@@ -188,6 +204,16 @@ export default async function ProgramDetailPage({
                   </tbody>
                 </table>
               </div>
+
+              {/* 걸리는 시간으로 적힌 일정(하루 여러 회차)이면 총 시간과 회차 시작 시각을 알려 줍니다. */}
+              {totalDuration !== null && (
+                <p className="mt-4 text-sm text-ink">
+                  총 소요 시간 {formatDuration(totalDuration)}
+                  {sessionStartTimes.length > 0 && (
+                    <> · 하루 {sessionStartTimes.length}회 ({sessionStartTimes.join(" · ")} 시작)</>
+                  )}
+                </p>
+              )}
 
               <p className="mt-4 text-right text-xs text-muted">
                 ※ 실제 운영 일정은 사찰 및 프로그램별로 다를 수 있습니다.

@@ -5,9 +5,13 @@ import type { ProgramSchedule } from "@/features/program/data/program-schedules"
 import { isScheduleAvailable } from "@/features/program/utils/booking";
 
 type ReservationCalendarProps = {
-  schedules: ProgramSchedule[];
-  selectedScheduleId: string;
-  onScheduleChange: (scheduleId: string) => void;
+  /** 입실일 → 그날 시작하는 회차들 */
+  schedulesByDate: Map<string, ProgramSchedule[]>;
+  /** 고른 입실일 (YYYY-MM-DD) */
+  selectedDate: string;
+  /** 고른 회차. 여러 날 머무는 프로그램이면 퇴실일까지 기간으로 표시합니다. */
+  selectedSchedule?: ProgramSchedule;
+  onDateChange: (date: string) => void;
 };
 
 const weekDays = ["일", "월", "화", "수", "목", "금", "토"];
@@ -18,47 +22,41 @@ function toDateKey(year: number, monthIndex: number, day: number) {
   return `${year}-${m}-${d}`;
 }
 
-/** 첫 화면에 보여줄 달: 선택한 회차 → 예약 가능한 첫 회차 → 첫 회차 순 */
-function getInitialMonth(schedules: ProgramSchedule[], selectedId: string) {
+/** 첫 화면에 보여줄 달: 고른 날짜 → 예약 가능한 첫 날짜 → 첫 날짜 순 */
+function getInitialMonth(schedulesByDate: Map<string, ProgramSchedule[]>, selectedDate: string) {
+  const dates = [...schedulesByDate.keys()].sort();
   const base =
-    schedules.find((schedule) => schedule.id === selectedId) ??
-    schedules.find(isScheduleAvailable) ??
-    schedules[0];
+    selectedDate ||
+    dates.find((date) => schedulesByDate.get(date)?.some(isScheduleAvailable)) ||
+    dates[0];
 
   if (!base) {
     const today = new Date();
     return { year: today.getFullYear(), monthIndex: today.getMonth() };
   }
 
-  const [year, month] = base.operationStartDate.split("-").map(Number);
+  const [year, month] = base.split("-").map(Number);
   return { year, monthIndex: month - 1 };
 }
 
+/** 입실일 선택 달력. 하루에 회차가 여러 개여도 날짜 단위로 고릅니다. */
 export default function ReservationCalendar({
-  schedules,
-  selectedScheduleId,
-  onScheduleChange,
+  schedulesByDate,
+  selectedDate,
+  selectedSchedule,
+  onDateChange,
 }: ReservationCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(() =>
-    getInitialMonth(schedules, selectedScheduleId),
+    getInitialMonth(schedulesByDate, selectedDate),
   );
 
   const { year, monthIndex } = currentMonth;
   const firstDay = new Date(year, monthIndex, 1).getDay();
   const lastDate = new Date(year, monthIndex + 1, 0).getDate();
 
-  const selectedSchedule = schedules.find(
-    (schedule) => schedule.id === selectedScheduleId,
-  );
-
-  // 입실일 → 회차. 같은 날 회차가 여러 개면 예약 가능한 회차를 우선합니다.
-  const scheduleByStartDate = new Map<string, ProgramSchedule>();
-  for (const schedule of schedules) {
-    const existing = scheduleByStartDate.get(schedule.operationStartDate);
-    if (!existing || (!isScheduleAvailable(existing) && isScheduleAvailable(schedule))) {
-      scheduleByStartDate.set(schedule.operationStartDate, schedule);
-    }
-  }
+  // 표시할 기간: 회차를 골랐으면 입실~퇴실, 날짜만 골랐으면 그날 하루
+  const rangeStart = selectedSchedule?.operationStartDate ?? selectedDate;
+  const rangeEnd = selectedSchedule?.operationEndDate ?? selectedDate;
 
   const moveMonth = (offset: number) => {
     const next = new Date(year, monthIndex + offset, 1);
@@ -110,31 +108,25 @@ export default function ReservationCalendar({
 
         {Array.from({ length: lastDate }, (_, index) => index + 1).map((day) => {
           const dateKey = toDateKey(year, monthIndex, day);
-          const schedule = scheduleByStartDate.get(dateKey);
-          const available = schedule ? isScheduleAvailable(schedule) : false;
-          const soldOut = schedule !== undefined && !available;
+          const daySchedules = schedulesByDate.get(dateKey) ?? [];
+          const available = daySchedules.some(isScheduleAvailable);
+          const soldOut = daySchedules.length > 0 && !available;
 
-          const isRangeEdge =
-            selectedSchedule !== undefined &&
-            (dateKey === selectedSchedule.operationStartDate ||
-              dateKey === selectedSchedule.operationEndDate);
-          const isInRange =
-            selectedSchedule !== undefined &&
-            dateKey > selectedSchedule.operationStartDate &&
-            dateKey < selectedSchedule.operationEndDate;
+          const isRangeEdge = Boolean(rangeStart) && (dateKey === rangeStart || dateKey === rangeEnd);
+          const isInRange = Boolean(rangeStart) && dateKey > rangeStart && dateKey < rangeEnd;
 
           return (
             <div key={day} className="flex flex-col items-center py-0.5">
               <button
                 type="button"
                 disabled={!available}
-                onClick={() => schedule && onScheduleChange(schedule.id)}
-                aria-pressed={isRangeEdge}
+                onClick={() => onDateChange(dateKey)}
+                aria-pressed={dateKey === selectedDate}
                 aria-label={
                   soldOut
                     ? `${monthIndex + 1}월 ${day}일 마감`
                     : available
-                      ? `${monthIndex + 1}월 ${day}일 입실 회차 선택`
+                      ? `${monthIndex + 1}월 ${day}일 입실일 선택`
                       : undefined
                 }
                 className={`flex h-9 w-9 items-center justify-center rounded-full text-sm transition-colors ${
@@ -152,9 +144,7 @@ export default function ReservationCalendar({
                 {day}
               </button>
               {soldOut && (
-                <span className="mt-0.5 text-[10px] leading-none text-muted/70">
-                  마감
-                </span>
+                <span className="mt-0.5 text-[10px] leading-none text-muted/70">마감</span>
               )}
             </div>
           );

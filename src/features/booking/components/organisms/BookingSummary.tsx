@@ -75,7 +75,7 @@ export default function BookingSummary({
         <div className="flex gap-4">
           <dt className="w-20 shrink-0 text-muted">머무는 기간</dt>
           <dd className="font-medium text-ink">
-            {selection.stayLabel} · {selection.startTime} 입실
+            {selection.stayLabel} · {selection.timeLabel}
           </dd>
         </div>
         <div className="flex gap-4">

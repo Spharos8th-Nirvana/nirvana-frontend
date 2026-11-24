@@ -9,6 +9,7 @@ import {
   buildReservationEditHref,
   calculateTotalPrice,
   formatScheduleRange,
+  formatScheduleTime,
   formatStay,
   getRemainingSeats,
   isScheduleAvailable,
@@ -86,7 +87,10 @@ export default async function BookingPage({ params, searchParams }: BookingPageP
               image: program.image,
               scheduleLabel: formatScheduleRange(schedule),
               stayLabel: formatStay(program.nights),
-              startTime: schedule.startTime,
+              timeLabel:
+                schedule.operationStartDate === schedule.operationEndDate
+                  ? formatScheduleTime(schedule)
+                  : `입실 ${schedule.startTime}`,
               adultCount,
               youthCount,
               adultPrice: program.adultPrice,

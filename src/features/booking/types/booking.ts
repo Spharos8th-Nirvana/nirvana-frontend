@@ -70,7 +70,8 @@ export type BookingSelection = {
   image: string;
   scheduleLabel: string;
   stayLabel: string;
-  startTime: string;
+  /** 회차 시간 안내. 숙박형 "입실 14:00", 당일형 "10:00 – 12:30" */
+  timeLabel: string;
   adultCount: number;
   youthCount: number;
   adultPrice: number;

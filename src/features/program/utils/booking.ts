@@ -64,6 +64,30 @@ export function formatScheduleRange(schedule: ProgramSchedule): string {
   return `${startLabel} – ${endLabel} (${getWeekDay(schedule.operationEndDate)})`;
 }
 
+/** 회차 시간을 "10:00 – 12:30"으로 표시 */
+export function formatScheduleTime(schedule: ProgramSchedule): string {
+  return `${schedule.startTime} – ${schedule.endTime}`;
+}
+
+/** 같은 날 시작하는 회차들을 시작 시각 순으로 묶습니다. (하루 여러 회차 프로그램) */
+export function groupSchedulesByStartDate(
+  schedules: ProgramSchedule[],
+): Map<string, ProgramSchedule[]> {
+  const groups = new Map<string, ProgramSchedule[]>();
+
+  for (const schedule of schedules) {
+    const list = groups.get(schedule.operationStartDate) ?? [];
+    list.push(schedule);
+    groups.set(schedule.operationStartDate, list);
+  }
+
+  for (const list of groups.values()) {
+    list.sort((a, b) => a.startTime.localeCompare(b.startTime));
+  }
+
+  return groups;
+}
+
 /** 주소의 인원 값(0 이상 정수)을 읽습니다. 숫자가 아니면 null */
 export function parseCountParam(value: string | string[] | undefined): number | null {
   if (typeof value !== "string" || !/^\d{1,3}$/.test(value)) {

@@ -6,14 +6,22 @@ export type ProgramCategoryCode = "OVERNIGHT" | "DAY" | "EXPERIENCE" | "REST";
 
 /**
  * 하루 일정표 한 줄 (운영자 입력)
- * DB에 아직 없는 항목입니다. (programSchedules는 판매 회차이고, 하루 진행 순서는 없음) → Backend 요청 필요
+ * DB에 아직 없는 항목입니다. Backend에 programTimetables 테이블로 요청한 모양과 같습니다.
+ * - 숙박형 등 시각이 정해진 일정: startTime(+ endTime)
+ * - 하루 여러 회차인 당일형: 회차마다 시작 시각이 달라 startTime 없이 durationMinutes
  */
 export type ProgramTimetableItem = {
-  /** 예: 첫째 날 */
-  day: string;
-  /** 예: 14:00 – 15:00 */
-  time: string;
-  /** 예: 도착 및 사찰 안내 */
+  /** 몇째 날 (1부터). 당일 프로그램은 1 */
+  dayNo: number;
+  /** 같은 날 안에서의 순서 */
+  sortOrder: number;
+  /** 시작 시각 (HH:mm) */
+  startTime?: string;
+  /** 끝 시각 (HH:mm) */
+  endTime?: string;
+  /** 걸리는 시간(분) */
+  durationMinutes?: number;
+  /** 함께하는 일 */
   activity: string;
 };
 
@@ -99,10 +107,10 @@ export const programs: Program[] = [
     rules: "사찰 내에서는 정숙을 유지하고, 스님의 안내에 따라 주세요.",
     preparation: "편한 복장과 양말을 준비하세요. 새벽에는 기온이 낮으니 따뜻한 옷을 챙기세요.",
     timetable: [
-      { day: "첫째 날", time: "14:00 – 15:00", activity: "도착 및 사찰 안내" },
-      { day: "첫째 날", time: "17:00 – 18:00", activity: "저녁 공양과 예불" },
-      { day: "둘째 날", time: "04:30 – 06:00", activity: "새벽 예불 · 숲길 명상" },
-      { day: "둘째 날", time: "07:00 – 10:00", activity: "아침 공양 · 자유 휴식 · 회향" },
+      { dayNo: 1, sortOrder: 1, startTime: "14:00", endTime: "15:00", activity: "도착 및 사찰 안내" },
+      { dayNo: 1, sortOrder: 2, startTime: "17:00", endTime: "18:00", activity: "저녁 공양과 예불" },
+      { dayNo: 2, sortOrder: 1, startTime: "04:30", endTime: "06:00", activity: "새벽 예불 · 숲길 명상" },
+      { dayNo: 2, sortOrder: 2, startTime: "07:00", endTime: "10:00", activity: "아침 공양 · 자유 휴식 · 회향" },
     ],
   },
   {
@@ -131,10 +139,11 @@ export const programs: Program[] = [
     description: "사찰음식의 의미를 배우고 직접 만들어 보는 체험 프로그램입니다.",
     rules: "공양 중에는 대화를 줄이고, 음식을 남기지 않도록 해 주세요.",
     preparation: "앞치마와 머리끈을 준비하세요. 조리 도구는 사찰에서 제공합니다.",
+    // 하루 여러 회차(10:00, 13:00)라 시작 시각 대신 걸리는 시간으로 적습니다.
     timetable: [
-      { day: "당일", time: "10:00 – 11:00", activity: "사찰음식 이야기" },
-      { day: "당일", time: "11:00 – 13:00", activity: "사찰음식 만들기" },
-      { day: "당일", time: "13:00 – 15:00", activity: "공양과 차담" },
+      { dayNo: 1, sortOrder: 1, durationMinutes: 30, activity: "사찰음식 이야기" },
+      { dayNo: 1, sortOrder: 2, durationMinutes: 90, activity: "사찰음식 만들기" },
+      { dayNo: 1, sortOrder: 3, durationMinutes: 30, activity: "공양과 차담" },
     ],
   },
   {
