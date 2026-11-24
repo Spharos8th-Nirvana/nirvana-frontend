@@ -8,7 +8,6 @@ import {
   buildBookingHref,
   calculateTotalPrice,
   formatScheduleRange,
-  formatStay,
   formatWon,
   getRemainingSeats,
 } from "@/features/program/utils/booking";
@@ -18,7 +17,6 @@ type ReservationPanelProps = {
   adultPrice: number;
   youthPrice: number;
   youthAllowed: boolean;
-  nights: number;
   schedules: ProgramSchedule[];
   /** 2단계에서 "변경"으로 돌아왔을 때 이어서 보여줄 선택값 */
   initialScheduleId?: string;
@@ -82,7 +80,6 @@ export default function ReservationPanel({
   adultPrice,
   youthPrice,
   youthAllowed,
-  nights,
   schedules,
   initialScheduleId = "",
   initialAdultCount = 1,
@@ -136,11 +133,6 @@ export default function ReservationPanel({
   return (
     <div className="sticky top-28 self-start rounded-lg border border-border bg-white p-6">
       <h2 className="text-lg font-bold text-ink">나의 고요를 예약하세요</h2>
-
-      <p className="mt-3 flex items-baseline gap-2">
-        <span className="text-2xl font-bold text-ink">{formatWon(adultPrice)}</span>
-        <span className="text-xs text-muted">성인 1인 · {formatStay(nights)}</span>
-      </p>
 
       {/* 회차(입실일) 선택 */}
       <div className="mt-6">
@@ -218,7 +210,7 @@ export default function ReservationPanel({
         <span aria-hidden="true">→</span>
       </button>
 
-      <p className="mt-3 text-xs text-muted/70">
+      <p className="mt-3 text-right text-xs text-muted/70">
         예약 전 취소·환불 규정을 확인해 주세요.
       </p>
     </div>

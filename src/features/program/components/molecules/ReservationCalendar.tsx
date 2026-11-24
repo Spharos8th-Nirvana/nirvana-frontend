@@ -161,7 +161,7 @@ export default function ReservationCalendar({
         })}
       </div>
 
-      <p className="mt-3 text-xs text-muted/70">
+      <p className="mt-3 text-right text-xs text-muted/70">
         테두리가 있는 날짜를 눌러 입실일을 선택해 주세요.
       </p>
     </section>

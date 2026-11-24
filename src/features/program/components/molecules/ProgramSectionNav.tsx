@@ -37,7 +37,8 @@ export default function ProgramSectionNav({ items }: ProgramSectionNavProps) {
             key={item.id}
             href={`#${item.id}`}
             onClick={(event) => handleClick(event, item.id)}
-            className="shrink-0 text-sm font-semibold text-ink transition-colors hover:text-primary"
+            // 헤더 메뉴와 같은 효과: 글자색 변경 + 가운데에서 펼쳐지는 밑줄 (키보드 포커스에도 적용)
+            className="relative shrink-0 py-1 text-sm font-semibold text-ink transition-colors after:absolute after:-bottom-0.5 after:left-1/2 after:h-0.5 after:w-0 after:rounded-full after:bg-primary after:transition-all after:duration-300 after:ease-out hover:text-primary hover:after:left-0 hover:after:w-full focus-visible:text-primary focus-visible:outline-none focus-visible:after:left-0 focus-visible:after:w-full"
           >
             {item.label}
           </a>

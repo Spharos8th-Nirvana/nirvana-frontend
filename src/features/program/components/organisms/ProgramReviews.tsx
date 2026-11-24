@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import DetailSection from "@/features/program/components/molecules/DetailSection";
 import { programReviews } from "@/features/program/data/program-reviews";
 
 type ProgramReviewsProps = {
@@ -17,53 +18,42 @@ export default function ProgramReviews({ programId }: ProgramReviewsProps) {
   const visibleReviews = reviews.slice(currentIndex, currentIndex + visibleCount);
 
   return (
-    <section id="reviews" className="mt-20 scroll-mt-24">
-      {/* 다른 섹션과 같은 제목 형식: 왼쪽 제목, 오른쪽 영문 소제목 */}
-      <div className="flex items-end justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-primary">참여자 후기</h2>
-          <p className="mt-4 text-sm text-muted">
-            프로그램에 참여한 이용자들의 솔직한 이야기를 확인해 보세요.
-            <span className="ml-2 text-muted/70">총 {reviews.length}개</span>
-          </p>
-        </div>
-        <span className="hidden text-xs tracking-wider text-muted/70 sm:block">
-          USER REVIEWS
+    <DetailSection
+      id="reviews"
+      eyebrow="후기"
+      title="참여자 후기"
+      titleAddon={
+        // 후기 개수 말풍선: 제목 글자 높이(28px)에 맞추고, 꼬리는 제목 쪽(왼쪽 가운데)을 가리킵니다.
+        <span className="relative ml-1 inline-flex h-7 min-w-8 items-center justify-center rounded-lg bg-primary px-2 text-sm font-bold leading-none text-white before:absolute before:-left-1 before:top-1/2 before:h-2.5 before:w-2.5 before:-translate-y-1/2 before:rotate-45 before:rounded-[2px] before:bg-primary">
+          <span className="relative z-10">{reviews.length}</span>
+          <span className="sr-only">개의 후기</span>
         </span>
-      </div>
-
+      }
+      description="프로그램에 참여한 이용자들의 솔직한 이야기를 확인해 보세요."
+    >
       {reviews.length === 0 ? (
-        <div className="mt-8 flex min-h-36 items-center justify-center rounded-lg border border-dashed border-border px-6 py-8 text-sm text-muted">
+        <div className="flex min-h-36 items-center justify-center border border-ink/40 bg-white px-6 py-8 text-sm text-muted">
           아직 작성된 후기가 없습니다.
         </div>
       ) : (
         <>
-          {/* 후기마다 독립된 카드로 구분 */}
-          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {/* 후기마다 테두리 상자로 구분 (와이어프레임 상자 모양) */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {visibleReviews.map((review) => (
               <article
                 key={review.id}
-                className="flex min-h-[260px] flex-col rounded-lg border border-border bg-white p-6 transition-shadow hover:shadow-sm"
+                className="flex min-h-[220px] flex-col border border-ink/40 bg-white px-5 py-5"
               >
-                <span aria-hidden="true" className="font-display text-4xl leading-none text-sage-03">
-                  &ldquo;
-                </span>
-
-                <h3 className="mt-2 line-clamp-2 font-bold leading-6 text-ink">{review.title}</h3>
-
-                <p className="mt-3 line-clamp-4 flex-1 text-sm leading-7 text-muted">
-                  {review.content}
+                <h3 className="line-clamp-2 font-bold leading-6 text-ink">{review.title}</h3>
+                <hr className="my-4 border-ink/30" />
+                <p className="line-clamp-4 flex-1 text-sm leading-7 text-ink/80">{review.content}</p>
+                <p className="mt-4 flex items-center justify-between gap-3 text-sm">
+                  <span className="font-bold text-ink">{review.nickname}</span>
+                  {/* 작성연월 (YYYY.MM), 오른쪽 정렬 */}
+                  <time dateTime={review.createdAt.slice(0, 7)} className="text-muted">
+                    {review.createdAt.slice(0, 7).replace("-", ".")}
+                  </time>
                 </p>
-
-                <footer className="mt-5 flex items-center gap-3 border-t border-border pt-4">
-                  <span
-                    aria-hidden="true"
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-subtle text-xs font-bold text-primary"
-                  >
-                    {review.nickname.slice(0, 1)}
-                  </span>
-                  <span className="text-sm font-medium text-ink">{review.nickname}</span>
-                </footer>
               </article>
             ))}
           </div>
@@ -110,6 +100,6 @@ export default function ProgramReviews({ programId }: ProgramReviewsProps) {
           )}
         </>
       )}
-    </section>
+    </DetailSection>
   );
 }

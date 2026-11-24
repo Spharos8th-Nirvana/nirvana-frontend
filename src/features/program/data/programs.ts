@@ -4,6 +4,26 @@
  */
 export type ProgramCategoryCode = "OVERNIGHT" | "DAY" | "EXPERIENCE" | "REST";
 
+/**
+ * 하루 일정표 한 줄 (운영자 입력)
+ * DB에 아직 없는 항목입니다. (programSchedules는 판매 회차이고, 하루 진행 순서는 없음) → Backend 요청 필요
+ */
+export type ProgramTimetableItem = {
+  /** 예: 첫째 날 */
+  day: string;
+  /** 예: 14:00 – 15:00 */
+  time: string;
+  /** 예: 도착 및 사찰 안내 */
+  activity: string;
+};
+
+/**
+ * 프로그램 (임시 데이터)
+ *
+ * 아래 항목 대부분은 사찰 운영자가 운영자 페이지에서 입력하는 정보입니다.
+ * - DB에 있는 항목은 DB 컬럼 이름을 주석에 적었습니다.
+ * - "DB에 없음"으로 표시한 항목은 Backend에 컬럼 추가를 요청해야 합니다.
+ */
 export type Program = {
   id: number;
   templeId: number;
@@ -23,14 +43,32 @@ export type Program = {
   youthAllowed: boolean;
   /** 박수. 0이면 당일. DB programs.nights */
   nights: number;
+  /** 대표 사진(썸네일). 목록 카드 등에 사용합니다. */
   image: string;
+  /**
+   * 상세 사진 목록. DB programMedia(sortOrder 순서)를 참고했습니다.
+   * 첫 번째가 대표 사진이며, 상세 상단에 최대 3장을 보여줍니다.
+   */
+  gallery: string[];
+  /** 외국어 지원 여부 (운영자 입력). DB programs.languageSupport */
   languageSupport: boolean;
   date: string;
+  /** 사진 위 한 줄 소개 (운영자 입력). DB에 없음 */
   summary: string;
+  /** 담당자 이메일 (운영자 입력). DB에 없음 */
   contactEmail: string;
+  /** 사찰 주소. DB temples.address */
   templeAddress: string;
+  /** 사찰 전화번호. DB temples.contactNumber */
   templePhone: string;
+  /** 프로그램 소개 (운영자 입력). DB programs.description */
   description: string;
+  /** 이용 규칙 (운영자 입력). DB programs.rules (필수) */
+  rules: string;
+  /** 준비물 (운영자 입력). DB에 없음 → Backend 요청 필요 */
+  preparation: string;
+  /** 하루 일정표 (운영자 입력). DB에 없음 → Backend 요청 필요 */
+  timetable: ProgramTimetableItem[];
 };
 
 export const programs: Program[] = [
@@ -46,6 +84,11 @@ export const programs: Program[] = [
     youthAllowed: true,
     nights: 1,
     image: "https://images.unsplash.com/photo-1519681393784-d120267933ba",
+    gallery: [
+      "https://images.unsplash.com/photo-1519681393784-d120267933ba",
+      "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8",
+      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+    ],
     languageSupport: true,
     date: "매주 토요일",
     summary: "새벽 예불과 명상을 통해 바쁜 일상에서 벗어나 마음의 평화를 찾아보는 시간입니다.",
@@ -53,6 +96,14 @@ export const programs: Program[] = [
     templeAddress: "경상남도 합천군 가야면 (임시 주소)",
     templePhone: "055-000-0001",
     description: "새벽 숲길을 걸으며 명상과 휴식을 경험하는 프로그램입니다.",
+    rules: "사찰 내에서는 정숙을 유지하고, 스님의 안내에 따라 주세요.",
+    preparation: "편한 복장과 양말을 준비하세요. 새벽에는 기온이 낮으니 따뜻한 옷을 챙기세요.",
+    timetable: [
+      { day: "첫째 날", time: "14:00 – 15:00", activity: "도착 및 사찰 안내" },
+      { day: "첫째 날", time: "17:00 – 18:00", activity: "저녁 공양과 예불" },
+      { day: "둘째 날", time: "04:30 – 06:00", activity: "새벽 예불 · 숲길 명상" },
+      { day: "둘째 날", time: "07:00 – 10:00", activity: "아침 공양 · 자유 휴식 · 회향" },
+    ],
   },
   {
     id: 2,
@@ -66,6 +117,11 @@ export const programs: Program[] = [
     youthAllowed: false,
     nights: 0,
     image: "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8",
+    gallery: [
+      "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8",
+      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+      "https://images.unsplash.com/photo-1519681393784-d120267933ba",
+    ],
     languageSupport: false,
     date: "매주 토요일",
     summary: "사찰음식을 직접 만들고 맛보며 자연의 재료가 가진 소중함을 경험합니다.",
@@ -73,6 +129,13 @@ export const programs: Program[] = [
     templeAddress: "경상북도 경주시 진현동 (임시 주소)",
     templePhone: "054-000-0002",
     description: "사찰음식의 의미를 배우고 직접 만들어 보는 체험 프로그램입니다.",
+    rules: "공양 중에는 대화를 줄이고, 음식을 남기지 않도록 해 주세요.",
+    preparation: "앞치마와 머리끈을 준비하세요. 조리 도구는 사찰에서 제공합니다.",
+    timetable: [
+      { day: "당일", time: "10:00 – 11:00", activity: "사찰음식 이야기" },
+      { day: "당일", time: "11:00 – 13:00", activity: "사찰음식 만들기" },
+      { day: "당일", time: "13:00 – 15:00", activity: "공양과 차담" },
+    ],
   },
   {
     id: 3,
@@ -86,6 +149,11 @@ export const programs: Program[] = [
     youthAllowed: true,
     nights: 2,
     image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+    gallery: [
+      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
+      "https://images.unsplash.com/photo-1519681393784-d120267933ba",
+      "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8",
+    ],
     languageSupport: true,
     date: "매주 토요일",
     summary: "몸의 움직임과 호흡을 통해 몸과 마음의 균형을 찾아가는 프로그램입니다.",
@@ -93,5 +161,8 @@ export const programs: Program[] = [
     templeAddress: "전라남도 구례군 마산면 (임시 주소)",
     templePhone: "061-000-0003",
     description: "호흡과 동작을 익히며 몸과 마음을 수련하는 선무도 체험 프로그램입니다.",
+    rules: "수련 중에는 지도 스님의 안내에 따라 무리하지 않는 범위에서 참여해 주세요.",
+    preparation: "움직이기 편한 옷과 개인 물병을 준비하세요.",
+    timetable: [],
   },
 ];

@@ -4,6 +4,7 @@ import type { Program } from "@/features/program/data/programs";
 import { formatStay, formatWon } from "@/features/program/utils/booking";
 
 type RelatedProgramsProps = {
+  /** 목록 순서 기준 이전 프로그램, 다음 프로그램 순 */
   programs: Program[];
 };
 
