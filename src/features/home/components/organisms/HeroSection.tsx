@@ -33,6 +33,7 @@ export function HeroSection() {
     <>
       {/* 메인 비주얼 */}
       <section
+        data-page-hero
         className="relative flex min-h-[420px] items-center justify-center bg-cover bg-center px-5 py-16 sm:min-h-[480px] md:min-h-[560px] md:px-6 md:py-20"
         style={{ backgroundImage: `url("${heroImage}")` }}
       >

@@ -87,6 +87,18 @@ body {
   font-family: var(--font-sans);
 }
 
+/*
+ * hero 사진(data-page-hero)이 있는 페이지에서만 적용되는 변형.
+ * 헤더가 최상단에서 hero 위에 투명하게 겹칠 때 사용합니다.
+ * CSS로 판단하므로 첫 화면에서 헤더 색이 깜빡이지 않습니다.
+ */
+@custom-variant over-hero (body:has([data-page-hero]) &);
+
+/* hero가 없는 페이지는 고정 헤더(h-16)에 본문이 가리지 않도록 여백을 둡니다. */
+body:not(:has([data-page-hero])) {
+  padding-top: 4rem;
+}
+
 /* 기존 font-serif 클래스도 본문 글꼴(Noto Sans KR)로 통일 */
 .font-serif {
   font-family: var(--font-sans);

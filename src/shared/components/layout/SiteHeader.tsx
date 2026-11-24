@@ -51,17 +51,32 @@ export function SiteHeader() {
     };
   }, []);
 
-  const textColor = isScrolled ? "text-primary" : "text-white";
+  // 기본은 흰 배경 헤더입니다. 최상단(스크롤 전)이면서 페이지에 hero가 있을 때만
+  // over-hero: 스타일(투명 배경, 흰 글씨)이 적용됩니다. (globals.css의 over-hero 변형)
+  const headerTone = isScrolled
+    ? "border-border bg-white/95 text-primary shadow-sm backdrop-blur-lg"
+    : "border-border bg-white/95 text-primary shadow-sm backdrop-blur-lg over-hero:border-white/20 over-hero:bg-transparent over-hero:text-white over-hero:shadow-none over-hero:backdrop-blur-none";
+  const textColor = isScrolled
+    ? "text-primary"
+    : "text-primary over-hero:text-white";
+  const separatorColor = isScrolled
+    ? "text-sage-05"
+    : "text-sage-05 over-hero:text-white/50";
+  const subTextColor = isScrolled
+    ? "text-primary/60"
+    : "text-primary/60 over-hero:text-white/60";
+  const loginTone = isScrolled
+    ? "border-primary hover:bg-primary hover:!text-white"
+    : "border-primary hover:bg-primary hover:!text-white over-hero:border-white over-hero:hover:bg-white over-hero:hover:!text-primary";
+  const mobileMenuTone = isScrolled
+    ? "border-border bg-background"
+    : "border-border bg-background over-hero:border-white/20 over-hero:bg-primary/95 over-hero:backdrop-blur-md";
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 w-full transition-all duration-1000 ease-in-out ${
+      className={`fixed inset-x-0 top-0 z-50 w-full border-b transition-all duration-1000 ease-in-out ${
         isHeaderVisible ? "translate-y-0" : "-translate-y-full"
-      } ${
-        isScrolled
-          ? "border-b border-border bg-white/95 text-primary shadow-sm backdrop-blur-lg"
-          : "border-b border-white/20 bg-transparent text-white"
-      }`}
+      } ${headerTone}`}
     >
       <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between px-6 md:px-10">
         {/* 로고 */}
@@ -94,13 +109,8 @@ export function SiteHeader() {
             <button type="button" className="font-semibold">
               KR
             </button>
-            <span className={isScrolled ? "text-sage-05" : "text-white/50"}>
-              |
-            </span>
-            <button
-              type="button"
-              className={isScrolled ? "text-primary/60" : "text-white/60"}
-            >
+            <span className={separatorColor}>|</span>
+            <button type="button" className={subTextColor}>
               EN
             </button>
           </div>
@@ -108,11 +118,7 @@ export function SiteHeader() {
           {/* 로그인 */}
           <Link
             href="/login"
-            className={`rounded-full border px-4 py-2 text-xs transition-[color,border-color,background-color] duration-1000 ease-in-out ${textColor} ${
-              isScrolled
-                ? "border-primary hover:bg-primary hover:!text-white"
-                : "border-white hover:bg-white hover:!text-primary"
-            }`}
+            className={`rounded-full border px-4 py-2 text-xs transition-[color,border-color,background-color] duration-1000 ease-in-out ${textColor} ${loginTone}`}
           >
             로그인
           </Link>
@@ -135,11 +141,7 @@ export function SiteHeader() {
       {isMenuOpen && (
         <nav
           id="mobile-menu"
-          className={`border-t px-6 py-4 md:hidden ${
-            isScrolled
-              ? "border-border bg-background"
-              : "border-white/20 bg-primary/95 backdrop-blur-md"
-          }`}
+          className={`border-t px-6 py-4 md:hidden ${mobileMenuTone}`}
         >
           <div className="flex flex-col gap-4">
             {navItems.map((item) => (
