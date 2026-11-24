@@ -4,6 +4,8 @@ export type ProgramReview = {
   title: string;
   nickname: string;
   content: string;
+  /** 작성일 (YYYY-MM-DD). DB community.posts.createdAt 참고 */
+  createdAt: string;
 };
 
 export const programReviews: ProgramReview[] = [
@@ -14,6 +16,7 @@ export const programReviews: ProgramReview[] = [
     nickname: "초록빛하루",
     content:
       "고요한 새벽 사찰에서 예불과 명상에 참여하며 일상의 복잡한 생각을 내려놓을 수 있었습니다. 특별하고 의미 있는 시간이었습니다.",
+    createdAt: "2026-11-15",
   },
   {
     id: 2,
@@ -22,6 +25,7 @@ export const programReviews: ProgramReview[] = [
     nickname: "마음산책",
     content:
       "처음 참여한 템플스테이였는데 차분한 분위기 속에서 나 자신을 돌아볼 수 있었습니다. 다음에도 다시 참여하고 싶습니다.",
+    createdAt: "2026-10-28",
   },
   {
     id: 3,
@@ -30,5 +34,6 @@ export const programReviews: ProgramReview[] = [
     nickname: "오늘도쉼",
     content:
       "자연 속에서 보내는 시간이 정말 좋았습니다. 평소 경험하기 어려운 특별한 시간을 보낼 수 있었습니다.",
+    createdAt: "2026-09-21",
   },
 ];

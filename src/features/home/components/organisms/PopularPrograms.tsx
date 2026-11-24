@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { programs } from "@/features/program/data/programs";
 
@@ -77,10 +78,12 @@ export function PopularPrograms() {
                 />
                 {/* 프로그램 이미지 */}
                 <div className="relative h-48 overflow-hidden sm:h-52 lg:h-56">
-                  <img
+                  <Image
                     src={program.image}
                     alt={program.name}
-                    className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                   />
 
                   <button
@@ -133,7 +136,7 @@ export function PopularPrograms() {
 
                   <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
                     <p className="font-semibold text-primary">
-                      ₩{Number(program.price).toLocaleString("ko-KR")}
+                      ₩{Number(program.adultPrice).toLocaleString("ko-KR")}
                       <span className="ml-1 text-xs font-normal text-muted">
                         / 1인
                       </span>

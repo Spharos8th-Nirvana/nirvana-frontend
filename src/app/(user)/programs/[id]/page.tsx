@@ -1,6 +1,32 @@
 import { notFound } from "next/navigation";
+import { programReviews } from "@/features/program/data/program-reviews";
 import { programs } from "@/features/program/data/programs";
+import { programSchedules } from "@/features/program/data/program-schedules";
+import {
+  formatStay,
+  formatWon,
+  getRemainingSeats,
+  isScheduleAvailable,
+  parseCountParam,
+  RESERVATION_PANEL_ID,
+} from "@/features/program/utils/booking";
+import {
+  formatDayLabel,
+  formatDuration,
+  formatTimetableTime,
+  getTotalDuration,
+  sortTimetable,
+} from "@/features/program/utils/timetable";
+import { cancellationPolicies } from "@/features/temple/data/cancellation-policies";
 import PageHero from "@/shared/components/layout/PageHero";
+import BackToListLink from "@/features/program/components/molecules/BackToListLink";
+import DetailSection, {
+  SectionDivider,
+} from "@/features/program/components/molecules/DetailSection";
+import ProgramSectionNav from "@/features/program/components/molecules/ProgramSectionNav";
+import ProgramGuide from "@/features/program/components/organisms/ProgramGuide";
+import ProgramOverview from "@/features/program/components/organisms/ProgramOverview";
+import RelatedPrograms from "@/features/program/components/organisms/RelatedPrograms";
 import ReservationPanel from "@/features/program/components/organisms/ReservationPanel";
 import ProgramReviews from "@/features/program/components/organisms/ProgramReviews";
 
@@ -8,12 +34,29 @@ type ProgramDetailPageProps = {
   params: Promise<{
     id: string;
   }>;
+  /** 2단계에서 "변경"으로 돌아왔을 때의 회차·인원 */
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
+
+/**
+ * 정보 상자: 연초록 제목 줄 → 흰 바탕 값 (선 없이 색 차이로 구분)
+ * 프로그램 소개 요약, 참가비용에서 함께 씁니다.
+ */
+function OutlineBox({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="overflow-hidden bg-white">
+      <dt className="bg-subtle px-5 py-3 text-sm font-bold text-ink">{label}</dt>
+      <dd className="px-5 py-5 text-lg font-bold text-ink">{value}</dd>
+    </div>
+  );
+}
 
 export default async function ProgramDetailPage({
   params,
+  searchParams,
 }: ProgramDetailPageProps) {
   const { id } = await params;
+  const query = await searchParams;
 
   const program = programs.find((item) => item.id === Number(id));
 
@@ -21,8 +64,54 @@ export default async function ProgramDetailPage({
     notFound();
   }
 
+  const schedules = programSchedules.filter(
+    (schedule) => schedule.programId === program.id,
+  );
+
+  // 2단계에서 돌아왔다면 이전 선택을 이어서 보여줍니다. 맞지 않는 값은 무시합니다.
+  const initialSchedule = schedules.find(
+    (schedule) => schedule.id === query.schedule && isScheduleAvailable(schedule),
+  );
+  const initialAdultCount = parseCountParam(query.adults);
+  const initialYouthCount = program.youthAllowed ? (parseCountParam(query.youth) ?? 0) : 0;
+  const hasInitialSelection =
+    initialSchedule !== undefined &&
+    initialAdultCount !== null &&
+    initialAdultCount + initialYouthCount >= 1 &&
+    initialAdultCount + initialYouthCount <= getRemainingSeats(initialSchedule);
+
+  // 사찰 취소·환불 규정 (이용일 기준 며칠 전까지 몇 % 환불)
+  const refundRules =
+    cancellationPolicies.find((policy) => policy.templeId === program.templeId)?.rules ?? [];
+
+  // 하단 "이런 쉼도 만나보세요.": 목록 순서 기준 이전 프로그램, 다음 프로그램 (처음·끝은 순환)
+  const currentIndex = programs.findIndex((item) => item.id === program.id);
+  const previousProgram = programs[(currentIndex - 1 + programs.length) % programs.length];
+  const nextProgram = programs[(currentIndex + 1) % programs.length];
+  const relatedPrograms = [previousProgram, nextProgram].filter(
+    // 프로그램이 1~2개뿐이면 자기 자신이나 같은 프로그램이 두 번 나오지 않게 합니다.
+    (item, index, list) =>
+      item.id !== program.id && list.findIndex((other) => other.id === item.id) === index,
+  );
+
+  const reviewCount = programReviews.filter((review) => review.programId === program.id).length;
+
+  // 하루 일정표 (날짜·순서대로)
+  const timetable = sortTimetable(program.timetable);
+  const totalDuration = getTotalDuration(timetable);
+  // 회차 시작 시각 (하루 여러 회차 프로그램 안내용)
+  const sessionStartTimes = [...new Set(schedules.map((schedule) => schedule.startTime))].sort();
+
+  const stay = formatStay(program.nights);
+  const programTitle = `${program.temple} ${program.name}`;
+  const highlights = [
+    { label: "머무는 기간", value: stay },
+    { label: "프로그램 분류", value: program.category },
+    { label: "참여 대상", value: program.youthAllowed ? "성인 · 청소년" : "성인" },
+  ];
+
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-background">
       <PageHero
         title={program.name}
         description={`${program.temple}에서 특별한 시간을 경험해 보세요.`}
@@ -30,235 +119,175 @@ export default async function ProgramDetailPage({
       />
 
       <section className="mx-auto max-w-[1200px] px-6 py-12 md:px-10">
+        {/* 보던 목록으로 돌아가기 */}
+        <div className="mb-8">
+          <BackToListLink />
+        </div>
+
         {/* 프로그램 기본 정보 */}
-        <div className="grid grid-cols-1 gap-8 border-b border-border pb-12 md:grid-cols-2 md:items-center md:gap-12">
-          {/* 왼쪽: 프로그램 대표 사진 */}
-          <div className="h-[280px] overflow-hidden bg-subtle md:h-[360px]">
-            <img
-              src={program.image}
-              alt={program.name}
-              className="h-full w-full object-cover"
-            />
-          </div>
-
-          {/* 오른쪽: 프로그램 간략 정보 */}
-          <div>
-            <p className="text-sm font-semibold text-primary">
-              {program.category}
-            </p>
-
-            <h1 className="mt-3 text-3xl font-bold leading-snug text-primary md:text-4xl">
-              {program.name}
-            </h1>
-
-            <p className="mt-5 leading-7 text-muted">{program.summary}</p>
-
-            <div className="mt-8 space-y-3 border-t border-border pt-6 text-sm">
-              <p>
-                <span className="mr-3 font-semibold text-ink">
-                  담당자 이메일
-                </span>
-                <span className="text-muted">{program.contactEmail}</span>
-              </p>
-
-              <p>
-                <span className="mr-3 font-semibold text-ink">사찰 주소</span>
-                <span className="text-muted">{program.templeAddress}</span>
-              </p>
-
-              <p>
-                <span className="mr-3 font-semibold text-ink">
-                  사찰 전화번호
-                </span>
-                <span className="text-muted">{program.templePhone}</span>
-              </p>
-            </div>
-          </div>
+        <div className="border-b border-border pb-12">
+          <ProgramOverview program={program} />
         </div>
 
         {/* 페이지 내 이동 메뉴 */}
-        <nav className="sticky top-16 z-40 border-b border-border bg-white/95 backdrop-blur-md">
-          <div className="mx-auto flex max-w-[1280px] items-center justify-center gap-8 overflow-x-auto px-6 py-5 md:gap-14 md:px-10">
-            <a
-              href="#introduction"
-              className="shrink-0 text-sm font-semibold text-ink transition-colors hover:text-primary"
-            >
-              소개
-            </a>
-            <a
-              href="#schedule"
-              className="shrink-0 text-sm font-semibold text-ink transition-colors hover:text-primary"
-            >
-              일정
-            </a>
-            <a
-              href="#fee"
-              className="shrink-0 text-sm font-semibold text-ink transition-colors hover:text-primary"
-            >
-              비용
-            </a>
-            <a
-              href="#reservation-info"
-              className="shrink-0 text-sm font-semibold text-ink transition-colors hover:text-primary"
-            >
-              신청 및 규정
-            </a>
-          </div>
-        </nav>
+        <ProgramSectionNav
+          items={[
+            { id: "introduction", label: "소개" },
+            { id: "schedule", label: "일정" },
+            { id: "fee", label: "비용" },
+            { id: "reservation-info", label: "이용 규칙" },
+            { id: "reviews", label: `리뷰 (${reviewCount})` },
+          ]}
+        />
 
         {/* 왼쪽 상세 정보 + 오른쪽 예약 영역 */}
-        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_400px]">
-          {/* 왼쪽 상세 정보 */}
-          <div className="min-w-0">
-            {/* 프로그램 소개 */}
-            <section id="introduction" className="scroll-mt-36 pt-8">
-              <h2 className="text-2xl font-bold text-primary">프로그램 소개</h2>
+        <div className="mt-14 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_400px]">
+          {/* 왼쪽 상세 정보: 작은 머리글 → 큰 제목 → 설명 (와이어프레임) */}
+          <div className="min-w-0 space-y-16">
+            <DetailSection
+              id="introduction"
+              eyebrow="소개"
+              title="프로그램 소개"
+              description={`${programTitle} 프로그램을 소개합니다.`}
+            >
+              <p className="leading-8 text-ink">{program.description}</p>
 
-              <p className="mt-5 leading-8 text-muted">
-                {program.description}
-              </p>
-            </section>
+              <dl className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                {highlights.map((item) => (
+                  <OutlineBox key={item.label} label={item.label} value={item.value} />
+                ))}
+              </dl>
+            </DetailSection>
 
-            {/* 프로그램 일정 */}
-            <section id="schedule" className="mt-20 scroll-mt-36">
-              <div className="flex items-end justify-between">
-                <div>
-                  <h2 className="text-2xl font-bold text-primary">
-                    프로그램 일정
-                  </h2>
-                  <p className="mt-4 text-sm text-muted">
-                    프로그램 진행 순서와 상세 시간을 확인해 주세요.
-                  </p>
-                </div>
-                <span className="hidden text-xs tracking-wider text-muted/70 sm:block">
-                  PROGRAM SCHEDULE
-                </span>
-              </div>
+            <SectionDivider />
 
-              <div className="mt-8 overflow-x-auto">
+            <DetailSection
+              id="schedule"
+              eyebrow="일정"
+              title="프로그램 일정"
+              description="프로그램 진행 순서와 상세 시간을 확인해 주세요."
+            >
+              {/* 하루 일정표 (운영자 입력). 같은 날의 두 번째 줄부터는 날짜를 비워 묶음으로 보이게 합니다. */}
+              <div className="overflow-x-auto">
                 <table className="w-full min-w-[480px] border-collapse text-left text-sm">
-                  <thead>
-                    <tr className="border-y border-border">
-                      <th className="w-[20%] px-5 py-4 font-medium text-muted/70">
-                        일
+                  <thead className="bg-subtle">
+                    <tr className="border-y border-ink/40">
+                      <th className="w-[20%] px-4 py-3.5 font-bold text-ink">일정</th>
+                      {/* 시각으로 적힌 일정은 "시간", 걸리는 시간으로 적힌 일정(하루 여러 회차)은 "소요 시간" */}
+                      <th className="w-[35%] px-4 py-3.5 font-bold text-ink">
+                        {totalDuration !== null ? "소요 시간" : "시간"}
                       </th>
-                      <th className="w-[35%] px-5 py-4 font-medium text-muted/70">
-                        시간
-                      </th>
-                      <th className="px-5 py-4 font-medium text-muted/70">
-                        일정명
-                      </th>
+                      <th className="px-4 py-3.5 font-bold text-ink">함께하는 일</th>
                     </tr>
                   </thead>
-
-                  <tbody className="divide-y divide-border">
-                    <tr>
-                      <td className="px-5 py-5 font-semibold text-primary">
-                        1일차
-                      </td>
-                      <td className="px-5 py-5 text-muted">
-                        일정 정보 준비 중
-                      </td>
-                      <td className="px-5 py-5 text-ink">일정 정보 준비 중</td>
-                    </tr>
-
-                    <tr>
-                      <td className="px-5 py-5"></td>
-                      <td className="px-5 py-5 text-muted">
-                        일정 정보 준비 중
-                      </td>
-                      <td className="px-5 py-5 text-ink">일정 정보 준비 중</td>
-                    </tr>
-
-                    <tr>
-                      <td className="px-5 py-5"></td>
-                      <td className="px-5 py-5 text-muted">
-                        일정 정보 준비 중
-                      </td>
-                      <td className="px-5 py-5 text-ink">일정 정보 준비 중</td>
-                    </tr>
+                  <tbody className="divide-y divide-border border-b border-ink/40 bg-white">
+                    {timetable.length > 0 ? (
+                      timetable.map((item, index) => {
+                        const isFirstOfDay = timetable[index - 1]?.dayNo !== item.dayNo;
+                        return (
+                          <tr key={`${item.dayNo}-${item.sortOrder}`}>
+                            <td className="px-4 py-4 font-bold text-ink">
+                              {isFirstOfDay ? formatDayLabel(item.dayNo, program.nights) : ""}
+                            </td>
+                            <td className="px-4 py-4 text-ink/80">{formatTimetableTime(item)}</td>
+                            <td className="px-4 py-4 text-ink">{item.activity}</td>
+                          </tr>
+                        );
+                      })
+                    ) : (
+                      <tr>
+                        <td colSpan={3} className="px-4 py-10 text-center text-muted">
+                          일정 정보가 아직 등록되지 않았어요.
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
 
-              <p className="mt-4 text-xs text-muted/70">
+              {/* 걸리는 시간으로 적힌 일정(하루 여러 회차)이면 총 시간과 회차 시작 시각을 알려 줍니다. */}
+              {totalDuration !== null && (
+                <p className="mt-4 text-sm text-ink">
+                  총 소요 시간 {formatDuration(totalDuration)}
+                  {sessionStartTimes.length > 0 && (
+                    <> · 하루 {sessionStartTimes.length}회 ({sessionStartTimes.join(" · ")} 시작)</>
+                  )}
+                </p>
+              )}
+
+              <p className="mt-4 text-right text-xs text-muted">
                 ※ 실제 운영 일정은 사찰 및 프로그램별로 다를 수 있습니다.
               </p>
-            </section>
+            </DetailSection>
 
-            {/* 참가 비용 */}
-            <section id="fee" className="mt-20 scroll-mt-36">
-              <div className="flex items-end justify-between">
-                <div>
-                  <h2 className="text-2xl font-bold text-primary">참가 비용</h2>
-                  <p className="mt-4 text-sm text-muted">
-                    프로그램 참가에 필요한 비용을 확인해 주세요.
-                  </p>
-                </div>
-                <span className="hidden text-xs tracking-wider text-muted/70 sm:block">
-                  PROGRAM FEE
-                </span>
-              </div>
+            <SectionDivider />
 
-              <div className="mt-8 border-y border-border py-7">
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-sm text-muted">1인 참가 비용</p>
-                    <p className="mt-2 text-xs text-muted/70">
-                      기본 참가 비용 기준
-                    </p>
-                  </div>
+            <DetailSection
+              id="fee"
+              eyebrow="가격"
+              title="참가비용"
+              description={`${programTitle}의 요금 안내입니다. (${stay} 기준)`}
+            >
+              <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:max-w-xl">
+                <OutlineBox label="성인" value={formatWon(program.adultPrice)} />
+                {/* 청소년 참여가 허용된 프로그램만 청소년 요금을 보여줍니다. */}
+                {program.youthAllowed && (
+                  <OutlineBox label="청소년" value={formatWon(program.youthPrice)} />
+                )}
+              </dl>
+            </DetailSection>
 
-                  <p className="text-2xl font-bold text-primary">
-                    ₩{program.price.toLocaleString("ko-KR")}
-                  </p>
-                </div>
-              </div>
-            </section>
+            <SectionDivider />
 
-            {/* 예약 안내 */}
-            <section id="reservation-info" className="mt-20 scroll-mt-36">
-              <div>
-                <h2 className="text-2xl font-bold text-primary">예약 안내</h2>
-                <p className="mt-4 text-sm text-muted">
-                  예약 전 아래 내용을 확인해 주세요.
-                </p>
-              </div>
+            <DetailSection
+              id="reservation-info"
+              eyebrow="청규 및 이용규칙"
+              title="예약 전 확인하세요"
+              description={
+                <>
+                  {programTitle}에 참여하기 전에 아래 규칙과 준비물을 확인하세요.
+                  {program.languageSupport && (
+                    <>
+                      <br />
+                      외국어 안내가 제공됩니다.
+                    </>
+                  )}
+                </>
+              }
+            >
+              <ProgramGuide
+                rules={program.rules}
+                preparation={program.preparation}
+                languageSupport={program.languageSupport}
+                refundRules={refundRules}
+              />
+            </DetailSection>
 
-              <div className="mt-8 divide-y divide-border border-y border-border">
-                <div className="grid grid-cols-1 gap-3 py-6 sm:grid-cols-[180px_1fr]">
-                  <h3 className="font-semibold text-ink">예약 안내</h3>
-                  <p className="text-sm leading-7 text-muted">
-                    예약 관련 상세 정보는 준비 중입니다.
-                  </p>
-                </div>
+            <SectionDivider />
 
-                <div className="grid grid-cols-1 gap-3 py-6 sm:grid-cols-[180px_1fr]">
-                  <h3 className="font-semibold text-ink">취소 및 환불</h3>
-                  <p className="text-sm leading-7 text-muted">
-                    취소 및 환불 규정은 준비 중입니다.
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 gap-3 py-6 sm:grid-cols-[180px_1fr]">
-                  <h3 className="font-semibold text-ink">참가 유의사항</h3>
-                  <p className="text-sm leading-7 text-muted">
-                    프로그램 참가 시 필요한 유의사항은 준비 중입니다.
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            {/* 후기 */}
-            {/* 프로그램 리뷰 */}
+            {/* 참여자 후기 */}
             <ProgramReviews programId={program.id} />
           </div>
 
           {/* 오른쪽: 고정 예약 영역 */}
-          <aside className="relative">
-            <ReservationPanel price={program.price} />
+          <aside id={RESERVATION_PANEL_ID} className="relative scroll-mt-24">
+            <ReservationPanel
+              programId={program.id}
+              adultPrice={program.adultPrice}
+              youthPrice={program.youthPrice}
+              youthAllowed={program.youthAllowed}
+              schedules={schedules}
+              {...(hasInitialSelection && {
+                initialScheduleId: initialSchedule.id,
+                initialAdultCount,
+                initialYouthCount,
+              })}
+            />
           </aside>
         </div>
+
+        {/* 이런 쉼도 만나보세요. */}
+        <RelatedPrograms programs={relatedPrograms} />
       </section>
     </main>
   );

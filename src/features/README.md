@@ -19,7 +19,7 @@ features/
     └── README.md
 ```
 
-기능에서 필요한 폴더만 추가합니다. 현재 구현된 기능은 `community`, `home`, `program`, `temple`입니다.
+기능에서 필요한 폴더만 추가합니다. 현재 구현된 기능은 `booking`, `community`, `home`, `program`, `temple`입니다.
 
 기능 내부에서만 사용하는 코드는 해당 기능 폴더에 두고, 여러 기능에서 함께 쓰는 코드는 `src/shared/`로 이동합니다. 공통 API 처리와 기반 설정은 `src/lib/`에서 관리합니다.
 
