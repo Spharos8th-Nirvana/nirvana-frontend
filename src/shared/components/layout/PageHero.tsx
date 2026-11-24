@@ -7,6 +7,7 @@ type PageHeroProps = {
 export default function PageHero({ title, description, image }: PageHeroProps) {
   return (
     <section
+      data-page-hero
       className="relative flex min-h-[400px] items-center justify-center bg-cover bg-center px-4"
       style={{ backgroundImage: `url(${image})` }}
     >
