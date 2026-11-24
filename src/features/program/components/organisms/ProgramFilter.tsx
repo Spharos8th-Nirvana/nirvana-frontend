@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Program } from "@/features/program/data/programs";
+import { saveProgramListUrl } from "@/features/program/utils/list-url";
 
 type ProgramFilterProps = {
   programs: Program[];
@@ -10,6 +11,11 @@ type ProgramFilterProps = {
 
 export default function ProgramFilter({ programs }: ProgramFilterProps) {
   const [languageOnly, setLanguageOnly] = useState(false);
+
+  // 상세 페이지의 "목록으로 돌아가기"가 지금 보는 목록(검색 조건 포함)으로 돌아오도록 기억합니다.
+  useEffect(() => {
+    saveProgramListUrl(`${window.location.pathname}${window.location.search}`);
+  }, []);
 
   const filteredPrograms = languageOnly
     ? programs.filter((program) => program.languageSupport)
@@ -73,7 +79,7 @@ export default function ProgramFilter({ programs }: ProgramFilterProps) {
                   {/* 가격 */}
                   <div className="mt-auto border-t border-border pt-5">
                     <p className="text-right text-base font-bold text-primary">
-                      {program.price.toLocaleString("ko-KR")}원
+                      {program.adultPrice.toLocaleString("ko-KR")}원
                     </p>
                   </div>
                 </div>

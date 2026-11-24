@@ -1,6 +1,19 @@
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { programs } from "@/features/program/data/programs";
+import { programSchedules } from "@/features/program/data/program-schedules";
+import {
+  formatStay,
+  formatWon,
+  getRemainingSeats,
+  isScheduleAvailable,
+  parseCountParam,
+  RESERVATION_PANEL_ID,
+} from "@/features/program/utils/booking";
 import PageHero from "@/shared/components/layout/PageHero";
+import BackToListLink from "@/features/program/components/molecules/BackToListLink";
+import ProgramSectionNav from "@/features/program/components/molecules/ProgramSectionNav";
+import RelatedPrograms from "@/features/program/components/organisms/RelatedPrograms";
 import ReservationPanel from "@/features/program/components/organisms/ReservationPanel";
 import ProgramReviews from "@/features/program/components/organisms/ProgramReviews";
 
@@ -8,18 +21,43 @@ type ProgramDetailPageProps = {
   params: Promise<{
     id: string;
   }>;
+  /** 2단계에서 "변경"으로 돌아왔을 때의 회차·인원 */
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export default async function ProgramDetailPage({
   params,
+  searchParams,
 }: ProgramDetailPageProps) {
   const { id } = await params;
+  const query = await searchParams;
 
   const program = programs.find((item) => item.id === Number(id));
 
   if (!program) {
     notFound();
   }
+
+  const schedules = programSchedules.filter(
+    (schedule) => schedule.programId === program.id,
+  );
+
+  // 2단계에서 돌아왔다면 이전 선택을 이어서 보여줍니다. 맞지 않는 값은 무시합니다.
+  const initialSchedule = schedules.find(
+    (schedule) => schedule.id === query.schedule && isScheduleAvailable(schedule),
+  );
+  const initialAdultCount = parseCountParam(query.adults);
+  const initialYouthCount = program.youthAllowed ? (parseCountParam(query.youth) ?? 0) : 0;
+  const hasInitialSelection =
+    initialSchedule !== undefined &&
+    initialAdultCount !== null &&
+    initialAdultCount + initialYouthCount >= 1 &&
+    initialAdultCount + initialYouthCount <= getRemainingSeats(initialSchedule);
+
+  // 하단 "이런 쉼도 만나보세요."에 보여줄 다른 프로그램 (최대 2개)
+  const relatedPrograms = programs
+    .filter((item) => item.id !== program.id)
+    .slice(0, 2);
 
   return (
     <main className="min-h-screen bg-white">
@@ -30,14 +68,22 @@ export default async function ProgramDetailPage({
       />
 
       <section className="mx-auto max-w-[1200px] px-6 py-12 md:px-10">
+        {/* 보던 목록으로 돌아가기 */}
+        <div className="mb-8">
+          <BackToListLink />
+        </div>
+
         {/* 프로그램 기본 정보 */}
         <div className="grid grid-cols-1 gap-8 border-b border-border pb-12 md:grid-cols-2 md:items-center md:gap-12">
           {/* 왼쪽: 프로그램 대표 사진 */}
-          <div className="h-[280px] overflow-hidden bg-subtle md:h-[360px]">
-            <img
+          <div className="relative h-[280px] overflow-hidden bg-subtle md:h-[360px]">
+            <Image
               src={program.image}
               alt={program.name}
-              className="h-full w-full object-cover"
+              fill
+              priority
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className="object-cover"
             />
           </div>
 
@@ -77,50 +123,42 @@ export default async function ProgramDetailPage({
         </div>
 
         {/* 페이지 내 이동 메뉴 */}
-        <nav className="sticky top-16 z-40 border-b border-border bg-white/95 backdrop-blur-md">
-          <div className="mx-auto flex max-w-[1280px] items-center justify-center gap-8 overflow-x-auto px-6 py-5 md:gap-14 md:px-10">
-            <a
-              href="#introduction"
-              className="shrink-0 text-sm font-semibold text-ink transition-colors hover:text-primary"
-            >
-              소개
-            </a>
-            <a
-              href="#schedule"
-              className="shrink-0 text-sm font-semibold text-ink transition-colors hover:text-primary"
-            >
-              일정
-            </a>
-            <a
-              href="#fee"
-              className="shrink-0 text-sm font-semibold text-ink transition-colors hover:text-primary"
-            >
-              비용
-            </a>
-            <a
-              href="#reservation-info"
-              className="shrink-0 text-sm font-semibold text-ink transition-colors hover:text-primary"
-            >
-              신청 및 규정
-            </a>
-          </div>
-        </nav>
+        <ProgramSectionNav
+          items={[
+            { id: "introduction", label: "소개" },
+            { id: "schedule", label: "일정" },
+            { id: "fee", label: "비용" },
+            { id: "reservation-info", label: "신청 및 규정" },
+          ]}
+        />
 
         {/* 왼쪽 상세 정보 + 오른쪽 예약 영역 */}
         <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-[1fr_400px]">
           {/* 왼쪽 상세 정보 */}
           <div className="min-w-0">
             {/* 프로그램 소개 */}
-            <section id="introduction" className="scroll-mt-36 pt-8">
-              <h2 className="text-2xl font-bold text-primary">프로그램 소개</h2>
+            <section id="introduction" className="scroll-mt-24 pt-8">
+              <div className="flex items-end justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-primary">
+                    프로그램 소개
+                  </h2>
+                  <p className="mt-4 text-sm text-muted">
+                    어떤 시간을 보내게 되는지 확인해 주세요.
+                  </p>
+                </div>
+                <span className="hidden text-xs tracking-wider text-muted/70 sm:block">
+                  PROGRAM INTRODUCTION
+                </span>
+              </div>
 
-              <p className="mt-5 leading-8 text-muted">
+              <p className="mt-8 leading-8 text-muted">
                 {program.description}
               </p>
             </section>
 
             {/* 프로그램 일정 */}
-            <section id="schedule" className="mt-20 scroll-mt-36">
+            <section id="schedule" className="mt-20 scroll-mt-24">
               <div className="flex items-end justify-between">
                 <div>
                   <h2 className="text-2xl font-bold text-primary">
@@ -187,7 +225,7 @@ export default async function ProgramDetailPage({
             </section>
 
             {/* 참가 비용 */}
-            <section id="fee" className="mt-20 scroll-mt-36">
+            <section id="fee" className="mt-20 scroll-mt-24">
               <div className="flex items-end justify-between">
                 <div>
                   <h2 className="text-2xl font-bold text-primary">참가 비용</h2>
@@ -200,29 +238,50 @@ export default async function ProgramDetailPage({
                 </span>
               </div>
 
-              <div className="mt-8 border-y border-border py-7">
-                <div className="flex items-center justify-between gap-4">
+              <div className="mt-8 divide-y divide-border border-y border-border">
+                <div className="flex items-center justify-between gap-4 py-7">
                   <div>
-                    <p className="text-sm text-muted">1인 참가 비용</p>
+                    <p className="text-sm text-muted">성인 1인</p>
                     <p className="mt-2 text-xs text-muted/70">
-                      기본 참가 비용 기준
+                      만 19세 이상 · {formatStay(program.nights)}
                     </p>
                   </div>
 
                   <p className="text-2xl font-bold text-primary">
-                    ₩{program.price.toLocaleString("ko-KR")}
+                    {formatWon(program.adultPrice)}
                   </p>
                 </div>
+
+                {/* 청소년 참여가 허용된 프로그램만 청소년 요금을 보여줍니다. */}
+                {program.youthAllowed && (
+                  <div className="flex items-center justify-between gap-4 py-7">
+                    <div>
+                      <p className="text-sm text-muted">청소년 1인</p>
+                      <p className="mt-2 text-xs text-muted/70">
+                        만 19세 미만 · {formatStay(program.nights)}
+                      </p>
+                    </div>
+
+                    <p className="text-2xl font-bold text-primary">
+                      {formatWon(program.youthPrice)}
+                    </p>
+                  </div>
+                )}
               </div>
             </section>
 
             {/* 예약 안내 */}
-            <section id="reservation-info" className="mt-20 scroll-mt-36">
-              <div>
-                <h2 className="text-2xl font-bold text-primary">예약 안내</h2>
-                <p className="mt-4 text-sm text-muted">
-                  예약 전 아래 내용을 확인해 주세요.
-                </p>
+            <section id="reservation-info" className="mt-20 scroll-mt-24">
+              <div className="flex items-end justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-primary">예약 안내</h2>
+                  <p className="mt-4 text-sm text-muted">
+                    예약 전 아래 내용을 확인해 주세요.
+                  </p>
+                </div>
+                <span className="hidden text-xs tracking-wider text-muted/70 sm:block">
+                  RESERVATION GUIDE
+                </span>
               </div>
 
               <div className="mt-8 divide-y divide-border border-y border-border">
@@ -255,10 +314,25 @@ export default async function ProgramDetailPage({
           </div>
 
           {/* 오른쪽: 고정 예약 영역 */}
-          <aside className="relative">
-            <ReservationPanel price={program.price} />
+          <aside id={RESERVATION_PANEL_ID} className="relative scroll-mt-24">
+            <ReservationPanel
+              programId={program.id}
+              adultPrice={program.adultPrice}
+              youthPrice={program.youthPrice}
+              youthAllowed={program.youthAllowed}
+              nights={program.nights}
+              schedules={schedules}
+              {...(hasInitialSelection && {
+                initialScheduleId: initialSchedule.id,
+                initialAdultCount,
+                initialYouthCount,
+              })}
+            />
           </aside>
         </div>
+
+        {/* 이런 쉼도 만나보세요. */}
+        <RelatedPrograms programs={relatedPrograms} />
       </section>
     </main>
   );

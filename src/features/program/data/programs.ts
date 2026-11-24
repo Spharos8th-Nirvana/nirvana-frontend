@@ -1,10 +1,28 @@
+/**
+ * 프로그램 분류 코드. DB nirvana_program.programs.category 와 같은 값입니다.
+ * 숙박형(OVERNIGHT)은 참가자 성별을 필수로 받습니다.
+ */
+export type ProgramCategoryCode = "OVERNIGHT" | "DAY" | "EXPERIENCE" | "REST";
+
 export type Program = {
   id: number;
   templeId: number;
+  /** 화면 표시용 분류 이름 (예: 템플스테이) */
   category: string;
+  categoryCode: ProgramCategoryCode;
   temple: string;
   name: string;
-  price: number;
+  /** 성인 1인 금액(원). DB programs.adultPrice */
+  adultPrice: number;
+  /** 청소년 1인 금액(원). DB programs.youthPrice */
+  youthPrice: number;
+  /**
+   * 청소년 참여 허용 여부. 사찰이 프로그램마다 설정합니다.
+   * 백엔드에 컬럼 추가를 요청한 상태라, 필드명은 API 확정 후 맞춥니다.
+   */
+  youthAllowed: boolean;
+  /** 박수. 0이면 당일. DB programs.nights */
+  nights: number;
   image: string;
   languageSupport: boolean;
   date: string;
@@ -20,9 +38,13 @@ export const programs: Program[] = [
     id: 1,
     templeId: 1,
     category: "템플스테이",
+    categoryCode: "OVERNIGHT",
     temple: "해인사",
     name: "새벽 숲, 나를 깨우는 시간",
-    price: 80000,
+    adultPrice: 80000,
+    youthPrice: 60000,
+    youthAllowed: true,
+    nights: 1,
     image: "https://images.unsplash.com/photo-1519681393784-d120267933ba",
     languageSupport: true,
     date: "매주 토요일",
@@ -36,9 +58,13 @@ export const programs: Program[] = [
     id: 2,
     templeId: 2,
     category: "사찰음식",
+    categoryCode: "DAY",
     temple: "불국사",
     name: "스님과 함께 빚는 사찰의 맛",
-    price: 45000,
+    adultPrice: 45000,
+    youthPrice: 35000,
+    youthAllowed: false,
+    nights: 0,
     image: "https://images.unsplash.com/photo-1470252649378-9c29740c9fa8",
     languageSupport: false,
     date: "매주 토요일",
@@ -52,9 +78,13 @@ export const programs: Program[] = [
     id: 3,
     templeId: 3,
     category: "선무도",
+    categoryCode: "OVERNIGHT",
     temple: "화엄사",
     name: "몸과 마음을 잇는 선무도",
-    price: 160000,
+    adultPrice: 160000,
+    youthPrice: 120000,
+    youthAllowed: true,
+    nights: 2,
     image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
     languageSupport: true,
     date: "매주 토요일",
