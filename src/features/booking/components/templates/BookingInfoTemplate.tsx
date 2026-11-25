@@ -1,6 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { savePendingPayment } from "@/features/booking/utils/pending-payment";
 import BookerInfoForm from "@/features/booking/components/organisms/BookerInfoForm";
 import BookingSummary from "@/features/booking/components/organisms/BookingSummary";
 import ParticipantTable from "@/features/booking/components/organisms/ParticipantTable";
@@ -176,13 +178,15 @@ export default function BookingInfoTemplate({
     setSubmitted(false);
   };
 
+  const router = useRouter();
+
   const handleSubmit = () => {
     if (!canSubmit) {
       return;
     }
-    // 3단계(결제 확인)와 예약 API 연동은 이번 범위가 아닙니다.
-    // 개인정보가 포함되므로 콘솔이나 주소(URL)에 남기지 않습니다.
-    setSubmitted(true);
+    // 이름·연락처는 주소와 저장소에 남기지 않습니다. 결제 화면에는 예약 요약만 넘깁니다.
+    savePendingPayment(selection);
+    router.push(`/programs/${selection.programId}/booking/pay`);
   };
 
   return (

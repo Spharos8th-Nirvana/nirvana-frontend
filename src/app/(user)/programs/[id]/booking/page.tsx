@@ -97,6 +97,9 @@ export default async function BookingPage({ params, searchParams }: BookingPageP
               youthPrice: program.youthPrice,
               totalPrice: calculateTotalPrice(program, { adultCount, youthCount }),
               editHref,
+              programId: program.id,
+              scheduleId: schedule.id,
+              scheduleStart: schedule.operationStartDate,
             }}
             terms={bookingTerms}
             refundRules={refundRules}

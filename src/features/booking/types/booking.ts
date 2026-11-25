@@ -79,4 +79,9 @@ export type BookingSelection = {
   totalPrice: number;
   /** 1단계로 돌아가 날짜·인원을 바꾸는 주소 (선택값 유지) */
   editHref: string;
+  programId: number;
+  /** 고른 회차. 결제 화면에 예약번호를 만들 때 씁니다. */
+  scheduleId: string;
+  /** 입실일 YYYY-MM-DD */
+  scheduleStart: string;
 };
