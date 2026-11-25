@@ -3,58 +3,39 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { programs } from "@/features/program/data/programs";
-
-const categories = ["전체", "템플스테이", "사찰음식", "선무도", "마음챙김"];
+import { homeCategories, homePrograms } from "@/features/home/data/home-preview";
 
 export function PopularPrograms() {
   const [favoritePrograms, setFavoritePrograms] = useState<number[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("전체");
 
-  const filteredPrograms =
-    selectedCategory === "전체"
-      ? programs
-      : programs.filter((program) => program.category === selectedCategory);
+  // 시안과 같이 분류로 거른 뒤 찜 수 상위 3개만 보여 줍니다.
+  const filteredPrograms = homePrograms
+    .filter((program) => selectedCategory === "전체" || program.cat === selectedCategory)
+    .sort((a, b) => b.favoriteCount - a.favoriteCount || a.id - b.id)
+    .slice(0, 3);
 
   return (
-    <section className="bg-background px-4 py-14 sm:px-6 sm:py-16 md:px-10 md:py-20 lg:py-28">
-      <div className="mx-auto max-w-6xl">
-        {/* 섹션 제목 */}
-        <div>
-          <p className="text-[10px] font-semibold tracking-[0.2em] text-primary sm:text-xs sm:tracking-[0.25em]">
-            CURATED FOR YOU
-          </p>
-
-          <div className="mt-3 flex items-end justify-between">
-            <h2 className="font-serif text-2xl font-bold text-primary sm:text-3xl md:text-4xl">
+    <section className="bg-background px-4 py-16 sm:px-6 md:px-10 md:py-24" aria-labelledby="h-prog">
+      <div className="mx-auto max-w-[1200px]">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 id="h-prog" className="text-[28px] font-bold text-primary md:text-4xl">
               지금 인기 있는 체험
             </h2>
-
-            <Link
-              href="/programs"
-              className="shrink-0 text-xs font-medium text-primary transition-all duration-200 hover:font-bold sm:text-sm"
-            >
-              모두 둘러보기 →
-            </Link>
+            <p className="mt-2 text-muted">많은 분들이 선택한, 특별한 사찰 체험을 만나보세요.</p>
           </div>
-
-          <p className="mt-3 text-xs leading-6 text-muted sm:text-sm">
-            많은 이들이 찾는 특별한 사찰 체험을 만나보세요.
-          </p>
-        </div>
-
-        {/* 카테고리 */}
-        <div className="mt-6 -mx-4 overflow-x-auto px-4 sm:mx-0 sm:mt-8 sm:px-0">
-          <div className="flex w-max gap-2">
-            {categories.map((category) => (
+          <div className="flex flex-wrap gap-2" role="group" aria-label="체험 분류">
+            {homeCategories.map((category) => (
               <button
                 key={category}
                 type="button"
+                aria-pressed={selectedCategory === category}
                 onClick={() => setSelectedCategory(category)}
-                className={`shrink-0 rounded-full border px-4 py-2 text-xs transition-colors duration-200 sm:px-5 ${
+                className={`rounded-full border px-5 py-2 text-sm ${
                   selectedCategory === category
                     ? "border-primary bg-primary text-white"
-                    : "border-border bg-transparent text-primary hover:border-primary"
+                    : "border-border bg-white text-ink-nav hover:border-primary"
                 }`}
               >
                 {category}
@@ -63,106 +44,79 @@ export function PopularPrograms() {
           </div>
         </div>
 
-        {/* 프로그램 카드 */}
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
+        <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {filteredPrograms.length > 0 ? (
-            filteredPrograms.map((program) => (
-              <article
-                key={program.id}
-                className="group relative overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-lg"
-              >
-                <Link
-                  href={`/programs/${program.id}`}
-                  aria-label={`${program.name} 상세 페이지로 이동`}
-                  className="absolute inset-0 z-10"
-                />
-                {/* 프로그램 이미지 */}
-                <div className="relative h-48 overflow-hidden sm:h-52 lg:h-56">
-                  <Image
-                    src={program.image}
-                    alt={program.name}
-                    fill
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                  />
-
-                  <button
-                    type="button"
-                    aria-label="찜하기"
-                    aria-pressed={favoritePrograms.includes(program.id)}
-                    onClick={() => {
-                      setFavoritePrograms((current) =>
-                        current.includes(program.id)
-                          ? current.filter((id) => id !== program.id)
-                          : [...current, program.id],
-                      );
-                    }}
-                    className={`absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(15,26,21,0.25)] shadow-sm backdrop-blur-sm transition-transform duration-200 hover:scale-110 active:scale-95 ${
-                      favoritePrograms.includes(program.id)
-                        ? "text-[#D76855]"
-                        : "text-white"
-                    }`}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      className="h-5 w-5"
-                      fill={
-                        favoritePrograms.includes(program.id)
-                          ? "currentColor"
-                          : "none"
-                      }
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+            filteredPrograms.map((program) => {
+              const liked = favoritePrograms.includes(program.id);
+              return (
+                <article
+                  key={program.id}
+                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-sm transition-transform duration-300 hover:-translate-y-1.5"
+                >
+                  <Link href={`/programs/${program.id}`} aria-label={`${program.title} 상세`} className="absolute inset-0 z-10" />
+                  <div className="relative aspect-[4/3] overflow-hidden bg-subtle">
+                    <Image
+                      src={program.img}
+                      alt={`${program.title} 사진`}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    <span className="absolute left-3 top-3 rounded-md bg-white/95 px-2.5 py-1 text-xs font-bold text-primary">
+                      {program.badge}
+                    </span>
+                    <button
+                      type="button"
+                      aria-label={`${program.title} 찜하기`}
+                      aria-pressed={liked}
+                      onClick={() => {
+                        setFavoritePrograms((current) =>
+                          current.includes(program.id)
+                            ? current.filter((id) => id !== program.id)
+                            : [...current, program.id],
+                        );
+                      }}
+                      className={`absolute right-3 top-3 z-20 grid h-9 w-9 place-items-center rounded-full ${
+                        liked ? "bg-white text-[#d6453b]" : "bg-primary/35 text-white"
+                      }`}
                     >
-                      <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5a5.5 5.5 0 0 0 1-8.9Z" />
-                    </svg>
-                  </button>
-
-                  <span className="absolute left-3 top-3 rounded bg-background px-3 py-1 text-xs text-primary">
-                    {program.category}
-                  </span>
-                </div>
-
-                {/* 프로그램 정보 */}
-                <div className="p-4 sm:p-5">
-                  <p className="text-xs text-muted">{program.temple}</p>
-
-                  <h3 className="mt-2 h-14 overflow-hidden line-clamp-2 font-serif text-base font-semibold leading-7 text-primary sm:text-lg">
-                    {program.name}
-                  </h3>
-
-                  <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
-                    <p className="font-semibold text-primary">
-                      ₩{Number(program.adultPrice).toLocaleString("ko-KR")}
-                      <span className="ml-1 text-xs font-normal text-muted">
-                        / 1인
-                      </span>
-                    </p>
-
-                    <Link
-                      href={`/programs/${program.id}`}
-                      aria-label={`${program.name} 상세 페이지로 이동`}
-                      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border text-primary transition-all duration-200 hover:border-primary hover:bg-primary hover:text-white"
-                    >
-                      →
-                    </Link>
+                      <svg viewBox="0 0 24 24" className="h-5 w-5" fill={liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
+                        <path d="M12 20s-7-4.4-9-9a4.8 4.8 0 0 1 9-3 4.8 4.8 0 0 1 9 3c-2 4.6-9 9-9 9z" />
+                      </svg>
+                    </button>
                   </div>
-                </div>
-              </article>
-            ))
+                  <div className="flex flex-1 flex-col gap-1.5 p-4">
+                    <span className="w-fit rounded-full bg-sage-05 px-2 py-0.5 text-[11px] font-bold text-sage-07">
+                      {program.cat}
+                    </span>
+                    <h3 className="text-[17px] leading-snug text-primary">{program.title}</h3>
+                    <p className="text-[13.5px] leading-relaxed text-muted">{program.desc}</p>
+                    <p className="text-[13px] text-muted">
+                      {program.temple} · {program.region}
+                    </p>
+                    <div className="mt-auto flex items-center justify-between border-t border-border pt-3">
+                      <p className="text-lg font-extrabold text-primary">
+                        {program.price.toLocaleString("ko-KR")}원
+                        <small className="ml-1 text-xs font-normal text-muted">1인 기준</small>
+                      </p>
+                      <span className="text-[13px] text-muted">
+                        <b className="text-[#c9a45c]">♥ {program.favoriteCount}</b> 찜
+                      </span>
+                    </div>
+                  </div>
+                </article>
+              );
+            })
           ) : (
-            <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
-              <p className="text-lg font-semibold text-primary">
-                준비 중인 프로그램입니다.
-              </p>
-              <p className="mt-2 text-sm text-muted">
-                새로운 프로그램을 준비하고 있어요. 조금만 기다려 주세요.
-              </p>
-            </div>
+            <p className="col-span-full py-10 text-center text-muted">이 분류에는 아직 체험이 없어요.</p>
           )}
+        </div>
+
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs text-muted">가격은 성인 1인 기준이며, 가격과 찜 순위는 시안 예시예요.</p>
+          <Link href="/programs" className="text-sm font-medium text-primary">
+            모든 체험 보기 →
+          </Link>
         </div>
       </div>
     </section>

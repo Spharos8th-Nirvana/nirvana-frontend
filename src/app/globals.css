@@ -85,6 +85,10 @@ body {
   background: var(--color-background);
   color: var(--color-ink);
   font-family: var(--font-sans);
+  /* 시안 본문: 밝은 화면, 15px */
+  color-scheme: light;
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 /*

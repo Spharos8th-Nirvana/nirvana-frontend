@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const heroImage =
-  "https://www.bulkwang.co.kr/news/photo/202209/37881_20706_4159.jpg";
+// 시안 첫 화면 사진 (app.js IMG.hero)
+const heroImage = "/images/photo-18464fadd2d70532.jpg";
 
 export function HeroSection() {
   const [selectedDate, setSelectedDate] = useState("");
