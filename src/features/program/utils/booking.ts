@@ -23,6 +23,36 @@ export function isScheduleAvailable(schedule: ProgramSchedule): boolean {
   return schedule.bookable && getRemainingSeats(schedule) > 0;
 }
 
+/**
+ * 목록 조회용. 같은 날의 회차 잔여석을 더하지 않습니다.
+ * 날짜가 있으면 그날 시작하는 회차만 보고, 인원이 있으면 그 인원 이상이 남은 회차만 봅니다.
+ * 조건을 만족하는 예약 가능 회차가 하나라도 있으면 true입니다.
+ */
+export function hasMatchingSchedule(
+  schedules: ProgramSchedule[],
+  filter: { date: string; people: number | null },
+): boolean {
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(filter.date) ? filter.date : "";
+  const people = filter.people !== null && filter.people > 0 ? filter.people : null;
+
+  if (!date && people === null) {
+    return true;
+  }
+
+  return schedules.some((schedule) => {
+    if (!schedule.bookable) {
+      return false;
+    }
+    if (date && schedule.operationStartDate !== date) {
+      return false;
+    }
+    if (people !== null && getRemainingSeats(schedule) < people) {
+      return false;
+    }
+    return true;
+  });
+}
+
 /** 총 결제 예정 금액 = 성인 금액 × 성인 수 + 청소년 금액 × 청소년 수 */
 export function calculateTotalPrice(
   prices: { adultPrice: number; youthPrice: number },

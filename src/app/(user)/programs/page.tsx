@@ -1,14 +1,71 @@
-import { programs } from "@/features/program/data/programs";
+import { programs, type Program } from "@/features/program/data/programs";
+import { programSchedules } from "@/features/program/data/program-schedules";
+import { hasMatchingSchedule, parseCountParam } from "@/features/program/utils/booking";
 import PageHero from "@/shared/components/layout/PageHero";
 import ProgramFilter from "@/features/program/components/organisms/ProgramFilter";
 
 type ProgramsPageProps = {
   searchParams: Promise<{
     keyword?: string;
+    category?: string;
+    region?: string;
     date?: string;
     people?: string;
   }>;
 };
+
+/** 화면의 지역 이름과 주소에 적힌 광역 이름을 잇습니다. */
+const regionMarkers: Record<string, string[]> = {
+  서울: ["서울"],
+  경기: ["경기"],
+  경북: ["경북", "경상북도"],
+  전남: ["전남", "전라남도"],
+};
+
+/** 체험명·사찰명. "휴식형"은 REST 분류와 같은 체험만 통과합니다. */
+function matchesKeyword(program: Program, keyword: string): boolean {
+  const query = keyword.trim().toLowerCase();
+
+  if (!query) {
+    return true;
+  }
+
+  if (query === "휴식형") {
+    return program.categoryCode === "REST" || program.category === "휴식형";
+  }
+
+  return (
+    program.name.toLowerCase().includes(query) ||
+    program.temple.toLowerCase().includes(query) ||
+    program.category.toLowerCase().includes(query)
+  );
+}
+
+/** 분류. REST와 "휴식형"은 같은 코드로 거릅니다. */
+function matchesCategory(program: Program, category: string): boolean {
+  const value = category.trim();
+
+  if (!value) {
+    return true;
+  }
+
+  if (value === "REST" || value === "휴식형") {
+    return program.categoryCode === "REST";
+  }
+
+  return program.category === value || program.categoryCode === value;
+}
+
+function matchesRegion(program: Program, region: string): boolean {
+  const value = region.trim();
+
+  if (!value) {
+    return true;
+  }
+
+  const markers = regionMarkers[value] ?? [value];
+  return markers.some((marker) => program.templeAddress.includes(marker));
+}
 
 export default async function ProgramsPage({
   searchParams,
@@ -16,20 +73,29 @@ export default async function ProgramsPage({
   const params = await searchParams;
 
   const keyword = params.keyword ?? "";
+  const category = params.category ?? "";
+  const region = params.region ?? "";
   const date = params.date ?? "";
   const people = params.people ?? "";
+  const peopleCount = parseCountParam(people);
 
-  // 검색어에 맞는 프로그램 찾기
+  const schedulesByProgram = new Map<number, typeof programSchedules>();
+  for (const schedule of programSchedules) {
+    const list = schedulesByProgram.get(schedule.programId) ?? [];
+    list.push(schedule);
+    schedulesByProgram.set(schedule.programId, list);
+  }
+
+  // 검색어, 분류, 지역, 날짜, 인원을 모두 만족하는 프로그램만 남깁니다.
   const filteredPrograms = programs.filter((program) => {
-    const searchKeyword = keyword.trim().toLowerCase();
-
-    if (!searchKeyword) {
-      return true;
-    }
-
     return (
-      program.name.toLowerCase().includes(searchKeyword) ||
-      program.temple.toLowerCase().includes(searchKeyword)
+      matchesKeyword(program, keyword) &&
+      matchesCategory(program, category) &&
+      matchesRegion(program, region) &&
+      hasMatchingSchedule(schedulesByProgram.get(program.id) ?? [], {
+        date,
+        people: peopleCount,
+      })
     );
   });
 
@@ -80,7 +146,7 @@ export default async function ProgramsPage({
                   <select
                     name="region"
                     aria-label="지역 선택"
-                    defaultValue=""
+                    defaultValue={region}
                     className="w-full bg-transparent text-sm text-muted outline-none"
                   >
                     <option value="">지역 선택</option>
@@ -110,7 +176,7 @@ export default async function ProgramsPage({
                   <select
                     name="category"
                     aria-label="종류 선택"
-                    defaultValue=""
+                    defaultValue={category}
                     className="w-full bg-transparent text-sm text-muted outline-none"
                   >
                     <option value="">종류 선택</option>
@@ -118,6 +184,8 @@ export default async function ProgramsPage({
                     <option value="명상">명상</option>
                     <option value="요가">요가</option>
                     <option value="사찰음식">사찰 음식</option>
+                    <option value="선무도">선무도</option>
+                    <option value="REST">휴식형</option>
                   </select>
                 </div>
               </div>
