@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import PageHero from "@/shared/components/layout/PageHero";
 import { communityNotices } from "@/features/community/data/community-notices";
 import { communityPosts } from "@/features/community/data/community-posts";
@@ -56,9 +57,17 @@ export default function CommunityListTemplate() {
       <CommunityNavigation activePage="community" />
 
       <section className="mx-auto max-w-[1200px] px-6 py-12 md:px-10">
-        <div className="mb-10">
-          <h1 className="text-2xl font-bold text-ink">커뮤니티</h1>
-          <p className="mt-3 text-sm text-muted">마음을 나누고, 일상을 나누는 너바나의 이야기</p>
+        <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-ink">커뮤니티</h1>
+            <p className="mt-3 text-sm text-muted">마음을 나누고, 일상을 나누는 너바나의 이야기</p>
+          </div>
+          <Link
+            href="/community/write"
+            className="rounded-full bg-primary px-5 py-3 text-sm font-bold text-white"
+          >
+            글쓰기
+          </Link>
         </div>
 
         <CommunityPostControls

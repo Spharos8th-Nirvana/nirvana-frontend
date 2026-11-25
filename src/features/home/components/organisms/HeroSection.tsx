@@ -7,19 +7,41 @@ import { useRouter } from "next/navigation";
 const heroImage = "/images/photo-18464fadd2d70532.jpg";
 
 export function HeroSection() {
-  const [selectedDate, setSelectedDate] = useState("");
+  const [checkIn, setCheckIn] = useState("");
+  const [checkOut, setCheckOut] = useState("");
   const [keyword, setKeyword] = useState("");
   const [selectedPeople, setSelectedPeople] = useState("");
+  const [searchError, setSearchError] = useState("");
   const router = useRouter();
   const handleSearch = () => {
+    const hasDate = Boolean(checkIn || checkOut);
+
+    if (hasDate && !selectedPeople) {
+      setSearchError("날짜를 고르셨다면 누구와 가는지(인원)도 골라 주세요.");
+      return;
+    }
+
+    if (selectedPeople && (!checkIn || !checkOut)) {
+      setSearchError("인원을 고르셨다면 체크인·체크아웃 날짜도 골라 주세요.");
+      return;
+    }
+
+    if (checkIn && checkOut && checkOut < checkIn) {
+      setSearchError("체크아웃 날짜는 체크인 날짜보다 뒤여야 해요.");
+      return;
+    }
+
+    setSearchError("");
+
     const params = new URLSearchParams();
 
     if (keyword.trim()) {
       params.set("keyword", keyword.trim());
     }
 
-    if (selectedDate) {
-      params.set("date", selectedDate);
+    // 목록은 기존처럼 date 하나만 받습니다. 체크인 날짜를 그 값으로 넘깁니다.
+    if (checkIn) {
+      params.set("date", checkIn);
     }
 
     if (selectedPeople) {
@@ -113,13 +135,28 @@ export function HeroSection() {
                 <path d="M16 2v4M8 2v4M3 10h18" />
               </svg>
 
-              <input
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                aria-label="체험 날짜 선택"
-                className="min-w-0 w-full cursor-pointer bg-transparent text-sm text-primary outline-none"
-              />
+              <span className="flex min-w-0 gap-2">
+                <input
+                  type="date"
+                  value={checkIn}
+                  onChange={(e) => {
+                    setCheckIn(e.target.value);
+                    if (checkOut && e.target.value && checkOut < e.target.value) {
+                      setCheckOut("");
+                    }
+                  }}
+                  aria-label="체크인 날짜"
+                  className="min-w-0 w-full cursor-pointer bg-transparent text-sm text-primary outline-none"
+                />
+                <input
+                  type="date"
+                  value={checkOut}
+                  min={checkIn || undefined}
+                  onChange={(e) => setCheckOut(e.target.value)}
+                  aria-label="체크아웃 날짜"
+                  className="min-w-0 w-full cursor-pointer bg-transparent text-sm text-primary outline-none"
+                />
+              </span>
             </div>
           </label>
 
@@ -190,6 +227,11 @@ export function HeroSection() {
             </button>
           </div>
         </div>
+        {searchError && (
+          <p role="alert" className="mx-auto mt-3 max-w-5xl text-sm font-semibold text-primary">
+            {searchError}
+          </p>
+        )}
       </section>
     </>
   );
