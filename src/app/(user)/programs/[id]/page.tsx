@@ -4,7 +4,6 @@ import { programs } from "@/features/program/data/programs";
 import { programSchedules } from "@/features/program/data/program-schedules";
 import {
   formatStay,
-  formatWon,
   getRemainingSeats,
   isScheduleAvailable,
   parseCountParam,
@@ -19,6 +18,8 @@ import {
 } from "@/features/program/utils/timetable";
 import { cancellationPolicies } from "@/features/temple/data/cancellation-policies";
 import PageHero from "@/shared/components/layout/PageHero";
+import { formatWon } from "@/shared/utils/format";
+
 import BackToListLink from "@/features/program/components/molecules/BackToListLink";
 import DetailSection, {
   SectionDivider,
@@ -51,10 +52,7 @@ function OutlineBox({ label, value }: { label: string; value: string }) {
   );
 }
 
-export default async function ProgramDetailPage({
-  params,
-  searchParams,
-}: ProgramDetailPageProps) {
+export default async function ProgramDetailPage({ params, searchParams }: ProgramDetailPageProps) {
   const { id } = await params;
   const query = await searchParams;
 
@@ -64,9 +62,7 @@ export default async function ProgramDetailPage({
     notFound();
   }
 
-  const schedules = programSchedules.filter(
-    (schedule) => schedule.programId === program.id,
-  );
+  const schedules = programSchedules.filter((schedule) => schedule.programId === program.id);
 
   // 2단계에서 돌아왔다면 이전 선택을 이어서 보여줍니다. 맞지 않는 값은 무시합니다.
   const initialSchedule = schedules.find(
@@ -210,7 +206,10 @@ export default async function ProgramDetailPage({
                 <p className="mt-4 text-sm text-ink">
                   총 소요 시간 {formatDuration(totalDuration)}
                   {sessionStartTimes.length > 0 && (
-                    <> · 하루 {sessionStartTimes.length}회 ({sessionStartTimes.join(" · ")} 시작)</>
+                    <>
+                      {" "}
+                      · 하루 {sessionStartTimes.length}회 ({sessionStartTimes.join(" · ")} 시작)
+                    </>
                   )}
                 </p>
               )}

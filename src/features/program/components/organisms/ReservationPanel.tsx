@@ -9,11 +9,11 @@ import {
   calculateTotalPrice,
   formatScheduleRange,
   formatScheduleTime,
-  formatWon,
   getRemainingSeats,
   groupSchedulesByStartDate,
   isScheduleAvailable,
 } from "@/features/program/utils/booking";
+import { formatWon } from "@/shared/utils/format";
 
 type ReservationPanelProps = {
   programId: number;
@@ -140,9 +140,7 @@ export default function ReservationPanel({
 
   const priceBreakdown = [
     adultCount > 0 ? `${formatWon(adultPrice)} × 성인 ${adultCount}명` : null,
-    appliedYouthCount > 0
-      ? `${formatWon(youthPrice)} × 청소년 ${appliedYouthCount}명`
-      : null,
+    appliedYouthCount > 0 ? `${formatWon(youthPrice)} × 청소년 ${appliedYouthCount}명` : null,
   ]
     .filter(Boolean)
     .join(" + ");
@@ -258,9 +256,7 @@ export default function ReservationPanel({
         <p className="mt-2 whitespace-nowrap text-2xl font-bold text-ink">
           {formatWon(totalPrice)}
         </p>
-        {priceBreakdown && (
-          <p className="mt-1 text-xs leading-5 text-muted">{priceBreakdown}</p>
-        )}
+        {priceBreakdown && <p className="mt-1 text-xs leading-5 text-muted">{priceBreakdown}</p>}
       </div>
 
       {/* 다음 단계 */}

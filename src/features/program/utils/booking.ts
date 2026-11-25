@@ -28,20 +28,12 @@ export function calculateTotalPrice(
   prices: { adultPrice: number; youthPrice: number },
   counts: { adultCount: number; youthCount: number },
 ): number {
-  return (
-    prices.adultPrice * counts.adultCount +
-    prices.youthPrice * counts.youthCount
-  );
+  return prices.adultPrice * counts.adultCount + prices.youthPrice * counts.youthCount;
 }
 
 /** 박수를 "1박 2일" 또는 "당일"로 표시 */
 export function formatStay(nights: number): string {
   return nights > 0 ? `${nights}박 ${nights + 1}일` : "당일";
-}
-
-/** 금액을 "100,000원"으로 표시 */
-export function formatWon(amount: number): string {
-  return `${amount.toLocaleString("ko-KR")}원`;
 }
 
 /** 회차 기간을 "2026.12.05 (토) – 12.06 (일)"로 표시 */

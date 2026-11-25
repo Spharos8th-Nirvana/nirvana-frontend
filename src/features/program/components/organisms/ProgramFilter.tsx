@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Program } from "@/features/program/data/programs";
 import { saveProgramListUrl } from "@/features/program/utils/list-url";
+import { formatWon } from "@/shared/utils/format";
 
 type ProgramFilterProps = {
   programs: Program[];
@@ -39,9 +40,7 @@ export default function ProgramFilter({ programs }: ProgramFilterProps) {
         <div className="flex items-center justify-between border-b border-border pb-4">
           <h2 className="text-xl font-bold text-primary">프로그램 검색 결과</h2>
 
-          <p className="text-sm text-muted/70">
-            총 {filteredPrograms.length}개
-          </p>
+          <p className="text-sm text-muted/70">총 {filteredPrograms.length}개</p>
         </div>
 
         {filteredPrograms.length > 0 ? (
@@ -64,22 +63,18 @@ export default function ProgramFilter({ programs }: ProgramFilterProps) {
 
                 {/* 프로그램 정보 */}
                 <div className="flex flex-1 flex-col p-5">
-                  <span className="text-xs font-semibold text-primary">
-                    {program.category}
-                  </span>
+                  <span className="text-xs font-semibold text-primary">{program.category}</span>
 
                   <h3 className="mt-3 line-clamp-2 min-h-[3.5rem] text-lg font-bold leading-7 text-ink transition-colors group-hover:text-primary">
                     {program.name}
                   </h3>
 
-                  <p className="mt-3 min-h-10 text-sm leading-6 text-muted">
-                    {program.temple}
-                  </p>
+                  <p className="mt-3 min-h-10 text-sm leading-6 text-muted">{program.temple}</p>
 
                   {/* 가격 */}
                   <div className="mt-auto border-t border-border pt-5">
                     <p className="text-right text-base font-bold text-primary">
-                      {program.adultPrice.toLocaleString("ko-KR")}원
+                      {formatWon(program.adultPrice)}
                     </p>
                   </div>
                 </div>
@@ -88,12 +83,8 @@ export default function ProgramFilter({ programs }: ProgramFilterProps) {
           </div>
         ) : (
           <div className="mt-6 border-y border-border bg-white px-5 py-16 text-center">
-            <p className="text-lg font-semibold text-ink">
-              검색 결과가 없습니다.
-            </p>
-            <p className="mt-3 text-sm text-muted">
-              다른 조건으로 검색해 보세요.
-            </p>
+            <p className="text-lg font-semibold text-ink">검색 결과가 없습니다.</p>
+            <p className="mt-3 text-sm text-muted">다른 조건으로 검색해 보세요.</p>
           </div>
         )}
       </div>

@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Program } from "@/features/program/data/programs";
-import { formatStay, formatWon } from "@/features/program/utils/booking";
+import { formatStay } from "@/features/program/utils/booking";
+import { formatWon } from "@/shared/utils/format";
 
 type RelatedProgramsProps = {
   /** 목록 순서 기준 이전 프로그램, 다음 프로그램 순 */

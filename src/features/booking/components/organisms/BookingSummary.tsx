@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { BookingSelection } from "@/features/booking/types/booking";
+import { formatWon } from "@/shared/utils/format";
 
 type BookingSummaryProps = {
   selection: BookingSelection;
@@ -10,8 +11,6 @@ type BookingSummaryProps = {
   submitted: boolean;
   onSubmit: () => void;
 };
-
-const won = (amount: number) => `${amount.toLocaleString("ko-KR")}원`;
 
 /** 오른쪽 예약 요약 + 다음 단계 버튼 */
 export default function BookingSummary({
@@ -29,8 +28,12 @@ export default function BookingSummary({
     .join(", ");
 
   const breakdown = [
-    selection.adultCount > 0 ? `${won(selection.adultPrice)} × 성인 ${selection.adultCount}명` : null,
-    selection.youthCount > 0 ? `${won(selection.youthPrice)} × 청소년 ${selection.youthCount}명` : null,
+    selection.adultCount > 0
+      ? `${formatWon(selection.adultPrice)} × 성인 ${selection.adultCount}명`
+      : null,
+    selection.youthCount > 0
+      ? `${formatWon(selection.youthPrice)} × 청소년 ${selection.youthCount}명`
+      : null,
   ]
     .filter(Boolean)
     .join(" + ");
@@ -39,7 +42,10 @@ export default function BookingSummary({
   const restCount = missingItems.length - visibleMissing.length;
 
   return (
-    <section aria-labelledby="summary-title" className="rounded-lg border border-border bg-white p-6">
+    <section
+      aria-labelledby="summary-title"
+      className="rounded-lg border border-border bg-white p-6"
+    >
       <div className="flex items-center justify-between gap-3">
         <h2 id="summary-title" className="text-xl font-bold text-ink">
           선택한 체험
@@ -85,7 +91,7 @@ export default function BookingSummary({
       </dl>
 
       <p className="mt-5 text-sm text-muted">총 결제 예정 금액</p>
-      <p className="mt-1 text-3xl font-bold text-ink">{won(selection.totalPrice)}</p>
+      <p className="mt-1 text-3xl font-bold text-ink">{formatWon(selection.totalPrice)}</p>
       <p className="mt-1 text-xs text-muted">{breakdown}</p>
 
       <button
