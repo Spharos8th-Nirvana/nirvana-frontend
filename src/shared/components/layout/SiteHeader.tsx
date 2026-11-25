@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { NotificationBadge } from "@/features/guide/components/organisms/NotificationList";
 
 const navItems = [
   {
@@ -163,6 +164,7 @@ export function SiteHeader() {
 
           <Link href="/notifications" className={`hidden text-xs sm:inline ${textColor}`}>
             알림
+            <NotificationBadge />
           </Link>
           <Link href="/mypage" className={`hidden text-xs sm:inline ${textColor}`}>
             마이페이지
@@ -218,7 +220,7 @@ export function SiteHeader() {
                 ))}
               </div>
             ))}
-            <Link href="/notifications" onClick={() => setIsMenuOpen(false)} className={`text-sm ${textColor}`}>알림</Link>
+            <Link href="/notifications" onClick={() => setIsMenuOpen(false)} className={`text-sm ${textColor}`}>알림<NotificationBadge /></Link>
             <Link href="/mypage" onClick={() => setIsMenuOpen(false)} className={`text-sm ${textColor}`}>마이페이지</Link>
           </div>
         </nav>

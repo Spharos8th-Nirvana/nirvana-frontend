@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { temples } from "@/features/temple/data/temples";
 import PageHero from "@/shared/components/layout/PageHero";
 import TempleImageSlider from "@/features/temple/components/organisms/TempleImageSlider";
+import { LikeTempleButton } from "@/features/guide/components/molecules/LikeTempleButton";
 import TempleDetailTabs from "@/features/temple/components/organisms/TempleDetailTabs";
 import { templeFacilities } from "@/features/temple/data/temple-facilities";
 import { programs } from "@/features/program/data/programs";
@@ -47,6 +48,9 @@ export default async function TempleDetailPage({
       />
 
       <section className="mx-auto max-w-[1200px] px-6 py-12 md:px-10">
+        <div className="mt-6">
+          <LikeTempleButton templeId={temple.id} templeName={temple.name} />
+        </div>
         <TempleImageSlider templeName={temple.name} />
 
         <TempleDetailTabs

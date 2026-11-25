@@ -11,6 +11,7 @@ import {
   subscribePendingPayment,
   writePendingPayment,
 } from "@/features/booking/utils/pending-payment";
+import { pushNotice } from "@/features/guide/utils/preview-notices";
 import {
   previewLoginServerSnapshot,
   previewLoginSnapshot,
@@ -127,6 +128,7 @@ export default function BookingPayTemplate({ programId }: { programId: number })
       ],
     };
     writePendingPayment(next);
+    pushNotice(`결제가 끝나 예약이 확정됐어요 · ${payment.programName} (${payment.scheduleLabel})`, `/mypage/bookings/${payment.id}`);
     router.push(`/programs/${programId}/booking/complete`);
   };
 

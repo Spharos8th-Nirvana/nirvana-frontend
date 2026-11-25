@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import CompareSelectButton from "@/features/program/components/molecules/CompareSelectButton";
+import { LikeProgramButton } from "@/features/guide/components/molecules/LikeProgramButton";
 import ProgramGallery from "@/features/program/components/organisms/ProgramGallery";
 import type { Program } from "@/features/program/data/programs";
 import { formatStay } from "@/features/program/utils/booking";
@@ -118,6 +119,7 @@ export default function ProgramOverview({ program }: ProgramOverviewProps) {
 
         {/* 사찰 안내 (피그마 오른쪽 알약 버튼) */}
         <div className="flex shrink-0 flex-wrap items-center gap-2">
+          <LikeProgramButton programId={program.id} programName={program.name} />
           <CompareSelectButton programId={program.id} />
           <Link
             href={`/temples/${program.templeId}`}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import PhotoViewer from "@/features/community/components/molecules/PhotoViewer";
 
 type TempleImageSliderProps = {
   templeName: string;
@@ -15,6 +16,7 @@ const images = [
 export default function TempleImageSlider({ templeName }: TempleImageSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [viewer, setViewer] = useState(false);
 
   useEffect(() => {
     if (isPaused) return;
@@ -70,6 +72,17 @@ export default function TempleImageSlider({ templeName }: TempleImageSliderProps
       >
         ›
       </button>
+
+      <button
+        type="button"
+        onClick={() => setViewer(true)}
+        className="absolute bottom-5 right-5 z-10 rounded-full bg-white px-4 py-2 text-sm font-bold text-ink"
+      >
+        크게 보기
+      </button>
+      {viewer ? (
+        <PhotoViewer images={images} start={currentIndex} title={templeName} onClose={() => setViewer(false)} />
+      ) : null}
 
       <div className="absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 gap-2">
         {images.map((image, index) => (

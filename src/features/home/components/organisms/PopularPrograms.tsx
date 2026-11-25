@@ -1,12 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { homeCategories, homePrograms } from "@/features/home/data/home-preview";
+import {
+  likedProgramsSnapshot,
+  likesServerSnapshot,
+  parseLikedIds,
+  subscribeLikes,
+  toggleLikedProgram,
+} from "@/features/guide/utils/preview-likes";
+import { previewLoginSnapshot } from "@/features/guide/utils/preview-login";
 
 export function PopularPrograms() {
-  const [favoritePrograms, setFavoritePrograms] = useState<number[]>([]);
+  const likedRaw = useSyncExternalStore(subscribeLikes, likedProgramsSnapshot, likesServerSnapshot);
+  const favoritePrograms = parseLikedIds(likedRaw);
+  const [likeNote, setLikeNote] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("전체");
 
   // 시안과 같이 분류로 거른 뒤 찜 수 상위 3개만 보여 줍니다.
@@ -70,11 +80,12 @@ export function PopularPrograms() {
                       aria-label={`${program.title} 찜하기`}
                       aria-pressed={liked}
                       onClick={() => {
-                        setFavoritePrograms((current) =>
-                          current.includes(program.id)
-                            ? current.filter((id) => id !== program.id)
-                            : [...current, program.id],
-                        );
+                        if (previewLoginSnapshot() !== "1") {
+                          setLikeNote("찜은 로그인한 뒤에 쓸 수 있어요. 오른쪽 위 로그인을 눌러 보세요 (시안).");
+                          return;
+                        }
+                        toggleLikedProgram(program.id);
+                        setLikeNote(liked ? "찜을 풀었어요." : "찜 목록에 담았어요.");
                       }}
                       className={`absolute right-3 top-3 z-20 grid h-9 w-9 place-items-center rounded-full ${
                         liked ? "bg-white text-[#d6453b]" : "bg-primary/35 text-white"
@@ -113,7 +124,7 @@ export function PopularPrograms() {
         </div>
 
         <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs text-muted">가격은 성인 1인 기준이며, 가격과 찜 순위는 시안 예시예요.</p>
+          <p className="text-xs text-muted">가격은 성인 1인 기준이며, 가격과 찜 순위는 시안 예시예요. {likeNote}</p>
           <Link href="/programs" className="text-sm font-medium text-primary">
             모든 체험 보기 →
           </Link>

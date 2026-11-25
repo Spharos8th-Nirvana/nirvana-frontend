@@ -19,7 +19,11 @@ export function LoginForm({ nextPath }: { nextPath?: string }) {
         <button type="button" role="tab" aria-selected={tab === "member"} onClick={() => setTab("member")} className={`rounded-full px-3 py-1.5 text-sm ${tab === "member" ? "bg-primary text-white" : "border"}`}>회원 로그인</button>
         <button type="button" role="tab" aria-selected={tab === "guest"} onClick={() => setTab("guest")} className={`rounded-full px-3 py-1.5 text-sm ${tab === "guest" ? "bg-primary text-white" : "border"}`}>비회원 예약 조회</button>
       </div>
-      {nextPath ? <p className="mb-3 text-sm text-muted">로그인하면 보던 화면으로 돌아가요.</p> : null}
+      {nextPath?.includes("/booking") ? (
+        <p className="mb-3 text-sm text-muted">로그인하면 고르신 날짜·인원 그대로 예약 정보 입력 화면으로 이어져요.</p>
+      ) : nextPath ? (
+        <p className="mb-3 text-sm text-muted">로그인하면 보던 화면으로 돌아가요.</p>
+      ) : null}
       {tab === "member" ? (
         <form
           className="grid gap-3"

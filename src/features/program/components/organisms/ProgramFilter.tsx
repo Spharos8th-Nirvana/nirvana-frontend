@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { Program } from "@/features/program/data/programs";
 import { saveProgramListUrl } from "@/features/program/utils/list-url";
 import CompareSelectButton from "@/features/program/components/molecules/CompareSelectButton";
+import { LikeProgramButton } from "@/features/guide/components/molecules/LikeProgramButton";
 import ComparisonBar from "@/features/program/components/molecules/ComparisonBar";
 
 type ProgramFilterProps = {
@@ -91,7 +92,8 @@ export default function ProgramFilter({ programs }: ProgramFilterProps) {
                   </div>
                 </div>
               </Link>
-              <div className="px-5 pb-5">
+              <div className="flex flex-wrap gap-2 px-5 pb-5">
+                <LikeProgramButton programId={program.id} programName={program.name} />
                 <CompareSelectButton programId={program.id} />
               </div>
               </div>

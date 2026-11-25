@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import ReservationCalendar from "@/features/program/components/molecules/ReservationCalendar";
 import type { ProgramSchedule } from "@/features/program/data/program-schedules";
+import { previewLoginSnapshot, safeNextPath } from "@/features/guide/utils/preview-login";
 import {
   buildBookingHref,
   calculateTotalPrice,
@@ -128,14 +129,17 @@ export default function ReservationPanel({
       return;
     }
 
-    router.push(
-      buildBookingHref({
-        programId,
-        scheduleId: selectedSchedule.id,
-        adultCount,
-        youthCount: appliedYouthCount,
-      }),
-    );
+    const href = buildBookingHref({
+      programId,
+      scheduleId: selectedSchedule.id,
+      adultCount,
+      youthCount: appliedYouthCount,
+    });
+    if (previewLoginSnapshot() !== "1") {
+      router.push(`/login?next=${encodeURIComponent(safeNextPath(href))}`);
+      return;
+    }
+    router.push(href);
   };
 
   const priceBreakdown = [

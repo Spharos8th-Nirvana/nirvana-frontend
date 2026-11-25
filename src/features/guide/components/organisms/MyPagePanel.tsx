@@ -2,7 +2,17 @@
 
 import { useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { demoUser } from "@/features/guide/data/mock-screens";
+import { demoUser, previewTemples } from "@/features/guide/data/mock-screens";
+import { homePrograms } from "@/features/home/data/home-preview";
+import { programs } from "@/features/program/data/programs";
+import { temples } from "@/features/temple/data/temples";
+import {
+  likedProgramsSnapshot,
+  likedTemplesSnapshot,
+  likesServerSnapshot,
+  parseLikedIds,
+  subscribeLikes,
+} from "@/features/guide/utils/preview-likes";
 import {
   bookingRecordsSnapshot,
   parseBookingRecords,
@@ -32,6 +42,15 @@ export function MyPagePanel() {
   const [filter, setFilter] = useState("all");
   const raw = useSyncExternalStore(subscribePendingPayment, bookingRecordsSnapshot, pendingPaymentServerSnapshot);
   const records = parseBookingRecords(raw);
+  const likedProgramIds = parseLikedIds(useSyncExternalStore(subscribeLikes, likedProgramsSnapshot, likesServerSnapshot));
+  const likedTempleIds = parseLikedIds(useSyncExternalStore(subscribeLikes, likedTemplesSnapshot, likesServerSnapshot));
+  const likedPrograms = likedProgramIds.map((id) => {
+    const team = programs.find((item) => item.id === id);
+    if (team) return { id, title: team.name, href: `/programs/${id}` };
+    const home = homePrograms.find((item) => item.id === id);
+    return home ? { id, title: home.title, href: `/programs/${id}` } : null;
+  }).filter((item): item is { id: number; title: string; href: string } => item !== null);
+  const likedTemples = likedTempleIds.map((id) => temples.find((item) => item.id === id) ?? previewTemples.find((item) => item.id === id)).filter((item) => item !== undefined);
 
   return (
     <div className="grid gap-6 md:grid-cols-[200px_1fr]">
@@ -69,8 +88,26 @@ export function MyPagePanel() {
             )}
           </>
         ) : null}
-        {tab === "like" ? <><h2 className="text-xl text-primary">찜한 프로그램</h2><p className="mt-3 font-bold">찜한 프로그램이 없어요.</p><p className="text-sm text-muted">프로그램 카드의 ♥를 눌러 보세요.</p></> : null}
-        {tab === "temple" ? <><h2 className="text-xl text-primary">관심 사찰</h2><p className="mt-3 font-bold">관심 사찰이 없어요.</p><p className="text-sm text-muted">사찰 화면에서 관심 사찰 등록을 눌러 보세요.</p></> : null}
+        {tab === "like" ? (
+          <>
+            <h2 className="text-xl text-primary">찜한 프로그램</h2>
+            {likedPrograms.length === 0 ? (
+              <><p className="mt-3 font-bold">찜한 프로그램이 없어요.</p><p className="text-sm text-muted">프로그램 카드의 ♥를 눌러 보세요.</p></>
+            ) : (
+              <ul className="mt-3 space-y-2">{likedPrograms.map((item) => <li key={item.id}><Link href={item.href} className="font-bold text-primary">{item.title}</Link></li>)}</ul>
+            )}
+          </>
+        ) : null}
+        {tab === "temple" ? (
+          <>
+            <h2 className="text-xl text-primary">관심 사찰</h2>
+            {likedTemples.length === 0 ? (
+              <><p className="mt-3 font-bold">관심 사찰이 없어요.</p><p className="text-sm text-muted">사찰 화면에서 관심 사찰 등록을 눌러 보세요.</p></>
+            ) : (
+              <ul className="mt-3 space-y-2">{likedTemples.map((item) => <li key={item.id}><Link href={`/temples/${item.id}`} className="font-bold text-primary">{item.name}</Link></li>)}</ul>
+            )}
+          </>
+        ) : null}
         {tab === "info" ? (
           <>
             <h2 className="text-xl text-primary">내 정보</h2>

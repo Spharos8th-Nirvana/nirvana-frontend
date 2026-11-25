@@ -10,8 +10,10 @@ import {
   pendingPaymentServerSnapshot,
   subscribePendingPayment,
   writePendingPayment,
+  type BookingStatus,
   type PendingPayment,
 } from "@/features/booking/utils/pending-payment";
+import { pushNotice } from "@/features/guide/utils/preview-notices";
 import {
   previewLoginServerSnapshot,
   previewLoginSnapshot,
@@ -90,6 +92,18 @@ export default function BookingDetailTemplate({ bookingId }: { bookingId: number
     setCanceling(false);
   };
 
+  const changeStatus = (status: BookingStatus, by: string, reason: string) => {
+    const next: PendingPayment = {
+      ...booking,
+      status,
+      history: [...(booking.history ?? []), { at: new Date().toLocaleString("ko-KR"), status, by, reason }],
+    };
+    writePendingPayment(next);
+    if (status === "이용 완료") {
+      pushNotice(`체험은 어떠셨나요? ${booking.programName} 후기를 남겨 주세요.`, "/community/write");
+    }
+  };
+
   const won = `${booking.totalPrice.toLocaleString("ko-KR")}원`;
 
   return (
@@ -129,6 +143,40 @@ export default function BookingDetailTemplate({ bookingId }: { bookingId: number
             </div>
           </div>
         ) : null}
+        <div className="mt-4 flex flex-wrap gap-2 text-xs">
+          <b className="w-full text-sm">시안용 시험 버튼</b>
+          {booking.status === "결제대기" ? (
+            <button type="button" className="rounded-full border px-3 py-1" onClick={() => changeStatus("만료", "시스템", "결제 시간이 지나 좌석 반환")}>시간 지나게 하기</button>
+          ) : null}
+          {booking.status === "예약 확정" ? (
+            <>
+              <button type="button" className="rounded-full border px-3 py-1" onClick={() => changeStatus("이용 완료", "사찰", "체험 참여 확인")}>이용 완료로 바꾸기</button>
+              <button type="button" className="rounded-full border px-3 py-1" onClick={() => changeStatus("노쇼", "사찰", "체험 당일 불참")}>노쇼로 바꾸기</button>
+              <button
+                type="button"
+                className="rounded-full border px-3 py-1"
+                onClick={() => {
+                  const next: PendingPayment = {
+                    ...booking,
+                    status: "취소 완료",
+                    refund: { rate: 100, money: booking.totalPrice, status: "환불 처리 중", by: "사찰", reason: "사찰 사정(기상 악화) · 전액 환불" },
+                    history: [...(booking.history ?? []), { at: new Date().toLocaleString("ko-KR"), status: "취소 완료", by: "사찰", reason: "사찰 사정(기상 악화) · 전액 환불" }],
+                  };
+                  writePendingPayment(next);
+                  pushNotice(`사찰 사정으로 예약이 취소됐어요 · ${booking.programName} · 환불 ${booking.totalPrice.toLocaleString("ko-KR")}원`, `/mypage/bookings/${booking.id}`);
+                }}
+              >
+                사찰 사정으로 취소
+              </button>
+            </>
+          ) : null}
+          {booking.refund?.status === "환불 처리 중" ? (
+            <>
+              <button type="button" className="rounded-full border px-3 py-1" onClick={() => writePendingPayment({ ...booking, refund: { ...booking.refund!, status: "환불 완료" } })}>환불 완료로 바꾸기</button>
+              <button type="button" className="rounded-full border px-3 py-1" onClick={() => writePendingPayment({ ...booking, refund: { ...booking.refund!, status: "환불 실패 · 고객센터 확인 중" } })}>환불 실패로 바꾸기</button>
+            </>
+          ) : null}
+        </div>
       </section>
 
       <section className="bg-white p-6">

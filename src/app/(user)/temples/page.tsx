@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LikeTempleButton } from "@/features/guide/components/molecules/LikeTempleButton";
 import { temples } from "@/features/temple/data/temples";
 import PageHero from "@/shared/components/layout/PageHero";
 
@@ -63,18 +64,12 @@ export default function TemplesPage() {
 
           <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
             {temples.map((temple) => (
-              <Link key={temple.id} href={`/temples/${temple.id}`} className="group">
+              <div key={temple.id} className="group">
+                <div className="relative">
+                <Link href={`/temples/${temple.id}`}>
                 {/* 이미지 영역 */}
                 <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-subtle transition-all duration-300 group-hover:shadow-lg">
                   <span className="text-5xl text-sage-03">▧</span>
-
-                  {/* 즐겨찾기 아이콘 */}
-                  <span
-                    className="absolute left-4 top-4 text-2xl text-primary"
-                    aria-label="즐겨찾기"
-                  >
-                    ☆
-                  </span>
                 </div>
 
                 {/* 사찰 정보 */}
@@ -98,7 +93,12 @@ export default function TemplesPage() {
 
                   <p className="mt-3 text-xs text-muted/70">주소 및 전화번호 정보 준비 중</p>
                 </div>
-              </Link>
+                </Link>
+                <div className="absolute left-4 top-4 z-10">
+                  <LikeTempleButton templeId={temple.id} templeName={temple.name} />
+                </div>
+                </div>
+              </div>
             ))}
           </div>
 
