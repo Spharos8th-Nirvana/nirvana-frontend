@@ -64,3 +64,12 @@ export function UsersIcon(props: IconProps) {
     </IconBase>
   );
 }
+
+/** 아래 화살표 (선택박스 열림 표시) */
+export function ChevronDownIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="m6 9 6 6 6-6" />
+    </IconBase>
+  );
+}

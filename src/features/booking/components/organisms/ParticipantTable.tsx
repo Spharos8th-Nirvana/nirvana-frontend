@@ -1,5 +1,5 @@
 import { inputClassName } from "@/features/booking/components/atoms/FormField";
-import SelectField from "@/features/booking/components/atoms/SelectField";
+import SelectField from "@/shared/components/ui/SelectField";
 import { countryOptions } from "@/features/booking/data/countries";
 import type { ParticipantInfo } from "@/features/booking/types/booking";
 import {
@@ -102,9 +102,7 @@ export default function ParticipantTable({
               <span>
                 나이 <span className="text-error">*</span>
               </span>
-              <span>
-                성별 {genderRequired && <span className="text-error">*</span>}
-              </span>
+              <span>성별 {genderRequired && <span className="text-error">*</span>}</span>
               <span>국적</span>
               <span>휴대폰</span>
               <span>이메일</span>
@@ -180,6 +178,7 @@ export default function ParticipantTable({
                         {`${name} 성별${genderRequired ? " (필수)" : " (선택)"}`}
                       </CellLabel>
                       <SelectField
+                        surface="subtle"
                         id={`${id}-gender`}
                         value={participant.gender}
                         disabled={isLinked}
@@ -200,6 +199,7 @@ export default function ParticipantTable({
                     <div className="col-span-2 md:col-span-1">
                       <CellLabel htmlFor={`${id}-country`}>{`${name} 국적 (선택)`}</CellLabel>
                       <SelectField
+                        surface="subtle"
                         id={`${id}-country`}
                         value={participant.countryCode}
                         disabled={isLinked}
