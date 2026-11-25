@@ -7,10 +7,16 @@ type BookingProgressProps = {
   currentStep: number;
   /** 끝난 단계로 돌아가는 주소. 키는 단계 번호 */
   stepHrefs?: Partial<Record<number, string>>;
+  /** 이전 단계로 이동하기 전에 확인창을 표시합니다. */
+  onBeforeNavigate?: () => boolean;
 };
 
 /** 예약 진행 단계 (01 · 02 · 03). 끝난 단계는 눌러서 돌아갈 수 있습니다. */
-export default function BookingProgress({ currentStep, stepHrefs = {} }: BookingProgressProps) {
+export default function BookingProgress({
+  currentStep,
+  stepHrefs = {},
+  onBeforeNavigate,
+}: BookingProgressProps) {
   return (
     <ol className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4" aria-label="예약 진행 단계">
       {steps.map((label, index) => {
@@ -24,7 +30,11 @@ export default function BookingProgress({ currentStep, stepHrefs = {} }: Booking
           <>
             <span
               className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] ${
-                isCurrent ? "bg-action text-primary" : isDone ? "bg-primary text-white" : "bg-subtle text-ink"
+                isCurrent
+                  ? "bg-action text-primary"
+                  : isDone
+                    ? "bg-primary text-white"
+                    : "bg-subtle text-ink"
               }`}
             >
               {isDone ? <span aria-hidden="true">✓</span> : number}
@@ -50,10 +60,14 @@ export default function BookingProgress({ currentStep, stepHrefs = {} }: Booking
             {href ? (
               <Link
                 href={href}
+                onClick={(event) => {
+                  // 확인창에서 취소를 누르면 이전 화면으로 이동하지 않음
+                  if (onBeforeNavigate && !onBeforeNavigate()) {
+                    event.preventDefault();
+                  }
+                }}
                 className={`group ${baseClass} border-border bg-subtle text-ink transition-colors hover:border-primary hover:bg-white`}
-              >
-                {content}
-              </Link>
+              ></Link>
             ) : (
               <div
                 className={`${baseClass} ${
