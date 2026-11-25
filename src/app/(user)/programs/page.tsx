@@ -46,7 +46,7 @@ export default async function ProgramsPage({ searchParams }: ProgramsPageProps) 
         {/* 검색 조건 */}
 
         {/* 검색 영역 */}
-        <section className="bg-white px-5 py-20 md:px-10">
+        <section className="px-5 py-20 md:px-10">
           <div className="w-full">
             {/* 검색 영역 제목 */}
             <div className="text-center">
@@ -60,10 +60,14 @@ export default async function ProgramsPage({ searchParams }: ProgramsPageProps) 
             </div>
 
             {/* 검색 입력 영역 */}
-            <form action="/programs" method="GET" className="mt-12">
+            <form
+              action="/programs"
+              method="GET"
+              className="mt-12 rounded-lg bg-white p-4 shadow-[0_12px_35px_rgba(23,63,53,0.10)] sm:p-5 md:p-3"
+            >
               {/* 첫 번째 줄: 지역 및 종류 */}
               <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
-                <div className="flex h-[68px] items-center rounded-t-lg bg-sage-04 px-5 md:rounded-l-lg md:rounded-tr-none">
+                <div className="flex h-[68px] items-center rounded-t-lg bg-white px-5 md:rounded-l-lg md:rounded-tr-none">
                   <svg
                     className="mr-4 h-5 w-5 shrink-0"
                     viewBox="0 0 24 24"
@@ -91,7 +95,7 @@ export default async function ProgramsPage({ searchParams }: ProgramsPageProps) 
                   </SelectField>
                 </div>
 
-                <div className="flex h-[68px] items-center bg-sage-04 px-5 md:rounded-r-lg">
+                <div className="flex h-[68px] items-center bg-white px-5 md:rounded-r-lg">
                   <span className="mr-5 hidden h-10 border-l border-sage-03 md:block" />
 
                   <svg
@@ -125,7 +129,7 @@ export default async function ProgramsPage({ searchParams }: ProgramsPageProps) 
               </div>
 
               {/* 두 번째 줄: 키워드, 날짜, 인원, 검색 */}
-              <div className="mt-3 grid grid-cols-1 overflow-hidden rounded-lg bg-sage-04 md:grid-cols-[1fr_1fr_1fr_auto]">
+              <div className="mt-3 grid grid-cols-1 overflow-hidden rounded-lg bg-white md:grid-cols-[1fr_1fr_1fr_auto]">
                 {/* 키워드 */}
                 <div className="flex h-[68px] items-center px-5">
                   <SearchIcon className="mr-3 h-4 w-4 shrink-0" />
