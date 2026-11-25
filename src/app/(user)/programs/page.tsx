@@ -1,6 +1,7 @@
 import { programs } from "@/features/program/data/programs";
 import PageHero from "@/shared/components/layout/PageHero";
 import ProgramFilter from "@/features/program/components/organisms/ProgramFilter";
+import { CalendarIcon, SearchIcon, UsersIcon } from "@/shared/components/ui/icons";
 
 type ProgramsPageProps = {
   searchParams: Promise<{
@@ -10,9 +11,7 @@ type ProgramsPageProps = {
   }>;
 };
 
-export default async function ProgramsPage({
-  searchParams,
-}: ProgramsPageProps) {
+export default async function ProgramsPage({ searchParams }: ProgramsPageProps) {
   const params = await searchParams;
 
   const keyword = params.keyword ?? "";
@@ -52,9 +51,7 @@ export default async function ProgramsPage({
             <div className="text-center">
               <p className="text-sm font-semibold text-primary">FILTER</p>
 
-              <h2 className="mt-4 text-3xl font-bold text-primary">
-                조건으로 체험 찾기
-              </h2>
+              <h2 className="mt-4 text-3xl font-bold text-primary">조건으로 체험 찾기</h2>
 
               <p className="mt-5 text-sm text-muted">
                 지역, 날짜, 인원, 가격, 1박/당일을 선택하세요.
@@ -126,16 +123,7 @@ export default async function ProgramsPage({
               <div className="mt-3 grid grid-cols-1 overflow-hidden rounded-lg bg-sage-04 md:grid-cols-[1fr_1fr_1fr_auto]">
                 {/* 키워드 */}
                 <div className="flex h-[68px] items-center px-5">
-                  <svg
-                    className="mr-3 h-4 w-4 shrink-0"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <circle cx="11" cy="11" r="7" />
-                    <path d="m16 16 4 4" />
-                  </svg>
+                  <SearchIcon className="mr-3 h-4 w-4 shrink-0" />
 
                   <input
                     type="text"
@@ -151,16 +139,7 @@ export default async function ProgramsPage({
                 <div className="flex h-[68px] items-center px-5">
                   <span className="mr-5 hidden h-10 border-l border-sage-03 md:block" />
 
-                  <svg
-                    className="mr-3 h-4 w-4 shrink-0"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                  >
-                    <rect x="3" y="5" width="18" height="16" rx="2" />
-                    <path d="M16 3v4M8 3v4M3 10h18" />
-                  </svg>
+                  <CalendarIcon className="mr-3 h-4 w-4 shrink-0" strokeWidth={1.8} />
 
                   <input
                     type="date"
@@ -175,17 +154,7 @@ export default async function ProgramsPage({
                 <div className="flex h-[68px] items-center px-5">
                   <span className="mr-5 hidden h-10 border-l border-sage-03 md:block" />
 
-                  <svg
-                    className="mr-3 h-4 w-4 shrink-0"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                  >
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="10" cy="7" r="4" />
-                    <path d="M20 8v6M17 11h6" />
-                  </svg>
+                  <UsersIcon className="mr-3 h-4 w-4 shrink-0" strokeWidth={1.8} />
 
                   <select
                     name="people"
@@ -209,16 +178,7 @@ export default async function ProgramsPage({
                     aria-label="검색"
                     className="flex h-12 w-12 items-center justify-center rounded-md bg-primary text-white transition-colors hover:bg-primary-hover"
                   >
-                    <svg
-                      className="h-5 w-5"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <circle cx="11" cy="11" r="7" />
-                      <path d="m16 16 4 4" />
-                    </svg>
+                    <SearchIcon className="h-5 w-5" />
                   </button>
                 </div>
               </div>
