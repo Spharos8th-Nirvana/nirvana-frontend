@@ -99,11 +99,7 @@ export default function BookingSummary({
       </button>
 
       <div className="mt-3 text-xs" aria-live="polite">
-        {submitted ? (
-          <p className="rounded-md bg-subtle px-3 py-2 text-ink">
-            결제 확인 단계는 준비 중이에요. 입력한 정보는 저장되지 않았어요.
-          </p>
-        ) : canSubmit ? (
+        {submitted ? null : canSubmit ? (
           <p className="text-muted">다음 단계에서 결제 내용을 확인합니다.</p>
         ) : (
           <p className="text-muted">
