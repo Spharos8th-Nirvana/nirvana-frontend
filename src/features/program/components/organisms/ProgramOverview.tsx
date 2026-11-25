@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import CompareSelectButton from "@/features/program/components/molecules/CompareSelectButton";
 import ProgramGallery from "@/features/program/components/organisms/ProgramGallery";
 import type { Program } from "@/features/program/data/programs";
 import { formatStay } from "@/features/program/utils/booking";
@@ -116,13 +117,16 @@ export default function ProgramOverview({ program }: ProgramOverviewProps) {
         </div>
 
         {/* 사찰 안내 (피그마 오른쪽 알약 버튼) */}
-        <Link
-          href={`/temples/${program.templeId}`}
-          className="inline-flex w-fit shrink-0 items-center gap-2 rounded-full border border-border bg-white px-5 py-2.5 text-sm font-bold text-ink transition-colors hover:border-primary"
-        >
-          사찰 안내
-          <ArrowUpRightIcon />
-        </Link>
+        <div className="flex shrink-0 flex-wrap items-center gap-2">
+          <CompareSelectButton programId={program.id} />
+          <Link
+            href={`/temples/${program.templeId}`}
+            className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-white px-5 py-2.5 text-sm font-bold text-ink transition-colors hover:border-primary"
+          >
+            사찰 안내
+            <ArrowUpRightIcon />
+          </Link>
+        </div>
       </div>
 
       <ProgramGallery images={program.gallery} name={program.name} caption={program.summary} />

@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Program } from "@/features/program/data/programs";
 import { saveProgramListUrl } from "@/features/program/utils/list-url";
+import CompareSelectButton from "@/features/program/components/molecules/CompareSelectButton";
+import ComparisonBar from "@/features/program/components/molecules/ComparisonBar";
 
 type ProgramFilterProps = {
   programs: Program[];
@@ -34,6 +36,8 @@ export default function ProgramFilter({ programs }: ProgramFilterProps) {
         외국어 가능 프로그램만 보기
       </label>
 
+      <ComparisonBar />
+
       {/* 프로그램 목록 */}
       <div className="mt-8">
         <div className="flex items-center justify-between border-b border-border pb-4">
@@ -47,10 +51,13 @@ export default function ProgramFilter({ programs }: ProgramFilterProps) {
         {filteredPrograms.length > 0 ? (
           <div className="mt-6 grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredPrograms.map((program) => (
-              <Link
+              <div
                 key={program.id}
+                className="flex h-full flex-col border border-border bg-white"
+              >
+              <Link
                 href={`/programs/${program.id}`}
-                className="group flex h-full flex-col border border-border bg-white transition-colors duration-300 hover:border-primary"
+                className="group flex h-full flex-col transition-colors duration-300 hover:border-primary"
               >
                 {/* 프로그램 이미지 */}
                 <div
@@ -84,6 +91,10 @@ export default function ProgramFilter({ programs }: ProgramFilterProps) {
                   </div>
                 </div>
               </Link>
+              <div className="px-5 pb-5">
+                <CompareSelectButton programId={program.id} />
+              </div>
+              </div>
             ))}
           </div>
         ) : (
