@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { NewsletterForm } from "@/shared/components/layout/NewsletterForm";
 
 const footerMenus = [
   {
@@ -90,6 +91,15 @@ export function SiteFooter() {
             <span>Instagram</span>
             <span>Blog</span>
           </div>
+        </div>
+
+        {/* 시안 뉴스레터 */}
+        <div className="mt-6 rounded-2xl bg-primary px-5 py-5 text-white/80 sm:px-6">
+          <h3 className="text-sm font-semibold text-white">뉴스레터 구독</h3>
+          <p className="mt-1 text-[13.5px] leading-7">
+            새로운 프로그램과 특별한 소식을 가장 먼저 받아보세요.
+          </p>
+          <NewsletterForm />
         </div>
 
         {/* 저작권 */}
