@@ -14,6 +14,7 @@ import {
   isScheduleAvailable,
 } from "@/features/program/utils/booking";
 import { formatWon } from "@/shared/utils/format";
+import Button from "@/shared/components/ui/Button";
 
 type ReservationPanelProps = {
   programId: number;
@@ -260,15 +261,10 @@ export default function ReservationPanel({
       </div>
 
       {/* 다음 단계 */}
-      <button
-        type="button"
-        onClick={handleProceed}
-        disabled={!canProceed}
-        className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-action py-4 font-bold text-primary transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
-      >
+      <Button onClick={handleProceed} disabled={!canProceed} className="mt-6 w-full">
         예약 정보 입력
         <span aria-hidden="true">→</span>
-      </button>
+      </Button>
 
       <p className="mt-3 text-right text-xs text-muted/70">
         예약 전 취소·환불 규정을 확인해 주세요.

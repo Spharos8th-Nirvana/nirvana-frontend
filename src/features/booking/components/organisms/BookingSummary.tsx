@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { BookingSelection } from "@/features/booking/types/booking";
 import { formatWon } from "@/shared/utils/format";
+import Button from "@/shared/components/ui/Button";
 
 type BookingSummaryProps = {
   selection: BookingSelection;
@@ -94,15 +95,9 @@ export default function BookingSummary({
       <p className="mt-1 text-3xl font-bold text-ink">{formatWon(selection.totalPrice)}</p>
       <p className="mt-1 text-xs text-muted">{breakdown}</p>
 
-      <button
-        type="button"
-        onClick={onSubmit}
-        disabled={!canSubmit}
-        className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-action py-4 font-bold text-primary transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
-      >
-        결제 정보 확인
-        <span aria-hidden="true">→</span>
-      </button>
+      <Button onClick={onSubmit} disabled={!canSubmit} className="mt-6 w-full">
+        <span aria-hidden="true">결제 정보 확인</span>
+      </Button>
 
       <div className="mt-3 text-xs" aria-live="polite">
         {submitted ? (
