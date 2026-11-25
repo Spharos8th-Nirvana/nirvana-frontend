@@ -4,16 +4,50 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 const navItems = [
-  { label: "사찰", href: "/temples" },
-  { label: "프로그램 예약", href: "/programs" },
-  { label: "커뮤니티", href: "/community" },
-  { label: "ABOUT", href: "/about" },
+  {
+    label: "사찰",
+    href: "/temples",
+    children: [
+      { label: "사찰 찾기", href: "/temples" },
+      { label: "지역별 사찰 지도", href: "/temples/map" },
+      { label: "템플스테이란?", href: "/about/templestay" },
+    ],
+  },
+  {
+    label: "프로그램 예약",
+    href: "/programs",
+    children: [
+      { label: "전체 프로그램", href: "/programs" },
+      { label: "추천 체험", href: "/programs/recommend" },
+      { label: "이벤트 체험", href: "/events" },
+      { label: "단체 체험 문의", href: "/programs/group" },
+    ],
+  },
+  {
+    label: "커뮤니티",
+    href: "/community",
+    children: [
+      { label: "동호회", href: "/community/clubs" },
+      { label: "체험 후기", href: "/community/reviews" },
+      { label: "공지사항", href: "/community/notices" },
+    ],
+  },
+  {
+    label: "ABOUT",
+    href: "/about",
+    children: [
+      { label: "템플스테이란?", href: "/about/templestay" },
+      { label: "너바나 소개", href: "/about" },
+      { label: "고객센터", href: "/support" },
+    ],
+  },
 ];
 
 export function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [langNote, setLangNote] = useState("");
   const previousScrollY = useRef(0);
 
   useEffect(() => {
@@ -90,13 +124,21 @@ export function SiteHeader() {
         {/* 데스크톱 메뉴 */}
         <nav className="hidden translate-y-0.5 items-center gap-8 md:flex">
           {navItems.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className={`relative text-sm font-bold after:absolute after:-bottom-1 after:left-1/2 after:h-px after:w-0 after:bg-current after:transition-all after:duration-300 after:ease-out hover:font-bold hover:after:left-0 hover:after:w-full ${textColor}`}
-            >
-              {item.label}
-            </Link>
+            <div key={item.label} className="group relative">
+              <Link
+                href={item.href}
+                className={`relative text-sm font-bold after:absolute after:-bottom-1 after:left-1/2 after:h-px after:w-0 after:bg-current after:transition-all after:duration-300 after:ease-out hover:font-bold hover:after:left-0 hover:after:w-full ${textColor}`}
+              >
+                {item.label}
+              </Link>
+              <div className="invisible absolute left-0 top-full z-50 min-w-[200px] rounded-lg border border-border bg-white p-2 opacity-0 shadow-lg transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                {item.children.map((child) => (
+                  <Link key={child.href + child.label} href={child.href} className="block rounded-md px-3 py-2 text-sm text-ink-nav hover:bg-subtle hover:text-primary">
+                    {child.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
           ))}
         </nav>
 
@@ -106,14 +148,25 @@ export function SiteHeader() {
           <div
             className={`hidden items-center gap-2 text-xs sm:flex ${textColor}`}
           >
-            <button type="button" className="font-semibold">
+            <button type="button" className="font-semibold" aria-pressed="true" onClick={() => setLangNote("")}>
               KR
             </button>
             <span className={separatorColor}>|</span>
-            <button type="button" className={subTextColor}>
+            <button
+              type="button"
+              className={subTextColor}
+              onClick={() => setLangNote("영어 화면은 같은 주소의 영어판(/en/…)으로 바뀔 예정이에요 (시안).")}
+            >
               EN
             </button>
           </div>
+
+          <Link href="/notifications" className={`hidden text-xs sm:inline ${textColor}`}>
+            알림
+          </Link>
+          <Link href="/mypage" className={`hidden text-xs sm:inline ${textColor}`}>
+            마이페이지
+          </Link>
 
           {/* 로그인 */}
           <Link
@@ -145,18 +198,32 @@ export function SiteHeader() {
         >
           <div className="flex flex-col gap-4">
             {navItems.map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                onClick={() => setIsMenuOpen(false)}
-                className={`text-sm font-medium transition-all hover:font-bold ${textColor}`}
-              >
-                {item.label}
-              </Link>
+              <div key={item.label} className="flex flex-col gap-2">
+                <Link
+                  href={item.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`text-sm font-medium transition-all hover:font-bold ${textColor}`}
+                >
+                  {item.label}
+                </Link>
+                {item.children.map((child) => (
+                  <Link
+                    key={child.href + child.label}
+                    href={child.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`pl-3 text-xs ${subTextColor}`}
+                  >
+                    {child.label}
+                  </Link>
+                ))}
+              </div>
             ))}
+            <Link href="/notifications" onClick={() => setIsMenuOpen(false)} className={`text-sm ${textColor}`}>알림</Link>
+            <Link href="/mypage" onClick={() => setIsMenuOpen(false)} className={`text-sm ${textColor}`}>마이페이지</Link>
           </div>
         </nav>
       )}
+      {langNote ? <p className="bg-primary px-6 py-2 text-center text-xs text-white" role="status">{langNote}</p> : null}
     </header>
   );
 }

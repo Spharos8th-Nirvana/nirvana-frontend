@@ -5,16 +5,19 @@ const footerMenus = [
   {
     title: "탐색",
     links: [
-      { label: "사찰", href: "/temples" },
-      { label: "프로그램", href: "/programs" },
-      { label: "커뮤니티", href: "/community" },
+      { label: "사찰 찾기", href: "/temples" },
+      { label: "프로그램 예약", href: "/programs" },
+      { label: "추천 체험", href: "/programs/recommend" },
+      { label: "이벤트", href: "/events" },
+      { label: "동호회", href: "/community/clubs" },
+      { label: "체험 후기", href: "/community/reviews" },
       { label: "공지사항", href: "/community/notices" },
     ],
   },
   {
     title: "지원",
     links: [
-      { label: "자주 묻는 질문", href: "/support/faq" },
+      { label: "자주 묻는 질문", href: "/support" },
       { label: "1:1 문의", href: "/support/inquiry" },
       { label: "이용약관", href: "/terms" },
       { label: "개인정보처리방침", href: "/privacy" },
@@ -24,8 +27,8 @@ const footerMenus = [
     title: "회사",
     links: [
       { label: "너바나 소개", href: "/about" },
-      { label: "서비스 소개", href: "/about/service" },
-      { label: "제휴 문의", href: "/support/partnership" },
+      { label: "템플스테이란?", href: "/about/templestay" },
+      { label: "단체 체험 문의", href: "/programs/group" },
     ],
   },
 ];
