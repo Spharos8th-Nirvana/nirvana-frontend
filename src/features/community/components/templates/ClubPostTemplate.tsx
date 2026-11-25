@@ -1,8 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { ClubComment, ClubPost } from "@/features/community/data/club-posts";
+import { markPostDeleted, saveExtraPost } from "@/features/community/data/club-posts";
+import PhotoViewer from "@/features/community/components/molecules/PhotoViewer";
+import {
+  previewLoginServerSnapshot,
+  previewLoginSnapshot,
+  subscribePreviewLogin,
+} from "@/features/guide/utils/preview-login";
 
 function countComments(comments: ClubComment[]) {
   return comments.reduce((sum, comment) => sum + 1 + comment.replies.length, 0);
@@ -24,7 +32,19 @@ export default function ClubPostTemplate({
   const [draft, setDraft] = useState("");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [viewer, setViewer] = useState<number | null>(null);
+  const [replyTo, setReplyTo] = useState<number | null>(null);
+  const [reply, setReply] = useState("");
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const router = useRouter();
+  const loggedIn = useSyncExternalStore(subscribePreviewLogin, previewLoginSnapshot, previewLoginServerSnapshot) === "1";
   const listHref = `/community/clubs/${post.clubId}`;
+  const loginNext = `/login?next=${encodeURIComponent(`/community/posts/${post.id}`)}`;
+
+  const requireLogin = (message: string) => {
+    setNotice(message);
+    router.push(loginNext);
+  };
 
   const addComment = () => {
     const text = draft.trim();
@@ -67,17 +87,24 @@ export default function ClubPostTemplate({
       <p className="mt-6 leading-7 text-ink">{post.body}</p>
       {post.imgs.length > 0 && (
         <ul className="mt-6 grid grid-cols-2 gap-3">
-          {post.imgs.map((src) => (
+          {post.imgs.map((src, index) => (
             <li key={src}>
-              <div role="img" aria-label={post.title} className="aspect-[4/3] bg-cover bg-center" style={{ backgroundImage: `url("${src}")` }} />
+              <button type="button" aria-label={`사진 ${index + 1} 크게 보기`} onClick={() => setViewer(index)} className="w-full">
+                <div role="img" aria-label={post.title} className="aspect-[4/3] bg-cover bg-center" style={{ backgroundImage: `url("${src}")` }} />
+              </button>
             </li>
           ))}
         </ul>
       )}
+      {viewer !== null ? <PhotoViewer images={post.imgs} start={viewer} title={post.title} onClose={() => setViewer(null)} /> : null}
       <div className="mt-6 flex flex-wrap gap-2">
         <button
           type="button"
           onClick={() => {
+            if (!loggedIn) {
+              requireLogin("좋아요는 로그인한 뒤에 누를 수 있어요.");
+              return;
+            }
             setLiked((on) => !on);
             setLikes((count) => count + (liked ? -1 : 1));
           }}
@@ -88,10 +115,46 @@ export default function ClubPostTemplate({
         <button type="button" onClick={copyLink} className="rounded-full border border-border px-4 py-2 text-sm font-bold">
           링크 복사
         </button>
-        <button type="button" onClick={() => setNotice("신고가 접수됐어요 (시안).")} className="text-sm text-muted underline">
+        <button
+          type="button"
+          onClick={() => {
+            if (!loggedIn) {
+              requireLogin("신고는 로그인한 뒤에 할 수 있어요.");
+              return;
+            }
+            setNotice("신고가 접수됐어요 (시안).");
+          }}
+          className="text-sm text-muted underline"
+        >
           신고
         </button>
+        {post.mine ? (
+          <>
+            <Link href={`/community/write?post=${post.id}`} className="rounded-full border border-border px-4 py-2 text-sm font-bold">수정</Link>
+            <button type="button" onClick={() => setConfirmDelete(true)} className="rounded-full border border-border px-4 py-2 text-sm font-bold">삭제</button>
+          </>
+        ) : null}
       </div>
+      {confirmDelete ? (
+        <div className="mt-4 border border-border bg-subtle p-4 text-sm">
+          <p className="font-bold">이 글을 삭제할까요?</p>
+          <p className="mt-1 text-muted">삭제한 글은 되돌릴 수 없어요. 달린 댓글도 함께 안 보여요.</p>
+          <div className="mt-3 flex gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                markPostDeleted(post.id);
+                saveExtraPost({ ...post, deleted: true });
+                router.push(listHref);
+              }}
+              className="rounded-full bg-primary px-4 py-2 font-bold text-white"
+            >
+              삭제하기
+            </button>
+            <button type="button" onClick={() => setConfirmDelete(false)} className="rounded-full border px-4 py-2">그만두기</button>
+          </div>
+        </div>
+      ) : null}
       {notice && <p className="mt-3 text-sm text-primary">{notice}</p>}
 
       <section className="mt-10" aria-label="댓글">
@@ -105,6 +168,45 @@ export default function ClubPostTemplate({
                 <span className="ml-2 font-normal text-muted">{comment.date}</span>
               </p>
               <p className="mt-1 text-sm text-ink">{comment.text}</p>
+              <button
+                type="button"
+                className="mt-1 text-xs text-muted underline"
+                onClick={() => {
+                  if (!loggedIn) {
+                    requireLogin("답글은 로그인한 뒤에 쓸 수 있어요.");
+                    return;
+                  }
+                  setReplyTo(comment.id);
+                }}
+              >
+                답글
+              </button>
+              {replyTo === comment.id ? (
+                <form
+                  className="mt-2"
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    const text = reply.trim();
+                    if (text.length < 2) {
+                      setError("두 글자 이상 써 주세요.");
+                      return;
+                    }
+                    setComments((current) =>
+                      current.map((item) =>
+                        item.id === comment.id
+                          ? { ...item, replies: [...item.replies, { id: Date.now(), author: "나", text, date: "2026.11.25", replies: [] }] }
+                          : item,
+                      ),
+                    );
+                    setReply("");
+                    setReplyTo(null);
+                    setError("");
+                  }}
+                >
+                  <textarea aria-label="답글 내용" value={reply} maxLength={300} onChange={(event) => setReply(event.target.value)} className="w-full border border-border px-3 py-2 text-sm" rows={2} />
+                  <button type="submit" className="mt-2 rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-white">답글 등록</button>
+                </form>
+              ) : null}
               {comment.replies.map((reply) => (
                 <div key={reply.id} className="ml-6 mt-3">
                   <p className="text-sm font-bold">{reply.author}</p>
@@ -114,6 +216,7 @@ export default function ClubPostTemplate({
             </li>
           ))}
         </ul>
+        {loggedIn ? (
         <form
           className="mt-6"
           onSubmit={(event) => {
@@ -136,6 +239,11 @@ export default function ClubPostTemplate({
             댓글 등록
           </button>
         </form>
+        ) : (
+          <button type="button" onClick={() => requireLogin("로그인하면 이 글로 돌아와요.")} className="mt-6 rounded-full border border-border px-4 py-2 text-sm font-bold">
+            로그인하고 댓글 쓰기
+          </button>
+        )}
       </section>
 
       <div className="mt-10 grid gap-3 border-y border-border py-4 text-sm">

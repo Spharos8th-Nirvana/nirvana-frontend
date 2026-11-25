@@ -22,6 +22,9 @@ export type ClubPost = {
   likes: number;
   imgs: string[];
   comments: ClubComment[];
+  /** 이 브라우저에서 내가 쓴 글 */
+  mine?: boolean;
+  deleted?: boolean;
 };
 
 const clubs: Record<number, string> = {
@@ -154,3 +157,57 @@ export const clubPosts: ClubPost[] = [
     comments: [],
   },
 ];
+
+const EXTRA_KEY = "nirvana.extra-club-posts";
+
+export function readExtraPosts(): ClubPost[] {
+  if (typeof window === "undefined") {
+    return [];
+  }
+  try {
+    const parsed: unknown = JSON.parse(window.sessionStorage.getItem(EXTRA_KEY) ?? "[]");
+    return Array.isArray(parsed) ? (parsed as ClubPost[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function saveExtraPost(post: ClubPost) {
+  const next = [post, ...readExtraPosts().filter((item) => item.id !== post.id)];
+  window.sessionStorage.setItem(EXTRA_KEY, JSON.stringify(next));
+  window.dispatchEvent(new Event("nirvana-posts"));
+}
+
+export function allClubPosts() {
+  return [...readExtraPosts(), ...clubPosts].filter((post) => !post.deleted);
+}
+
+export function subscribeExtraPosts(onChange: () => void) {
+  window.addEventListener("nirvana-posts", onChange);
+  return () => window.removeEventListener("nirvana-posts", onChange);
+}
+
+export function extraPostsSnapshot() {
+  return window.sessionStorage.getItem(EXTRA_KEY) ?? "[]";
+}
+
+export function extraPostsServerSnapshot() {
+  return "[]";
+}
+
+export function parseExtraPosts(raw: string): ClubPost[] {
+  try {
+    const parsed: unknown = JSON.parse(raw || "[]");
+    return Array.isArray(parsed) ? (parsed as ClubPost[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function markPostDeleted(id: number) {
+  const extra = readExtraPosts();
+  const found = extra.find((post) => post.id === id);
+  if (found) {
+    saveExtraPost({ ...found, deleted: true });
+  }
+}

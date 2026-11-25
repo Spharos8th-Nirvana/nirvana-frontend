@@ -11,6 +11,12 @@ import {
   subscribePendingPayment,
   writePendingPayment,
 } from "@/features/booking/utils/pending-payment";
+import {
+  previewLoginServerSnapshot,
+  previewLoginSnapshot,
+  safeNextPath,
+  subscribePreviewLogin,
+} from "@/features/guide/utils/preview-login";
 
 const methods = ["신용·체크카드", "계좌이체", "간편결제"];
 
@@ -24,6 +30,7 @@ function leftText(expiresAt: number) {
 /** 시안 결제 화면. 실제 결제는 일어나지 않습니다. */
 export default function BookingPayTemplate({ programId }: { programId: number }) {
   const router = useRouter();
+  const loggedIn = useSyncExternalStore(subscribePreviewLogin, previewLoginSnapshot, previewLoginServerSnapshot) === "1";
   const raw = useSyncExternalStore(subscribePendingPayment, pendingPaymentSnapshot, pendingPaymentServerSnapshot);
   const payment = parsePendingPayment(raw, programId);
   const [method, setMethod] = useState("");
@@ -33,6 +40,14 @@ export default function BookingPayTemplate({ programId }: { programId: number })
   const [error, setError] = useState("");
   const [failed, setFailed] = useState(false);
   const [timer, setTimer] = useState("");
+
+  useEffect(() => {
+    if (loggedIn) {
+      return;
+    }
+    const next = safeNextPath(`/programs/${programId}/booking/pay`);
+    router.replace(`/login?next=${encodeURIComponent(next)}`);
+  }, [loggedIn, programId, router]);
 
   useEffect(() => {
     const current = parsePendingPayment(raw, programId);
@@ -55,6 +70,10 @@ export default function BookingPayTemplate({ programId }: { programId: number })
     }, 1000);
     return () => window.clearInterval(id);
   }, [raw, programId]);
+
+  if (!loggedIn) {
+    return null;
+  }
 
   if (!payment) {
     return (
@@ -97,7 +116,16 @@ export default function BookingPayTemplate({ programId }: { programId: number })
       setError("");
       return;
     }
-    const next = { ...payment, status: "예약 확정" as const, method };
+    const next = {
+      ...payment,
+      status: "예약 확정" as const,
+      method,
+      paidAt: new Date().toLocaleString("ko-KR"),
+      history: [
+        ...(payment.history ?? []),
+        { at: new Date().toLocaleString("ko-KR"), status: "예약 확정" as const, by: "결제 서비스", reason: `결제 완료 (${method})` },
+      ],
+    };
     writePendingPayment(next);
     router.push(`/programs/${programId}/booking/complete`);
   };

@@ -3,10 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { safeNextPath, setPreviewLogin } from "@/features/guide/utils/preview-login";
 
 /** 시안 로그인. 계정을 확인하거나 비밀번호를 저장하지 않습니다. */
-export function LoginForm() {
+export function LoginForm({ nextPath }: { nextPath?: string }) {
   const router = useRouter();
+  const next = safeNextPath(nextPath);
   const [tab, setTab] = useState<"member" | "guest">("member");
   const [error, setError] = useState("");
   const [note, setNote] = useState("");
@@ -17,6 +19,7 @@ export function LoginForm() {
         <button type="button" role="tab" aria-selected={tab === "member"} onClick={() => setTab("member")} className={`rounded-full px-3 py-1.5 text-sm ${tab === "member" ? "bg-primary text-white" : "border"}`}>회원 로그인</button>
         <button type="button" role="tab" aria-selected={tab === "guest"} onClick={() => setTab("guest")} className={`rounded-full px-3 py-1.5 text-sm ${tab === "guest" ? "bg-primary text-white" : "border"}`}>비회원 예약 조회</button>
       </div>
+      {nextPath ? <p className="mb-3 text-sm text-muted">로그인하면 보던 화면으로 돌아가요.</p> : null}
       {tab === "member" ? (
         <form
           className="grid gap-3"
@@ -25,7 +28,8 @@ export function LoginForm() {
             const data = new FormData(event.currentTarget);
             if (!String(data.get("id") ?? "").trim()) { setError("아이디를 넣어 주세요."); return; }
             if (!String(data.get("pw") ?? "")) { setError("비밀번호를 넣어 주세요."); return; }
-            router.push("/mypage");
+            setPreviewLogin(true);
+            router.push(next);
           }}
         >
           <label className="text-sm">아이디<input name="id" className="mt-1 w-full rounded border px-3 py-2" placeholder="아이디를 넣어 주세요" /></label>

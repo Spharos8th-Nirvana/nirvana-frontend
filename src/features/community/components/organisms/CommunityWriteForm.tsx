@@ -1,7 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  extraPostsServerSnapshot,
+  extraPostsSnapshot,
+  parseExtraPosts,
+  saveExtraPost,
+  subscribeExtraPosts,
+} from "@/features/community/data/club-posts";
+import { previewLoginSnapshot } from "@/features/guide/utils/preview-login";
 
 const boards = [
   { id: "reviews", label: "체험 후기" },
@@ -11,10 +20,21 @@ const boards = [
 type BoardId = (typeof boards)[number]["id"];
 
 /** 시안의 글쓰기 화면. 완료 예약·가입 동호회 데이터가 없어 저장하지 않습니다. */
-export default function CommunityWriteForm() {
-  const [board, setBoard] = useState<BoardId>("reviews");
+export default function CommunityWriteForm({ editId }: { editId?: number }) {
+  const router = useRouter();
+  const rawPosts = useSyncExternalStore(subscribeExtraPosts, extraPostsSnapshot, extraPostsServerSnapshot);
+  const editing = editId
+    ? parseExtraPosts(rawPosts).find((post) => post.id === editId && post.mine && !post.deleted)
+    : undefined;
+  const [board, setBoard] = useState<BoardId>("clubs");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+  const [seenEdit, setSeenEdit] = useState(0);
+  if (editing && seenEdit !== editing.id) {
+    setTitle(editing.title);
+    setBody(editing.body);
+    setSeenEdit(editing.id);
+  }
   const [photos, setPhotos] = useState<string[]>([]);
   const [message, setMessage] = useState("");
 
@@ -37,7 +57,32 @@ export default function CommunityWriteForm() {
       setMessage("내용은 10자 이상 적어 주세요.");
       return;
     }
-    setMessage("작성한 글은 이 화면에만 남고 저장되지 않아요.");
+    if (previewLoginSnapshot() !== "1") {
+      router.push(`/login?next=${encodeURIComponent(editId ? `/community/write?post=${editId}` : "/community/write")}`);
+      return;
+    }
+    if (editing) {
+      saveExtraPost({ ...editing, title: title.trim(), body: body.trim() });
+      router.push(`/community/posts/${editing.id}`);
+      return;
+    }
+    const id = Date.now();
+    saveExtraPost({
+      id,
+      clubId: 3,
+      clubName: "주말 템플스테이 동행",
+      cat: "일상",
+      title: title.trim(),
+      body: body.trim(),
+      author: "나",
+      date: "2026.11.25",
+      views: 0,
+      likes: 0,
+      imgs: photos,
+      comments: [],
+      mine: true,
+    });
+    router.push(`/community/posts/${id}`);
   };
 
   return (
@@ -136,7 +181,7 @@ export default function CommunityWriteForm() {
         </p>
       )}
       <button type="submit" className="mt-6 rounded-full bg-primary px-6 py-3 text-sm font-bold text-white">
-        등록
+        {editing ? "수정 완료" : "등록"}
       </button>
     </form>
   );

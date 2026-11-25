@@ -43,7 +43,8 @@ export default function BookingCompleteTemplate({ programId }: { programId: numb
           <div className="flex justify-between gap-4"><dt className="text-muted">결제</dt><dd>{confirmed.totalPrice.toLocaleString("ko-KR")}원 · {confirmed.method}</dd></div>
         </dl>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link href="/mypage" className="rounded-full bg-primary px-5 py-3 text-sm font-bold text-white">내 예약</Link>
+          <Link href={`/mypage/bookings/${confirmed.id}`} className="rounded-full bg-primary px-5 py-3 text-sm font-bold text-white">예약 상세 보기</Link>
+          <Link href="/mypage" className="rounded-full border border-border px-5 py-3 text-sm font-bold text-ink">내 예약</Link>
           <Link href="/mypage/passport" className="rounded-full border border-border px-5 py-3 text-sm font-bold text-ink">사찰 패스포트</Link>
           <Link href="/programs" className="rounded-full border border-border px-5 py-3 text-sm font-bold text-ink">다른 프로그램 보기</Link>
           <Link href="/" className="rounded-full border border-border px-5 py-3 text-sm font-bold text-ink">홈으로</Link>
