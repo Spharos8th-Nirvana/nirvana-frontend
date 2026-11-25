@@ -1,7 +1,7 @@
 import { programs } from "@/features/program/data/programs";
 import PageHero from "@/shared/components/layout/PageHero";
 import ProgramFilter from "@/features/program/components/organisms/ProgramFilter";
-import { CalendarIcon, SearchIcon, UsersIcon } from "@/shared/components/ui/icons";
+import { CalendarIcon, SearchIcon, UsersIcon } from "@/shared/components/ui/Icons";
 
 type ProgramsPageProps = {
   searchParams: Promise<{

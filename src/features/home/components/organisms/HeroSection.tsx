@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CalendarIcon, SearchIcon, UsersIcon } from "@/shared/components/ui/icons";
+import { CalendarIcon, SearchIcon, UsersIcon } from "@/shared/components/ui/Icons";
 
 const heroImage = "https://www.bulkwang.co.kr/news/photo/202209/37881_20706_4159.jpg";
 
