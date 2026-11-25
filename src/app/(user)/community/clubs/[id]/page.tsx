@@ -33,7 +33,7 @@ export default async function ClubDetailPage({ params }: { params: Promise<{ id:
       <ul className="mt-3 divide-y border-y border-border">
         {posts.map((post) => (
           <li key={post.id} className="py-3">
-            <p className="font-bold text-primary">{post.title}</p>
+            <Link href={`/community/posts/${post.id}`} className="font-bold text-primary">{post.title}</Link>
             <p className="text-sm text-muted">{post.body}</p>
             <p className="text-xs text-muted">{post.author} · {post.date}</p>
           </li>
