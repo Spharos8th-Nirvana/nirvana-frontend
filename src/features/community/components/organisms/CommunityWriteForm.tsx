@@ -10,7 +10,14 @@ import {
   saveExtraPost,
   subscribeExtraPosts,
 } from "@/features/community/data/club-posts";
+import { clubs } from "@/features/guide/data/mock-screens";
 import { previewLoginSnapshot } from "@/features/guide/utils/preview-login";
+import {
+  joinedClubsServerSnapshot,
+  joinedClubsSnapshot,
+  parseJoinedClubs,
+  subscribeJoinedClubs,
+} from "@/features/community/utils/club-membership";
 
 const boards = [
   { id: "reviews", label: "체험 후기" },
@@ -18,6 +25,10 @@ const boards = [
 ] as const;
 
 type BoardId = (typeof boards)[number]["id"];
+
+function nextPostId() {
+  return Date.now();
+}
 
 /** 시안의 글쓰기 화면. 완료 예약·가입 동호회 데이터가 없어 저장하지 않습니다. */
 export default function CommunityWriteForm({ editId }: { editId?: number }) {
@@ -30,13 +41,19 @@ export default function CommunityWriteForm({ editId }: { editId?: number }) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [seenEdit, setSeenEdit] = useState(0);
+  const [clubId, setClubId] = useState(0);
+  const [photos, setPhotos] = useState<string[]>([]);
+  const [message, setMessage] = useState("");
+  const joinedIds = parseJoinedClubs(
+    useSyncExternalStore(subscribeJoinedClubs, joinedClubsSnapshot, joinedClubsServerSnapshot),
+  );
   if (editing && seenEdit !== editing.id) {
     setTitle(editing.title);
     setBody(editing.body);
     setSeenEdit(editing.id);
   }
-  const [photos, setPhotos] = useState<string[]>([]);
-  const [message, setMessage] = useState("");
+  const joinedClubs = clubs.filter((club) => joinedIds.includes(club.id));
+  const selectedClub = joinedClubs.find((club) => club.id === clubId) ?? joinedClubs[0];
 
   const onPhotos = (files: FileList | null) => {
     const next = Array.from(files ?? []).slice(0, 4);
@@ -61,16 +78,20 @@ export default function CommunityWriteForm({ editId }: { editId?: number }) {
       router.push(`/login?next=${encodeURIComponent(editId ? `/community/write?post=${editId}` : "/community/write")}`);
       return;
     }
+    if (board === "clubs" && !selectedClub) {
+      setMessage("가입한 동호회가 있어야 글을 쓸 수 있어요.");
+      return;
+    }
     if (editing) {
       saveExtraPost({ ...editing, title: title.trim(), body: body.trim() });
       router.push(`/community/posts/${editing.id}`);
       return;
     }
-    const id = Date.now();
+    const id = nextPostId();
     saveExtraPost({
       id,
-      clubId: 3,
-      clubName: "주말 템플스테이 동행",
+      clubId: selectedClub?.id ?? 3,
+      clubName: selectedClub?.name ?? "주말 템플스테이 동행",
       cat: "일상",
       title: title.trim(),
       body: body.trim(),
@@ -124,13 +145,28 @@ export default function CommunityWriteForm({ editId }: { editId?: number }) {
           </Link>
         </div>
       ) : (
+        selectedClub ? (
+          <label className="mt-8 block text-sm font-bold text-ink">
+            동호회
+            <select
+              value={selectedClub.id}
+              onChange={(event) => setClubId(Number(event.target.value))}
+              className="mt-2 w-full border border-border px-4 py-3 text-sm font-normal"
+            >
+              {joinedClubs.map((club) => (
+                <option key={club.id} value={club.id}>{club.name}</option>
+              ))}
+            </select>
+          </label>
+        ) : (
         <div className="mt-8 border border-border bg-subtle px-5 py-8 text-center">
           <p className="font-bold text-ink">가입한 동호회가 있어야 글을 쓸 수 있어요.</p>
           <p className="mt-2 text-sm text-muted">아직 가입한 동호회가 없어요.</p>
-          <Link href="/community" className="mt-5 inline-flex rounded-full bg-primary px-5 py-3 text-sm font-bold text-white">
-            커뮤니티로 가기
+          <Link href="/community/clubs" className="mt-5 inline-flex rounded-full bg-primary px-5 py-3 text-sm font-bold text-white">
+            동호회 보러 가기
           </Link>
         </div>
+        )
       )}
 
       <label className="mt-8 block text-sm font-bold text-ink">

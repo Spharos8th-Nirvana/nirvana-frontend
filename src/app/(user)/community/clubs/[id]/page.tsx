@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { PreviewPage } from "@/shared/components/layout/PreviewPage";
 import { SectionNav } from "@/shared/components/layout/SectionNav";
 import { clubPosts, clubs } from "@/features/guide/data/mock-screens";
+import { ClubJoinButton } from "@/features/community/components/molecules/ClubJoinButton";
 
 const communityNav = [
   { href: "/community/clubs", label: "동호회" },
@@ -28,6 +29,7 @@ export default async function ClubDetailPage({ params }: { params: Promise<{ id:
         <div>만든 때 {club.since}</div>
       </dl>
       <ul className="mt-4 list-disc pl-5 text-sm">{club.rules.map((rule) => <li key={rule}>{rule}</li>)}</ul>
+      <ClubJoinButton clubId={club.id} clubName={club.name} nextPath={`/community/clubs/${club.id}`} />
       <p className="mt-3 text-xs text-muted">가입 방식은 시안에서 ‘바로 가입 · 가입자만 글쓰기’예요. 실제 규칙은 팀 확인이 필요해요.</p>
       <h2 className="mt-8 text-xl text-primary">동호회 게시판</h2>
       <ul className="mt-3 divide-y border-y border-border">

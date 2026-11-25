@@ -1,3 +1,5 @@
+import { clearJoinedClubs } from "@/features/community/utils/club-membership";
+
 const LOGIN_KEY = "nirvana.preview-login";
 
 export function subscribePreviewLogin(onChange: () => void) {
@@ -18,6 +20,7 @@ export function setPreviewLogin(on: boolean) {
     window.sessionStorage.setItem(LOGIN_KEY, "1");
   } else {
     window.sessionStorage.removeItem(LOGIN_KEY);
+    clearJoinedClubs();
   }
   window.dispatchEvent(new Event("nirvana-login"));
 }

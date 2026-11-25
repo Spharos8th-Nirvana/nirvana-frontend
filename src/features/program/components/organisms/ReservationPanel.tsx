@@ -1,10 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import ReservationCalendar from "@/features/program/components/molecules/ReservationCalendar";
 import type { ProgramSchedule } from "@/features/program/data/program-schedules";
 import { previewLoginSnapshot, safeNextPath } from "@/features/guide/utils/preview-login";
+import {
+  bookingRecordsSnapshot,
+  heldHeadcount,
+  parseBookingRecords,
+  pendingPaymentServerSnapshot,
+  subscribePendingPayment,
+} from "@/features/booking/utils/pending-payment";
 import {
   buildBookingHref,
   calculateTotalPrice,
@@ -90,7 +97,22 @@ export default function ReservationPanel({
   initialYouthCount = 0,
 }: ReservationPanelProps) {
   const router = useRouter();
-  const schedulesByDate = useMemo(() => groupSchedulesByStartDate(schedules), [schedules]);
+  const recordsRaw = useSyncExternalStore(
+    subscribePendingPayment,
+    bookingRecordsSnapshot,
+    pendingPaymentServerSnapshot,
+  );
+  const records = useMemo(() => parseBookingRecords(recordsRaw), [recordsRaw]);
+  // 화면에서만 결제대기·확정 인원만큼 예약된 자리를 더합니다. 원래 회차 데이터는 바꾸지 않습니다.
+  const visibleSchedules = useMemo(
+    () =>
+      schedules.map((schedule) => ({
+        ...schedule,
+        reservedCount: schedule.reservedCount + heldHeadcount(records, schedule.id),
+      })),
+    [records, schedules],
+  );
+  const schedulesByDate = useMemo(() => groupSchedulesByStartDate(visibleSchedules), [visibleSchedules]);
 
   // 2단계에서 돌아왔다면 그 회차의 날짜와 회차를 이어서 선택해 둡니다.
   const initialSchedule = schedules.find((schedule) => schedule.id === initialScheduleId);
@@ -101,7 +123,7 @@ export default function ReservationPanel({
 
   const daySchedules = selectedDate ? (schedulesByDate.get(selectedDate) ?? []) : [];
   const hasMultipleSessions = daySchedules.length > 1;
-  const selectedSchedule = schedules.find((schedule) => schedule.id === scheduleId);
+  const selectedSchedule = visibleSchedules.find((schedule) => schedule.id === scheduleId);
 
   // 날짜를 고르면: 그날 예약 가능한 회차가 하나뿐이면 바로 선택, 여러 개면 시간을 고르게 합니다.
   const handleDateChange = (date: string) => {

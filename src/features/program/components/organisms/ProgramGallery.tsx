@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState, type KeyboardEvent, type TouchEvent } from "react";
+import PhotoViewer from "@/features/community/components/molecules/PhotoViewer";
 
 type ProgramGalleryProps = {
   images: string[];
@@ -28,6 +29,7 @@ export default function ProgramGallery({ images, name, caption }: ProgramGallery
   const dialogRef = useRef<HTMLDialogElement>(null);
   const touchStartX = useRef<number | null>(null);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [viewer, setViewer] = useState<number | null>(null);
   const isOpen = openIndex !== null;
 
   // 크게 보는 동안 뒤 페이지 스크롤을 막습니다.
@@ -47,8 +49,7 @@ export default function ProgramGallery({ images, name, caption }: ProgramGallery
   }
 
   const open = (index: number) => {
-    setOpenIndex(index);
-    dialogRef.current?.showModal();
+    setViewer(index);
   };
 
   const close = () => dialogRef.current?.close();
@@ -146,6 +147,9 @@ export default function ProgramGallery({ images, name, caption }: ProgramGallery
           </div>
         ))}
       </div>
+      {viewer !== null ? (
+        <PhotoViewer images={photos} start={viewer} title={name} onClose={() => setViewer(null)} />
+      ) : null}
 
       {/* 크게 보기 (브라우저 기본 대화상자: 포커스 가두기와 Esc 닫기를 브라우저가 처리) */}
       <dialog

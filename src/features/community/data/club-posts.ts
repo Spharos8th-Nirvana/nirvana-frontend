@@ -6,6 +6,9 @@ export type ClubComment = {
   text: string;
   date: string;
   staff?: boolean;
+  mine?: boolean;
+  edited?: boolean;
+  deleted?: boolean;
   replies: ClubComment[];
 };
 

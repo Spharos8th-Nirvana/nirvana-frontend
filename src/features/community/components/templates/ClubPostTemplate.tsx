@@ -36,6 +36,8 @@ export default function ClubPostTemplate({
   const [replyTo, setReplyTo] = useState<number | null>(null);
   const [reply, setReply] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingText, setEditingText] = useState("");
   const router = useRouter();
   const loggedIn = useSyncExternalStore(subscribePreviewLogin, previewLoginSnapshot, previewLoginServerSnapshot) === "1";
   const listHref = `/community/clubs/${post.clubId}`;
@@ -54,10 +56,53 @@ export default function ClubPostTemplate({
     }
     setComments((current) => [
       ...current,
-      { id: Date.now(), author: "나", text, date: "2026.11.25", replies: [] },
+      { id: Date.now(), author: "나", text, date: "2026.11.25", mine: true, replies: [] },
     ]);
     setDraft("");
     setError("");
+  };
+
+  const saveEdit = (id: number, parentId: number | null) => {
+    const text = editingText.trim();
+    if (text.length < 2) {
+      setError("두 글자 이상 써 주세요.");
+      return;
+    }
+    setComments((current) =>
+      current.map((item) => {
+        if (parentId === null && item.id === id) {
+          return { ...item, text, edited: true };
+        }
+        if (item.id === parentId) {
+          return {
+            ...item,
+            replies: item.replies.map((replyItem) => (replyItem.id === id ? { ...replyItem, text, edited: true } : replyItem)),
+          };
+        }
+        return item;
+      }),
+    );
+    setEditingId(null);
+    setError("");
+  };
+
+  const removeComment = (id: number, parentId: number | null) => {
+    setComments((current) => {
+      if (parentId === null) {
+        return current.flatMap((item) => {
+          if (item.id !== id) {
+            return [item];
+          }
+          if (item.replies.length > 0) {
+            return [{ ...item, deleted: true, text: "삭제된 댓글입니다." }];
+          }
+          return [];
+        });
+      }
+      return current.map((item) =>
+        item.id === parentId ? { ...item, replies: item.replies.filter((replyItem) => replyItem.id !== id) } : item,
+      );
+    });
   };
 
   const copyLink = async () => {
@@ -167,7 +212,32 @@ export default function ClubPostTemplate({
                 {comment.staff && <span className="ml-2 text-xs text-primary">운영팀</span>}
                 <span className="ml-2 font-normal text-muted">{comment.date}</span>
               </p>
-              <p className="mt-1 text-sm text-ink">{comment.text}</p>
+              {comment.deleted ? (
+                <p className="mt-1 text-sm text-muted">삭제된 댓글입니다.</p>
+              ) : editingId === comment.id ? (
+                <form
+                  className="mt-2"
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    saveEdit(comment.id, null);
+                  }}
+                >
+                  <textarea aria-label="댓글 수정" value={editingText} maxLength={300} onChange={(event) => setEditingText(event.target.value)} className="w-full border border-border px-3 py-2 text-sm" rows={2} />
+                  <button type="submit" className="mt-2 text-xs font-bold text-primary">저장</button>
+                </form>
+              ) : (
+                <p className="mt-1 text-sm text-ink">
+                  {comment.text}
+                  {comment.edited ? <span className="text-muted"> (수정됨)</span> : null}
+                </p>
+              )}
+              {comment.mine && !comment.deleted ? (
+                <div className="mt-1 flex gap-3 text-xs">
+                  <button type="button" className="underline" onClick={() => { setEditingId(comment.id); setEditingText(comment.text); }}>수정</button>
+                  <button type="button" className="underline" onClick={() => removeComment(comment.id, null)}>삭제</button>
+                </div>
+              ) : null}
+              {!comment.deleted ? (
               <button
                 type="button"
                 className="mt-1 text-xs text-muted underline"
@@ -181,6 +251,7 @@ export default function ClubPostTemplate({
               >
                 답글
               </button>
+              ) : null}
               {replyTo === comment.id ? (
                 <form
                   className="mt-2"
@@ -194,7 +265,7 @@ export default function ClubPostTemplate({
                     setComments((current) =>
                       current.map((item) =>
                         item.id === comment.id
-                          ? { ...item, replies: [...item.replies, { id: Date.now(), author: "나", text, date: "2026.11.25", replies: [] }] }
+                          ? { ...item, replies: [...item.replies, { id: Date.now(), author: "나", text, date: "2026.11.25", mine: true, replies: [] }] }
                           : item,
                       ),
                     );
@@ -207,10 +278,32 @@ export default function ClubPostTemplate({
                   <button type="submit" className="mt-2 rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-white">답글 등록</button>
                 </form>
               ) : null}
-              {comment.replies.map((reply) => (
-                <div key={reply.id} className="ml-6 mt-3">
-                  <p className="text-sm font-bold">{reply.author}</p>
-                  <p className="text-sm">{reply.text}</p>
+              {comment.replies.map((child) => (
+                <div key={child.id} className="ml-6 mt-3">
+                  <p className="text-sm font-bold">{child.author}</p>
+                  {editingId === child.id ? (
+                    <form
+                      className="mt-1"
+                      onSubmit={(event) => {
+                        event.preventDefault();
+                        saveEdit(child.id, comment.id);
+                      }}
+                    >
+                      <textarea aria-label="답글 수정" value={editingText} maxLength={300} onChange={(event) => setEditingText(event.target.value)} className="w-full border border-border px-3 py-2 text-sm" rows={2} />
+                      <button type="submit" className="mt-2 text-xs font-bold text-primary">저장</button>
+                    </form>
+                  ) : (
+                    <p className="text-sm">
+                      {child.text}
+                      {child.edited ? <span className="text-muted"> (수정됨)</span> : null}
+                    </p>
+                  )}
+                  {child.mine ? (
+                    <div className="mt-1 flex gap-3 text-xs">
+                      <button type="button" className="underline" onClick={() => { setEditingId(child.id); setEditingText(child.text); }}>수정</button>
+                      <button type="button" className="underline" onClick={() => removeComment(child.id, comment.id)}>삭제</button>
+                    </div>
+                  ) : null}
                 </div>
               ))}
             </li>

@@ -32,6 +32,8 @@ export type PendingPayment = {
   image: string;
   scheduleLabel: string;
   peopleLabel: string;
+  adultCount: number;
+  youthCount: number;
   totalPrice: number;
   expiresAt: number;
   status: BookingStatus;
@@ -60,7 +62,32 @@ function readRecords(): PendingPayment[] {
 
 function writeRecords(records: PendingPayment[]) {
   window.sessionStorage.setItem(LIST_KEY, JSON.stringify(records));
+  const held = new Map<string, number>();
+  records.forEach((item) => {
+    if (item.status !== "결제대기" && item.status !== "예약 확정") {
+      return;
+    }
+    held.set(item.scheduleId, (held.get(item.scheduleId) ?? 0) + (item.adultCount || 0) + (item.youthCount || 0));
+  });
+  const value = [...held.entries()].map(([id, count]) => `${id}=${count}`).join(",");
+  document.cookie = `nirvana-holds=${encodeURIComponent(value)}; path=/; max-age=86400; SameSite=Lax`;
   window.dispatchEvent(new Event("nirvana-payment"));
+}
+
+/** 결제대기·예약 확정이 잡아 둔 인원. 취소·만료·노쇼·이용 완료는 빼지 않습니다. */
+export function heldHeadcount(records: PendingPayment[], scheduleId: string) {
+  return records
+    .filter((item) => item.scheduleId === scheduleId && (item.status === "결제대기" || item.status === "예약 확정"))
+    .reduce((sum, item) => sum + (item.adultCount || 0) + (item.youthCount || 0), 0);
+}
+
+export function heldFromCookie(raw: string | undefined, scheduleId: string) {
+  if (!raw) {
+    return 0;
+  }
+  const text = decodeURIComponent(raw);
+  const found = text.split(",").find((part) => part.startsWith(`${scheduleId}=`));
+  return found ? Number(found.split("=")[1]) || 0 : 0;
 }
 
 export function bookingRecordsSnapshot() {
@@ -101,6 +128,8 @@ export function savePendingPayment(selection: BookingSelection) {
     image: selection.image,
     scheduleLabel: selection.scheduleLabel,
     peopleLabel: peopleLabel(selection),
+    adultCount: selection.adultCount,
+    youthCount: selection.youthCount,
     totalPrice: selection.totalPrice,
     expiresAt: Date.now() + HOLD_MS,
     status: "결제대기",

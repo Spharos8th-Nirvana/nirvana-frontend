@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
+import { heldFromCookie } from "@/features/booking/utils/pending-payment";
 import BookingProgress from "@/features/booking/components/organisms/BookingProgress";
 import BookingInfoTemplate from "@/features/booking/components/templates/BookingInfoTemplate";
 import { bookingTerms } from "@/features/booking/data/booking-terms";
@@ -42,6 +44,11 @@ export default async function BookingPage({ params, searchParams }: BookingPageP
   );
   const adultCount = parseCountParam(query.adults);
   const youthCount = parseCountParam(query.youth) ?? 0;
+  const holdCookie = (await cookies()).get("nirvana-holds")?.value;
+  const seatsLeft =
+    schedule === undefined
+      ? 0
+      : Math.max(0, getRemainingSeats(schedule) - heldFromCookie(holdCookie, schedule.id));
 
   // 1단계에서 넘어온 값 확인 (화면용 확인이며, 최종 검증은 Backend가 합니다)
   const isValidSelection =
@@ -50,7 +57,7 @@ export default async function BookingPage({ params, searchParams }: BookingPageP
     adultCount !== null &&
     (program.youthAllowed || youthCount === 0) &&
     adultCount + youthCount >= 1 &&
-    adultCount + youthCount <= getRemainingSeats(schedule);
+    adultCount + youthCount <= seatsLeft;
 
   if (!isValidSelection) {
     redirect(programPath);
