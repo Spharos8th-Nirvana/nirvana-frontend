@@ -14,8 +14,8 @@ function getWeekDay(value: string) {
 }
 
 /** 회차의 남은 자리 */
-export function getRemainingSeats(schedule: ProgramSchedule): number {
-  return Math.max(0, schedule.capacity - schedule.reservedCount);
+export function getRemainingSeats(schedule: ProgramSchedule, held = 0): number {
+  return Math.max(0, schedule.capacity - schedule.reservedCount - held);
 }
 
 /** 예약할 수 있는 회차인지 (판매 중이고 남은 자리가 있음) */
@@ -31,6 +31,7 @@ export function isScheduleAvailable(schedule: ProgramSchedule): boolean {
 export function hasMatchingSchedule(
   schedules: ProgramSchedule[],
   filter: { date: string; people: number | null },
+  heldForSchedule: (scheduleId: string) => number = () => 0,
 ): boolean {
   const date = /^\d{4}-\d{2}-\d{2}$/.test(filter.date) ? filter.date : "";
   const people = filter.people !== null && filter.people > 0 ? filter.people : null;
@@ -46,7 +47,7 @@ export function hasMatchingSchedule(
     if (date && schedule.operationStartDate !== date) {
       return false;
     }
-    if (people !== null && getRemainingSeats(schedule) < people) {
+    if (people !== null && getRemainingSeats(schedule, heldForSchedule(schedule.id)) < people) {
       return false;
     }
     return true;

@@ -5,9 +5,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import BookingProgress from "@/features/booking/components/organisms/BookingProgress";
 import {
+  bookingRecordsSnapshot,
+  expireDuePayments,
+  findBooking,
+  isPaymentExpired,
+  parseBookingRecords,
   parsePendingPayment,
   pendingPaymentServerSnapshot,
   pendingPaymentSnapshot,
+  readPendingPayment,
   subscribePendingPayment,
   writePendingPayment,
 } from "@/features/booking/utils/pending-payment";
@@ -62,13 +68,15 @@ export default function BookingPayTemplate({ programId }: { programId: number })
     if (!current || current.status !== "결제대기") {
       return;
     }
-    const id = window.setInterval(() => {
-      if (Date.now() >= current.expiresAt) {
-        writePendingPayment({ ...current, status: "만료" });
+    const tick = () => {
+      const now = Date.now();
+      if (isPaymentExpired(current, now)) {
+        expireDuePayments(now);
         return;
       }
       setTimer(leftText(current.expiresAt));
-    }, 1000);
+    };
+    const id = window.setInterval(tick, 1000);
     return () => window.clearInterval(id);
   }, [raw, programId]);
 
@@ -76,7 +84,7 @@ export default function BookingPayTemplate({ programId }: { programId: number })
     return null;
   }
 
-  if (!payment) {
+  if (!payment || (payment.status !== "결제대기" && payment.status !== "만료" && payment.status !== "예약 확정")) {
     return (
       <div className="bg-white px-6 py-16 text-center">
         <p className="text-lg font-bold text-ink">결제할 예약이 없어요.</p>
@@ -104,6 +112,20 @@ export default function BookingPayTemplate({ programId }: { programId: number })
   }
 
   const pay = () => {
+    const pending = readPendingPayment();
+    const current = findBooking(parseBookingRecords(bookingRecordsSnapshot()), payment.id);
+    if (pending?.id !== payment.id || current?.programId !== programId || current.status !== "결제대기") {
+      setError("지금 결제할 수 없는 예약입니다.");
+      return;
+    }
+    if (isPaymentExpired(current)) {
+      expireDuePayments();
+      return;
+    }
+    if (!Number.isSafeInteger(current.expiresAt) || current.expiresAt <= 0) {
+      setError("예약의 결제 시간을 확인할 수 없어요. 다시 예약해 주세요.");
+      return;
+    }
     if (!agreeRefund || !agreeShare) {
       setError("필수 동의 2개에 체크해 주세요.");
       return;
@@ -118,12 +140,12 @@ export default function BookingPayTemplate({ programId }: { programId: number })
       return;
     }
     const next = {
-      ...payment,
+      ...current,
       status: "예약 확정" as const,
       method,
       paidAt: new Date().toLocaleString("ko-KR"),
       history: [
-        ...(payment.history ?? []),
+        ...(current.history ?? []),
         { at: new Date().toLocaleString("ko-KR"), status: "예약 확정" as const, by: "결제 서비스", reason: `결제 완료 (${method})` },
       ],
     };

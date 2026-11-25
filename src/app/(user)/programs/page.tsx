@@ -3,6 +3,8 @@ import { programSchedules } from "@/features/program/data/program-schedules";
 import { hasMatchingSchedule, parseCountParam } from "@/features/program/utils/booking";
 import PageHero from "@/shared/components/layout/PageHero";
 import ProgramFilter from "@/features/program/components/organisms/ProgramFilter";
+import ProgramSeatResults from "@/features/program/components/organisms/ProgramSeatResults";
+import SeatCookieAlign from "@/features/booking/components/organisms/SeatCookieAlign";
 
 type ProgramsPageProps = {
   searchParams: Promise<{
@@ -86,7 +88,7 @@ export default async function ProgramsPage({
     schedulesByProgram.set(schedule.programId, list);
   }
 
-  // 검색어, 분류, 지역, 날짜, 인원을 모두 만족하는 프로그램만 남깁니다.
+  // 날짜 후보는 서버에서 고르고, 이 탭의 예약을 반영한 인원 필터는 브라우저에서 실행합니다.
   const filteredPrograms = programs.filter((program) => {
     return (
       matchesKeyword(program, keyword) &&
@@ -94,7 +96,7 @@ export default async function ProgramsPage({
       matchesRegion(program, region) &&
       hasMatchingSchedule(schedulesByProgram.get(program.id) ?? [], {
         date,
-        people: peopleCount,
+        people: null,
       })
     );
   });
@@ -296,7 +298,17 @@ export default async function ProgramsPage({
 
         {/* 프로그램 목록 및 필터 */}
         <div className="mt-12">
-          <ProgramFilter programs={filteredPrograms} />
+          <SeatCookieAlign />
+          {peopleCount !== null && peopleCount > 0 ? (
+            <ProgramSeatResults
+              programs={filteredPrograms}
+              schedules={programSchedules}
+              date={date}
+              people={peopleCount}
+            />
+          ) : (
+            <ProgramFilter programs={filteredPrograms} />
+          )}
         </div>
       </div>
     </main>

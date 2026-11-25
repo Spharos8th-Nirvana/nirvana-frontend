@@ -44,11 +44,6 @@ export default async function BookingPage({ params, searchParams }: BookingPageP
   );
   const adultCount = parseCountParam(query.adults);
   const youthCount = parseCountParam(query.youth) ?? 0;
-  const holdCookie = (await cookies()).get("nirvana-holds")?.value;
-  const seatsLeft =
-    schedule === undefined
-      ? 0
-      : Math.max(0, getRemainingSeats(schedule) - heldFromCookie(holdCookie, schedule.id));
 
   // 1단계에서 넘어온 값 확인 (화면용 확인이며, 최종 검증은 Backend가 합니다)
   const isValidSelection =
@@ -57,11 +52,15 @@ export default async function BookingPage({ params, searchParams }: BookingPageP
     adultCount !== null &&
     (program.youthAllowed || youthCount === 0) &&
     adultCount + youthCount >= 1 &&
-    adultCount + youthCount <= seatsLeft;
+    adultCount + youthCount <= getRemainingSeats(schedule);
 
   if (!isValidSelection) {
     redirect(programPath);
   }
+
+  // 쿠키는 첫 화면에만 참고합니다. 현재 탭 예약 기록으로 다시 검사한 뒤 입력을 엽니다.
+  const holdCookie = (await cookies()).get("nirvana-holds")?.value;
+  const serverMayBeFull = adultCount + youthCount > getRemainingSeats(schedule, heldFromCookie(holdCookie, schedule.id));
 
   const refundRules =
     cancellationPolicies.find((policy) => policy.templeId === program.templeId)?.rules ?? [];
@@ -87,6 +86,8 @@ export default async function BookingPage({ params, searchParams }: BookingPageP
 
         <div className="mt-12">
           <BookingInfoTemplate
+            schedule={schedule}
+            serverMayBeFull={serverMayBeFull}
             selection={{
               programName: program.name,
               templeName: program.temple,

@@ -5,12 +5,13 @@ import { useRouter } from "next/navigation";
 import ReservationCalendar from "@/features/program/components/molecules/ReservationCalendar";
 import type { ProgramSchedule } from "@/features/program/data/program-schedules";
 import { previewLoginSnapshot, safeNextPath } from "@/features/guide/utils/preview-login";
+import SeatCookieAlign from "@/features/booking/components/organisms/SeatCookieAlign";
 import {
-  bookingRecordsSnapshot,
-  heldHeadcount,
-  parseBookingRecords,
-  pendingPaymentServerSnapshot,
-  subscribePendingPayment,
+  alignSeatCookie,
+  heldFromSnapshot,
+  seatHoldsServerSnapshot,
+  seatHoldsSnapshot,
+  subscribeSeatHolds,
 } from "@/features/booking/utils/pending-payment";
 import {
   buildBookingHref,
@@ -97,20 +98,16 @@ export default function ReservationPanel({
   initialYouthCount = 0,
 }: ReservationPanelProps) {
   const router = useRouter();
-  const recordsRaw = useSyncExternalStore(
-    subscribePendingPayment,
-    bookingRecordsSnapshot,
-    pendingPaymentServerSnapshot,
-  );
-  const records = useMemo(() => parseBookingRecords(recordsRaw), [recordsRaw]);
+  const holds = useSyncExternalStore(subscribeSeatHolds, seatHoldsSnapshot, seatHoldsServerSnapshot);
   // 화면에서만 결제대기·확정 인원만큼 예약된 자리를 더합니다. 원래 회차 데이터는 바꾸지 않습니다.
   const visibleSchedules = useMemo(
-    () =>
-      schedules.map((schedule) => ({
+    () => holds === null
+      ? []
+      : schedules.map((schedule) => ({
         ...schedule,
-        reservedCount: schedule.reservedCount + heldHeadcount(records, schedule.id),
+        reservedCount: schedule.reservedCount + heldFromSnapshot(holds, schedule.id),
       })),
-    [records, schedules],
+    [holds, schedules],
   );
   const schedulesByDate = useMemo(() => groupSchedulesByStartDate(visibleSchedules), [visibleSchedules]);
 
@@ -144,16 +141,19 @@ export default function ReservationPanel({
     { adultCount, youthCount: appliedYouthCount },
   );
 
-  const canProceed = selectedSchedule !== undefined && totalCount > 0 && !isOverCapacity;
+  const canProceed = selectedSchedule !== undefined && isScheduleAvailable(selectedSchedule) && totalCount > 0 && !isOverCapacity;
 
   const handleProceed = () => {
-    if (!selectedSchedule || !canProceed) {
+    const schedule = schedules.find((item) => item.id === scheduleId);
+    if (!schedule?.bookable || totalCount < 1 ||
+      totalCount > getRemainingSeats(schedule, heldFromSnapshot(seatHoldsSnapshot(), schedule.id))) {
       return;
     }
 
+    alignSeatCookie();
     const href = buildBookingHref({
       programId,
-      scheduleId: selectedSchedule.id,
+      scheduleId: schedule.id,
       adultCount,
       youthCount: appliedYouthCount,
     });
@@ -175,16 +175,21 @@ export default function ReservationPanel({
 
   return (
     <div className="sticky top-28 self-start rounded-lg border border-border bg-white p-6">
+      <SeatCookieAlign />
       <h2 className="text-lg font-bold text-ink">나의 고요를 예약하세요</h2>
 
       {/* 입실일 선택 */}
       <div className="mt-6">
-        <ReservationCalendar
-          schedulesByDate={schedulesByDate}
-          selectedDate={selectedDate}
-          selectedSchedule={selectedSchedule}
-          onDateChange={handleDateChange}
-        />
+        {holds === null ? (
+          <p role="status" className="text-sm text-muted">남은 자리를 확인하고 있습니다.</p>
+        ) : (
+          <ReservationCalendar
+            schedulesByDate={schedulesByDate}
+            selectedDate={selectedDate}
+            selectedSchedule={selectedSchedule}
+            onDateChange={handleDateChange}
+          />
+        )}
       </div>
 
       {/* 시간 선택: 하루에 회차가 여러 개인 날만 보입니다. */}

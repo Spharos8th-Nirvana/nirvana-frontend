@@ -1,8 +1,7 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PreviewPage } from "@/shared/components/layout/PreviewPage";
 import { SectionNav } from "@/shared/components/layout/SectionNav";
 import { reviews } from "@/features/guide/data/mock-screens";
+import ReviewDetail from "@/features/community/components/organisms/ReviewDetail";
 
 const communityNav = [
   { href: "/community/clubs", label: "동호회" },
@@ -13,15 +12,16 @@ const communityNav = [
 
 export default async function ReviewDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const review = reviews.find((item) => item.id === Number(id));
-  if (!review) notFound();
+  const example = reviews.find((item) => String(item.id) === id);
+  const localId = /^local-([1-9]\d*)$/.exec(id);
+  const reservationId = localId ? Number(localId[1]) : undefined;
+  if (!example && (reservationId === undefined || !Number.isSafeInteger(reservationId))) {
+    notFound();
+  }
 
   return (
-    <PreviewPage title={review.title} description={review.prog} image={review.img}>
+    <ReviewDetail example={example} reservationId={reservationId}>
       <SectionNav label="커뮤니티 메뉴" items={communityNav} current="/community/reviews" />
-      <p className="text-sm text-muted">{review.author} · {review.date}</p>
-      <p className="mt-4 leading-8">{review.body}</p>
-      <Link href="/community/reviews" className="mt-6 inline-block text-sm font-bold">체험 후기 목록</Link>
-    </PreviewPage>
+    </ReviewDetail>
   );
 }

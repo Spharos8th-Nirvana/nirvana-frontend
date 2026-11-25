@@ -1,8 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
-import { savePendingPayment } from "@/features/booking/utils/pending-payment";
+import {
+  heldFromSnapshot,
+  savePendingPayment,
+  seatHoldsServerSnapshot,
+  seatHoldsSnapshot,
+  subscribeSeatHolds,
+} from "@/features/booking/utils/pending-payment";
+import SeatCookieAlign from "@/features/booking/components/organisms/SeatCookieAlign";
+import type { ProgramSchedule } from "@/features/program/data/program-schedules";
+import { getRemainingSeats } from "@/features/program/utils/booking";
 import BookerInfoForm from "@/features/booking/components/organisms/BookerInfoForm";
 import BookingSummary from "@/features/booking/components/organisms/BookingSummary";
 import ParticipantTable from "@/features/booking/components/organisms/ParticipantTable";
@@ -22,6 +31,8 @@ import {
 } from "@/features/booking/utils/validate-booking";
 
 type BookingInfoTemplateProps = {
+  schedule: ProgramSchedule;
+  serverMayBeFull: boolean;
   selection: BookingSelection;
   terms: BookingTerm[];
   refundRules: RefundRule[];
@@ -77,11 +88,15 @@ const participantFieldLabels: Record<string, string> = {
 };
 
 export default function BookingInfoTemplate({
+  schedule,
+  serverMayBeFull,
   selection,
   terms,
   refundRules,
   genderRequired,
 }: BookingInfoTemplateProps) {
+  const holds = useSyncExternalStore(subscribeSeatHolds, seatHoldsSnapshot, seatHoldsServerSnapshot);
+  const saving = useRef(false);
   const [booker, setBooker] = useState<BookerInfo>(emptyBooker);
   const [participants, setParticipants] = useState<ParticipantInfo[]>(() =>
     createParticipants(selection.adultCount, selection.youthCount),
@@ -179,18 +194,42 @@ export default function BookingInfoTemplate({
   };
 
   const router = useRouter();
+  const people = selection.adultCount + selection.youthCount;
+  const overCapacity = holds !== null && people > getRemainingSeats(schedule, heldFromSnapshot(holds, schedule.id));
+  const editHref = selection.editHref;
+  useEffect(() => {
+    if (overCapacity && !saving.current) {
+      router.replace(editHref);
+    }
+  }, [overCapacity, editHref, router]);
 
   const handleSubmit = () => {
-    if (!canSubmit) {
+    if (!canSubmit || saving.current) {
+      return;
+    }
+    if (people > getRemainingSeats(schedule, heldFromSnapshot(seatHoldsSnapshot(), schedule.id))) {
+      router.replace(editHref);
       return;
     }
     // 이름·연락처는 주소와 저장소에 남기지 않습니다. 결제 화면에는 예약 요약만 넘깁니다.
+    saving.current = true;
     savePendingPayment(selection);
     router.push(`/programs/${selection.programId}/booking/pay`);
   };
 
+  if (holds === null || overCapacity) {
+    return (
+      <p role="status" className="text-sm text-muted">
+        {overCapacity
+          ? "남은 자리가 부족해 체험 상세로 돌아갑니다."
+          : serverMayBeFull ? "남은 자리를 다시 확인하고 있습니다." : "예약 정보를 확인하고 있습니다."}
+      </p>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_380px] lg:gap-12">
+      <SeatCookieAlign />
       <div className="min-w-0 space-y-14">
         <BookerInfoForm
           value={booker}
