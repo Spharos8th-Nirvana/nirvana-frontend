@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { Program } from "@/features/program/data/programs";
+import SelectField from "@/shared/components/ui/SelectField";
 
 type TempleProgramsProps = {
   programs: Program[];
@@ -26,18 +27,18 @@ export default function TemplePrograms({ programs }: TempleProgramsProps) {
           프로그램 종류
         </label>
 
-        <select
+        <SelectField
           id="program-category"
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="w-full max-w-xl rounded-sm border border-border bg-white px-5 py-4 text-sm text-ink outline-none focus:ring-2 focus:ring-primary"
+          wrapperClassName="w-full max-w-xl"
         >
           {categories.map((category) => (
             <option key={category} value={category}>
               {category === "전체" ? "종류 선택" : category}
             </option>
           ))}
-        </select>
+        </SelectField>
       </div>
 
       {/* 프로그램 목록 */}

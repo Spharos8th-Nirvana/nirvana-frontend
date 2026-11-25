@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { CalendarIcon, SearchIcon, UsersIcon } from "@/shared/components/ui/Icons";
+import SelectField from "@/shared/components/ui/SelectField";
 
-const heroImage =
-  "https://www.bulkwang.co.kr/news/photo/202209/37881_20706_4159.jpg";
+const heroImage = "https://www.bulkwang.co.kr/news/photo/202209/37881_20706_4159.jpg";
 
 export function HeroSection() {
   const [selectedDate, setSelectedDate] = useState("");
@@ -59,27 +60,10 @@ export function HeroSection() {
         <div className="mx-auto grid max-w-5xl grid-cols-1 gap-3 rounded-lg bg-white p-4 shadow-[0_12px_35px_rgba(23,63,53,0.10)] sm:p-5 md:grid-cols-[1fr_1fr_1fr_auto] md:items-center md:gap-0 md:p-3">
           {/* 지역 및 사찰 검색 */}
           <label className="min-w-0 px-3 py-2 md:px-5">
-            <span className="mb-3 block text-xs font-bold text-primary">
-              어디로 떠날까요?
-            </span>
+            <span className="mb-3 block text-xs font-bold text-primary">어디로 떠날까요?</span>
 
             <div className="flex items-center gap-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="21"
-                height="21"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="var(--color-primary)"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.35-4.35" />
-              </svg>
-
+              <SearchIcon size={21} className="text-primary" />
               <input
                 type="text"
                 value={keyword}
@@ -92,26 +76,10 @@ export function HeroSection() {
 
           {/* 날짜 선택 */}
           <label className="min-w-0 border-t border-border px-3 py-4 md:border-l md:border-t-0 md:px-5 md:py-2">
-            <span className="mb-3 block text-xs font-bold text-primary">
-              언제 떠날까요?
-            </span>
+            <span className="mb-3 block text-xs font-bold text-primary">언제 떠날까요?</span>
 
-            <div className="flex items-center gap-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="21"
-                height="21"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="var(--color-muted)"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <rect x="3" y="4" width="18" height="18" rx="2" />
-                <path d="M16 2v4M8 2v4M3 10h18" />
-              </svg>
+            <div className="flex it{ems-center gap-3">
+              <CalendarIcon size={21} className="text-muted" />
 
               <input
                 type="date"
@@ -125,33 +93,18 @@ export function HeroSection() {
 
           {/* 인원 선택 */}
           <label className="min-w-0 border-t border-border px-3 py-4 md:border-l md:border-t-0 md:px-5 md:py-2">
-            <span className="mb-3 block text-xs font-bold text-primary">
-              누구와 함께?
-            </span>
+            <span className="mb-3 block text-xs font-bold text-primary">누구와 함께?</span>
 
             <div className="flex items-center gap-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="21"
-                height="21"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="var(--color-muted)"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="10" cy="7" r="4" />
-                <path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-              </svg>
+              <UsersIcon size={21} className="text-muted" />
 
-              <select
+              <SelectField
+                variant="bare"
                 value={selectedPeople}
                 onChange={(e) => setSelectedPeople(e.target.value)}
                 aria-label="참여 인원 선택"
-                className="min-w-0 w-full bg-transparent text-sm text-primary outline-none"
+                wrapperClassName="min-w-0 w-full"
+                className="text-primary"
               >
                 <option value="" disabled>
                   인원 선택
@@ -160,7 +113,7 @@ export function HeroSection() {
                 <option value="2">2명</option>
                 <option value="3">3명</option>
                 <option value="4">4명 이상</option>
-              </select>
+              </SelectField>
             </div>
           </label>
 
@@ -172,21 +125,7 @@ export function HeroSection() {
               aria-label="프로그램 검색"
               className="flex h-14 w-full items-center justify-center rounded-md bg-primary text-white transition-colors hover:bg-primary-hover md:w-14"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="23"
-                height="23"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.35-4.35" />
-              </svg>
+              <SearchIcon size={23} />
             </button>
           </div>
         </div>

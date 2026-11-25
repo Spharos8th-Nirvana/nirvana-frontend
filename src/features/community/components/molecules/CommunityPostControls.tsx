@@ -1,3 +1,5 @@
+import SelectField from "@/shared/components/ui/SelectField";
+
 type CommunityPostControlsProps = {
   categories: string[];
   selectedCategory: string;
@@ -44,15 +46,14 @@ export default function CommunityPostControls({
           <label htmlFor="community-sort" className="text-sm text-muted">
             정렬
           </label>
-          <select
+          <SelectField
             id="community-sort"
             value={sortType}
             onChange={(event) => onSortChange(event.target.value as "latest" | "popular")}
-            className="border border-border bg-white px-4 py-3 text-sm text-ink outline-none focus:border-primary"
           >
             <option value="latest">최신순</option>
             <option value="popular">베스트순</option>
-          </select>
+          </SelectField>
         </div>
 
         <form

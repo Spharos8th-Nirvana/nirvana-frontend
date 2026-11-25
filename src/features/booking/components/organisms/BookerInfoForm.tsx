@@ -1,5 +1,5 @@
 import FormField, { inputClassName } from "@/features/booking/components/atoms/FormField";
-import SelectField from "@/features/booking/components/atoms/SelectField";
+import SelectField from "@/shared/components/ui/SelectField";
 import { countryOptions } from "@/features/booking/data/countries";
 import type { BookerInfo } from "@/features/booking/types/booking";
 import {
@@ -122,13 +122,12 @@ export default function BookerInfoForm({
           hint={genderRequired ? participantHint : undefined}
         >
           <SelectField
+            surface="subtle"
             id="booker-gender"
             value={value.gender}
             aria-invalid={Boolean(errors.gender)}
             aria-describedby={describedBy("booker-gender", errors.gender)}
-            onChange={(event) =>
-              onChange("gender", event.target.value as BookerInfo["gender"])
-            }
+            onChange={(event) => onChange("gender", event.target.value as BookerInfo["gender"])}
             onBlur={() => onFieldBlur("gender")}
           >
             <option value="">{genderRequired ? "선택" : "선택 안 함"}</option>
@@ -139,6 +138,7 @@ export default function BookerInfoForm({
 
         <FormField label="국적" htmlFor="booker-country">
           <SelectField
+            surface="subtle"
             id="booker-country"
             value={value.countryCode}
             onChange={(event) => onChange("countryCode", event.target.value)}

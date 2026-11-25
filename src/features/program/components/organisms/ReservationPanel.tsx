@@ -9,11 +9,12 @@ import {
   calculateTotalPrice,
   formatScheduleRange,
   formatScheduleTime,
-  formatWon,
   getRemainingSeats,
   groupSchedulesByStartDate,
   isScheduleAvailable,
 } from "@/features/program/utils/booking";
+import { formatWon } from "@/shared/utils/format";
+import Button from "@/shared/components/ui/Button";
 
 type ReservationPanelProps = {
   programId: number;
@@ -140,9 +141,7 @@ export default function ReservationPanel({
 
   const priceBreakdown = [
     adultCount > 0 ? `${formatWon(adultPrice)} × 성인 ${adultCount}명` : null,
-    appliedYouthCount > 0
-      ? `${formatWon(youthPrice)} × 청소년 ${appliedYouthCount}명`
-      : null,
+    appliedYouthCount > 0 ? `${formatWon(youthPrice)} × 청소년 ${appliedYouthCount}명` : null,
   ]
     .filter(Boolean)
     .join(" + ");
@@ -258,21 +257,14 @@ export default function ReservationPanel({
         <p className="mt-2 whitespace-nowrap text-2xl font-bold text-ink">
           {formatWon(totalPrice)}
         </p>
-        {priceBreakdown && (
-          <p className="mt-1 text-xs leading-5 text-muted">{priceBreakdown}</p>
-        )}
+        {priceBreakdown && <p className="mt-1 text-xs leading-5 text-muted">{priceBreakdown}</p>}
       </div>
 
       {/* 다음 단계 */}
-      <button
-        type="button"
-        onClick={handleProceed}
-        disabled={!canProceed}
-        className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-action py-4 font-bold text-primary transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
-      >
+      <Button onClick={handleProceed} disabled={!canProceed} className="mt-6 w-full">
         예약 정보 입력
         <span aria-hidden="true">→</span>
-      </button>
+      </Button>
 
       <p className="mt-3 text-right text-xs text-muted/70">
         예약 전 취소·환불 규정을 확인해 주세요.

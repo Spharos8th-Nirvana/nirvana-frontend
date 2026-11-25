@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { TempleReview } from "@/features/temple/data/temple-reviews";
+import SelectField from "@/shared/components/ui/SelectField";
 
 type TempleReviewsProps = {
   reviews: TempleReview[];
@@ -36,18 +37,18 @@ export default function TempleReviews({ reviews }: TempleReviewsProps) {
           >
             체험 종류
           </label>
-          <select
+          <SelectField
             id="review-category"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full rounded-sm border border-border bg-white px-4 py-3 text-sm text-ink outline-none focus:ring-2 focus:ring-primary"
+            wrapperClassName="w-full"
           >
             {categories.map((category) => (
               <option key={category} value={category}>
                 {category}
               </option>
             ))}
-          </select>
+          </SelectField>
         </div>
 
         <div>

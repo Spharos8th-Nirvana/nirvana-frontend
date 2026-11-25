@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { programs } from "@/features/program/data/programs";
+import { formatWon } from "@/shared/utils/format";
 
 const categories = ["전체", "템플스테이", "사찰음식", "선무도", "마음챙김"];
 
@@ -98,20 +99,14 @@ export function PopularPrograms() {
                       );
                     }}
                     className={`absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(15,26,21,0.25)] shadow-sm backdrop-blur-sm transition-transform duration-200 hover:scale-110 active:scale-95 ${
-                      favoritePrograms.includes(program.id)
-                        ? "text-[#D76855]"
-                        : "text-white"
+                      favoritePrograms.includes(program.id) ? "text-[#D76855]" : "text-white"
                     }`}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       className="h-5 w-5"
-                      fill={
-                        favoritePrograms.includes(program.id)
-                          ? "currentColor"
-                          : "none"
-                      }
+                      fill={favoritePrograms.includes(program.id) ? "currentColor" : "none"}
                       stroke="currentColor"
                       strokeWidth="1.8"
                       strokeLinecap="round"
@@ -136,10 +131,8 @@ export function PopularPrograms() {
 
                   <div className="mt-5 flex items-center justify-between border-t border-border pt-4">
                     <p className="font-semibold text-primary">
-                      ₩{Number(program.adultPrice).toLocaleString("ko-KR")}
-                      <span className="ml-1 text-xs font-normal text-muted">
-                        / 1인
-                      </span>
+                      {formatWon(program.adultPrice)}
+                      <span className="ml-1 text-xs font-normal text-muted">/ 1인</span>
                     </p>
 
                     <Link
@@ -155,9 +148,7 @@ export function PopularPrograms() {
             ))
           ) : (
             <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
-              <p className="text-lg font-semibold text-primary">
-                준비 중인 프로그램입니다.
-              </p>
+              <p className="text-lg font-semibold text-primary">준비 중인 프로그램입니다.</p>
               <p className="mt-2 text-sm text-muted">
                 새로운 프로그램을 준비하고 있어요. 조금만 기다려 주세요.
               </p>
