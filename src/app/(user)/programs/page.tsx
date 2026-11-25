@@ -2,6 +2,7 @@ import { programs } from "@/features/program/data/programs";
 import PageHero from "@/shared/components/layout/PageHero";
 import ProgramFilter from "@/features/program/components/organisms/ProgramFilter";
 import { CalendarIcon, SearchIcon, UsersIcon } from "@/shared/components/ui/Icons";
+import SelectField from "@/shared/components/ui/SelectField";
 
 type ProgramsPageProps = {
   searchParams: Promise<{
@@ -74,18 +75,20 @@ export default async function ProgramsPage({ searchParams }: ProgramsPageProps) 
                     <path d="M9 4v13.5M15 6.5V20" />
                   </svg>
 
-                  <select
+                  <SelectField
+                    variant="bare"
                     name="region"
                     aria-label="지역 선택"
                     defaultValue=""
-                    className="w-full bg-transparent text-sm text-muted outline-none"
+                    wrapperClassName="min-w-0 w-full"
+                    className="text-muted"
                   >
                     <option value="">지역 선택</option>
                     <option value="서울">서울</option>
                     <option value="경기">경기</option>
                     <option value="경북">경북</option>
                     <option value="전남">전남</option>
-                  </select>
+                  </SelectField>
                 </div>
 
                 <div className="flex h-[68px] items-center bg-sage-04 px-5 md:rounded-r-lg">
@@ -104,18 +107,20 @@ export default async function ProgramsPage({ searchParams }: ProgramsPageProps) 
                     <circle cx="4" cy="18" r="1" />
                   </svg>
 
-                  <select
+                  <SelectField
+                    variant="bare"
                     name="category"
                     aria-label="종류 선택"
                     defaultValue=""
-                    className="w-full bg-transparent text-sm text-muted outline-none"
+                    wrapperClassName="min-w-0 w-full"
+                    className="text-muted"
                   >
                     <option value="">종류 선택</option>
                     <option value="템플스테이">템플스테이</option>
                     <option value="명상">명상</option>
                     <option value="요가">요가</option>
                     <option value="사찰음식">사찰 음식</option>
-                  </select>
+                  </SelectField>
                 </div>
               </div>
 
@@ -156,11 +161,13 @@ export default async function ProgramsPage({ searchParams }: ProgramsPageProps) 
 
                   <UsersIcon className="mr-3 h-4 w-4 shrink-0" strokeWidth={1.8} />
 
-                  <select
+                  <SelectField
+                    variant="bare"
                     name="people"
                     aria-label="인원 선택"
                     defaultValue={people}
-                    className="min-w-0 w-full bg-transparent text-sm text-muted outline-none"
+                    wrapperClassName="min-w-0 w-full"
+                    className="text-muted"
                   >
                     <option value="">인원 선택</option>
                     <option value="1">1명</option>
@@ -168,7 +175,7 @@ export default async function ProgramsPage({ searchParams }: ProgramsPageProps) 
                     <option value="3">3명</option>
                     <option value="4">4명</option>
                     <option value="5">5명 이상</option>
-                  </select>
+                  </SelectField>
                 </div>
 
                 {/* 검색 버튼 */}

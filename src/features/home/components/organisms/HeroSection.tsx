@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarIcon, SearchIcon, UsersIcon } from "@/shared/components/ui/Icons";
+import SelectField from "@/shared/components/ui/SelectField";
 
 const heroImage = "https://www.bulkwang.co.kr/news/photo/202209/37881_20706_4159.jpg";
 
@@ -97,11 +98,13 @@ export function HeroSection() {
             <div className="flex items-center gap-3">
               <UsersIcon size={21} className="text-muted" />
 
-              <select
+              <SelectField
+                variant="bare"
                 value={selectedPeople}
                 onChange={(e) => setSelectedPeople(e.target.value)}
                 aria-label="참여 인원 선택"
-                className="min-w-0 w-full bg-transparent text-sm text-primary outline-none"
+                wrapperClassName="min-w-0 w-full"
+                className="text-primary"
               >
                 <option value="" disabled>
                   인원 선택
@@ -110,7 +113,7 @@ export function HeroSection() {
                 <option value="2">2명</option>
                 <option value="3">3명</option>
                 <option value="4">4명 이상</option>
-              </select>
+              </SelectField>
             </div>
           </label>
 
