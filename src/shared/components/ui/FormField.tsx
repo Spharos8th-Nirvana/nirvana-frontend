@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-/** 예약 입력 칸 공통 스타일 */
+/** 입력 칸 공통 스타일 (예약·회원가입 등) */
 export const inputClassName =
   "h-12 w-full rounded-md border border-border bg-background px-3 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-primary aria-[invalid=true]:border-error disabled:cursor-not-allowed disabled:bg-subtle disabled:text-muted";
 

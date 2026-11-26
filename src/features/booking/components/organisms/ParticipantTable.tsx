@@ -1,4 +1,4 @@
-import { inputClassName } from "@/features/booking/components/atoms/FormField";
+import { inputClassName } from "@/shared/components/ui/FormField";
 import SelectField from "@/shared/components/ui/SelectField";
 import { countryOptions } from "@/shared/data/countries";
 import type { ParticipantInfo } from "@/features/booking/types/booking";
