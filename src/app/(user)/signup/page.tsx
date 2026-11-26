@@ -16,7 +16,7 @@ export default function SignupPage() {
         image="https://www.bulkwang.co.kr/news/photo/202209/37881_20706_4159.jpg"
       />
 
-      <div className="mx-auto max-w-[560px] px-6 py-12 md:py-16">
+      <div className="mx-auto max-w-[560px] px-6 py-16 md:py-24">
         <SignupFlowTemplate terms={signupTerms} />
       </div>
     </main>

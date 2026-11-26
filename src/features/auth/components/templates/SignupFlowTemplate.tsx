@@ -64,7 +64,7 @@ export default function SignupFlowTemplate({ terms }: SignupFlowTemplateProps) {
   }
 
   return (
-    <div ref={flowTopRef} className="scroll-mt-24 space-y-10">
+    <div ref={flowTopRef} className="scroll-mt-24 space-y-12">
       {/* 단계가 바뀌면 화면 낭독기가 읽도록 포커스를 받는 제목 */}
       <h2 ref={stepHeadingRef} tabIndex={-1} className="sr-only">
         {stepTitles[step]}
@@ -83,11 +83,7 @@ export default function SignupFlowTemplate({ terms }: SignupFlowTemplateProps) {
       )}
 
       {step === 2 && (
-        <EmailVerificationStep
-          initialEmail={verifiedEmail}
-          onVerified={handleEmailVerified}
-          onBack={() => goToStep(1)}
-        />
+        <EmailVerificationStep initialEmail={verifiedEmail} onVerified={handleEmailVerified} />
       )}
 
       {/* 다음 단계에서 정보 입력 화면으로 바꿉니다. */}

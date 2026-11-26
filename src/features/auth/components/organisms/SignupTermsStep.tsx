@@ -27,7 +27,7 @@ export default function SignupTermsStep({
       <p className="mt-2 text-sm text-muted">회원가입을 위해 아래 약관에 모두 동의해 주세요.</p>
 
       {/* 전체 동의 */}
-      <label className="mt-6 flex cursor-pointer items-center gap-3 rounded-lg border border-primary bg-subtle px-5 py-4">
+      <label className="mt-8 flex cursor-pointer items-center gap-3 rounded-lg border border-primary bg-subtle px-5 py-4">
         <input
           type="checkbox"
           checked={allAgreed}
@@ -38,7 +38,7 @@ export default function SignupTermsStep({
       </label>
 
       {/* 약관 하나씩 */}
-      <ul className="mt-3 space-y-3">
+      <ul className="mt-4 space-y-4">
         {terms.map((term) => {
           const inputId = `signup-term-${term.id}`;
 

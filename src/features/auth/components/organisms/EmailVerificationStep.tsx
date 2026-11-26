@@ -1,26 +1,49 @@
 import { useRef } from "react";
 import { useEmailVerification } from "@/features/auth/hooks/useEmailVerification";
 import Button from "@/shared/components/ui/Button";
-import FormField, { inputClassName } from "@/shared/components/ui/FormField";
+import FormField, { inputBaseClassName } from "@/shared/components/ui/FormField";
 
 type EmailVerificationStepProps = {
   initialEmail: string;
   onVerified: (email: string, verificationToken: string) => void;
-  onBack: () => void;
 };
+
+/** @ 뒤에 추천할 이메일 도메인 */
+const EMAIL_DOMAINS = [
+  "naver.com",
+  "gmail.com",
+  "daum.net",
+  "hanmail.net",
+  "kakao.com",
+  "nate.com",
+  "icloud.com",
+  "outlook.com",
+];
+
+/** 회원가입 입력 칸: 연한 바탕 위라서 흰색 */
+const signupInputClass = `${inputBaseClassName} bg-white`;
 
 /** 도움말 안 보조 버튼 (인증번호 다시 받기, 다른 이메일로 변경) */
 const helpButtonClass =
   "h-11 flex-1 rounded-md border border-border bg-white px-4 text-sm font-bold text-ink transition-colors hover:border-primary hover:bg-subtle disabled:cursor-not-allowed disabled:text-muted disabled:hover:border-border disabled:hover:bg-white";
 
-/** 이전 단계로 돌아가기 (예약 화면과 같은 모양) */
-const backActionClass =
-  "inline-flex items-center gap-2 rounded-full border border-border bg-white px-5 py-3 text-sm font-bold text-ink transition-colors hover:border-primary hover:bg-subtle";
-
 function formatTimer(seconds: number): string {
   const minutes = Math.floor(seconds / 60);
   const rest = String(seconds % 60).padStart(2, "0");
   return `${minutes}:${rest}`;
+}
+
+/** "me@na" → ["me@naver.com", "me@nate.com"]. @ 를 치기 전에는 추천하지 않습니다. */
+function getEmailSuggestions(value: string): string[] {
+  const atIndex = value.indexOf("@");
+  if (atIndex < 1) return [];
+
+  const localPart = value.slice(0, atIndex);
+  const typedDomain = value.slice(atIndex + 1);
+
+  return EMAIL_DOMAINS.filter(
+    (domain) => domain.startsWith(typedDomain) && domain !== typedDomain,
+  ).map((domain) => `${localPart}@${domain}`);
 }
 
 /**
@@ -31,7 +54,6 @@ function formatTimer(seconds: number): string {
 export default function EmailVerificationStep({
   initialEmail,
   onVerified,
-  onBack,
 }: EmailVerificationStepProps) {
   const verification = useEmailVerification({ initialEmail, onVerified });
   const emailInputRef = useRef<HTMLInputElement>(null);
@@ -39,6 +61,7 @@ export default function EmailVerificationStep({
   const isSending = verification.status === "sending";
   const isVerifying = verification.status === "verifying";
   const { isSent } = verification;
+  const emailSuggestions = isSent ? [] : getEmailSuggestions(verification.email);
 
   function handleChangeEmail() {
     verification.resetEmail();
@@ -68,14 +91,20 @@ export default function EmailVerificationStep({
             id="signup-email"
             type="email"
             autoComplete="email"
+            list="signup-email-suggestions"
             value={verification.email}
             onChange={(event) => verification.changeEmail(event.target.value)}
             readOnly={isSent}
             placeholder="이메일을 입력해 주세요"
             aria-invalid={Boolean(verification.emailError)}
             aria-describedby={verification.emailError ? "signup-email-error" : undefined}
-            className={`${inputClassName} read-only:bg-subtle read-only:text-muted`}
+            className={`${signupInputClass} read-only:bg-subtle read-only:text-muted`}
           />
+          <datalist id="signup-email-suggestions">
+            {emailSuggestions.map((suggestion) => (
+              <option key={suggestion} value={suggestion} />
+            ))}
+          </datalist>
         </FormField>
 
         {isSent && (
@@ -96,7 +125,7 @@ export default function EmailVerificationStep({
                 placeholder="숫자 6자리"
                 aria-invalid={Boolean(verification.codeError)}
                 aria-describedby={verification.codeError ? "signup-code-error" : undefined}
-                className={`${inputClassName} pr-16`}
+                className={`${signupInputClass} pr-16`}
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium text-error">
                 <span aria-hidden="true">{formatTimer(verification.remainingSeconds)}</span>
@@ -159,10 +188,6 @@ export default function EmailVerificationStep({
           )}
         </details>
       )}
-
-      <button type="button" onClick={onBack} className={`mt-8 ${backActionClass}`}>
-        ← 약관 동의로 돌아가기
-      </button>
     </section>
   );
 }
