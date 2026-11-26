@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import EmailVerificationStep from "@/features/auth/components/organisms/EmailVerificationStep";
 import SignupProgress from "@/features/auth/components/organisms/SignupProgress";
 import SignupTermsStep from "@/features/auth/components/organisms/SignupTermsStep";
 import type { SignupStep, SignupTerm } from "@/features/auth/types/signup";
@@ -23,6 +24,9 @@ type SignupFlowTemplateProps = {
 export default function SignupFlowTemplate({ terms }: SignupFlowTemplateProps) {
   const [step, setStep] = useState<SignupStep>(1);
   const [agreedTermIds, setAgreedTermIds] = useState<string[]>([]);
+  // ②에서 인증에 성공한 이메일과 인증 토큰. ③에서는 읽기만 하고, 가입 요청에 함께 보냅니다.
+  const [verifiedEmail, setVerifiedEmail] = useState("");
+  const [verificationToken, setVerificationToken] = useState("");
 
   const flowTopRef = useRef<HTMLDivElement>(null);
   const stepHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -53,6 +57,12 @@ export default function SignupFlowTemplate({ terms }: SignupFlowTemplateProps) {
     setAgreedTermIds(checked ? terms.map((term) => term.id) : []);
   }
 
+  function handleEmailVerified(email: string, token: string) {
+    setVerifiedEmail(email);
+    setVerificationToken(token);
+    goToStep(3);
+  }
+
   return (
     <div ref={flowTopRef} className="scroll-mt-24 space-y-10">
       {/* 단계가 바뀌면 화면 낭독기가 읽도록 포커스를 받는 제목 */}
@@ -72,9 +82,19 @@ export default function SignupFlowTemplate({ terms }: SignupFlowTemplateProps) {
         />
       )}
 
-      {/* 다음 단계에서 이메일 인증 화면으로 바꿉니다. */}
       {step === 2 && (
-        <p className="text-sm text-muted">이메일 인증 화면은 다음 작업에서 만들어요.</p>
+        <EmailVerificationStep
+          initialEmail={verifiedEmail}
+          onVerified={handleEmailVerified}
+          onBack={() => goToStep(1)}
+        />
+      )}
+
+      {/* 다음 단계에서 정보 입력 화면으로 바꿉니다. */}
+      {step === 3 && verificationToken && (
+        <p className="text-sm text-muted">
+          {verifiedEmail} 인증 완료. 정보 입력 화면은 다음 작업에서 만들어요.
+        </p>
       )}
     </div>
   );
