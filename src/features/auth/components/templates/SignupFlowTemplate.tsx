@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+
 import EmailVerificationStep from "@/features/auth/components/organisms/EmailVerificationStep";
+import SignupInfoForm from "@/features/auth/components/organisms/SignupInfoForm";
 import SignupProgress from "@/features/auth/components/organisms/SignupProgress";
 import SignupTermsStep from "@/features/auth/components/organisms/SignupTermsStep";
-import type { SignupStep, SignupTerm } from "@/features/auth/types/signup";
+import type { SignupStep, SignupSummary, SignupTerm } from "@/features/auth/types/signup";
 
 const stepTitles: Record<SignupStep, string> = {
   1: "1단계 약관 동의",
@@ -27,6 +29,8 @@ export default function SignupFlowTemplate({ terms }: SignupFlowTemplateProps) {
   // ②에서 인증에 성공한 이메일과 인증 토큰. ③에서는 읽기만 하고, 가입 요청에 함께 보냅니다.
   const [verifiedEmail, setVerifiedEmail] = useState("");
   const [verificationToken, setVerificationToken] = useState("");
+  // ④ 완료 화면에 보여 줄 입력 정보 요약
+  const [signupSummary, setSignupSummary] = useState<SignupSummary | null>(null);
 
   const flowTopRef = useRef<HTMLDivElement>(null);
   const stepHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -63,6 +67,17 @@ export default function SignupFlowTemplate({ terms }: SignupFlowTemplateProps) {
     goToStep(3);
   }
 
+  /** 이메일 변경·토큰 만료: 토큰을 지우고 ②로 돌아가 다시 인증합니다. */
+  function handleReverifyEmail() {
+    setVerificationToken("");
+    goToStep(2);
+  }
+
+  function handleSignupComplete(summary: SignupSummary) {
+    setSignupSummary(summary);
+    goToStep(4);
+  }
+
   return (
     <div ref={flowTopRef} className="scroll-mt-24 space-y-12">
       {/* 단계가 바뀌면 화면 낭독기가 읽도록 포커스를 받는 제목 */}
@@ -86,10 +101,20 @@ export default function SignupFlowTemplate({ terms }: SignupFlowTemplateProps) {
         <EmailVerificationStep initialEmail={verifiedEmail} onVerified={handleEmailVerified} />
       )}
 
-      {/* 다음 단계에서 정보 입력 화면으로 바꿉니다. */}
       {step === 3 && verificationToken && (
+        <SignupInfoForm
+          email={verifiedEmail}
+          verificationToken={verificationToken}
+          onChangeEmail={handleReverifyEmail}
+          onTokenInvalid={handleReverifyEmail}
+          onComplete={handleSignupComplete}
+        />
+      )}
+
+      {/* 다음 작업에서 가입 완료 화면으로 바꿉니다. */}
+      {step === 4 && signupSummary && (
         <p className="text-sm text-muted">
-          {verifiedEmail} 인증 완료. 정보 입력 화면은 다음 작업에서 만들어요.
+          {signupSummary.name}님, 가입 완료 화면은 다음 작업에서 만들어요.
         </p>
       )}
     </div>
