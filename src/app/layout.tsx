@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Inter, Noto_Sans_KR } from "next/font/google";
 import type { ReactNode } from "react";
 import "./globals.css";
-import { SiteHeader } from "@/shared/components/layout/SiteHeader";
-import { SiteFooter } from "@/shared/components/layout/SiteFooter";
 
 // 피그마 디자인 시스템 글꼴: 본문·라벨은 Noto Sans KR, 영문 큰 제목은 Inter
 const notoSansKr = Noto_Sans_KR({
@@ -35,11 +33,7 @@ type RootLayoutProps = Readonly<{
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="ko" className={`${notoSansKr.variable} ${inter.variable}`}>
-      <body>
-        <SiteHeader />
-        {children}
-        <SiteFooter />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
