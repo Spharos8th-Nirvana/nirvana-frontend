@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import BookingProgress from "@/features/booking/components/organisms/BookingProgress";
-import BookingInfoTemplate from "@/features/booking/components/templates/BookingInfoTemplate";
+// 예약 전체 흐름을 담당하는 Template
+import BookingFlowTemplate from "@/features/booking/components/templates/BookingFlowTemplate";
 import { bookingTerms } from "@/features/booking/data/booking-terms";
 import { programSchedules } from "@/features/program/data/program-schedules";
 import { programs } from "@/features/program/data/programs";
@@ -76,10 +76,8 @@ export default async function BookingPage({ params, searchParams }: BookingPageP
       />
 
       <div className="mx-auto max-w-[1280px] px-6 py-12 md:px-10 md:py-16">
-        <BookingProgress currentStep={2} stepHrefs={{ 1: editHref }} />
-
         <div className="mt-12">
-          <BookingInfoTemplate
+          <BookingFlowTemplate
             selection={{
               programName: program.name,
               templeName: program.temple,

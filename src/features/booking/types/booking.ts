@@ -10,6 +10,9 @@ export type Gender = "MALE" | "FEMALE";
 /** DB ENUM('ADULT', 'YOUTH') */
 export type ParticipantType = "ADULT" | "YOUTH";
 
+/** DB ENUM('CARD', 'VIRTUAL_ACCOUNT'). 예약 화면에서 선택하는 결제수단 */
+export type BookingPaymentMethod = "CARD" | "VIRTUAL_ACCOUNT";
+
 /** 예약자 입력값. 입력 칸과 연결되므로 숫자도 문자열로 다룹니다. */
 export type BookerInfo = {
   /** 필수. DB contactName VARCHAR(50) NOT NULL */

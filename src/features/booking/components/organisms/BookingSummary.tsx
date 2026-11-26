@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { BookingSelection } from "@/features/booking/types/booking";
 import { formatWon } from "@/shared/utils/format";
 import Button from "@/shared/components/ui/Button";
@@ -47,17 +46,9 @@ export default function BookingSummary({
       aria-labelledby="summary-title"
       className="rounded-lg border border-border bg-white p-6"
     >
-      <div className="flex items-center justify-between gap-3">
-        <h2 id="summary-title" className="text-xl font-bold text-ink">
-          선택한 체험
-        </h2>
-        <Link
-          href={selection.editHref}
-          className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-primary hover:text-primary"
-        >
-          날짜·인원 변경
-        </Link>
-      </div>
+      <h2 id="summary-title" className="text-xl font-bold text-ink">
+        선택한 체험
+      </h2>
 
       <div className="relative mt-4 aspect-[360/170] overflow-hidden rounded-md bg-subtle">
         <Image
