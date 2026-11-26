@@ -12,7 +12,6 @@ export const PASSWORD_MAX_LENGTH = 64;
 export const PASSWORD_MAX_BYTES = 72;
 export const PASSWORD_SPECIAL_CHARACTERS = "!@#$%^&*";
 export const NAME_MAX_LENGTH = 100;
-export const NICKNAME_MAX_LENGTH = 30;
 export const PHONE_MAX_LENGTH = 20;
 export const VERIFICATION_CODE_LENGTH = 6;
 
@@ -77,7 +76,7 @@ export function validateVerificationCode(value: string): string | undefined {
     : `인증번호 숫자 ${VERIFICATION_CODE_LENGTH}자리를 입력해 주세요.`;
 }
 
-export type SignupFormField = "password" | "passwordConfirmation" | "name" | "nickname" | "phone";
+export type SignupFormField = "password" | "passwordConfirmation" | "name" | "phone";
 
 export type SignupFormErrors = Partial<Record<SignupFormField, string>>;
 
@@ -95,14 +94,8 @@ function validateRequiredText(value: string, label: string, maxLength: number): 
   return undefined;
 }
 
-/**
- * ③ 정보 입력 검사.
- * nicknameChecked: 현재 닉네임으로 중복확인을 마쳤는지
- */
-export function validateSignupForm(
-  values: SignupFormValues,
-  nicknameChecked: boolean,
-): SignupFormErrors {
+/** ③ 정보 입력 검사 */
+export function validateSignupForm(values: SignupFormValues): SignupFormErrors {
   const errors: SignupFormErrors = {};
 
   if (!values.password) {
@@ -120,13 +113,6 @@ export function validateSignupForm(
   const nameError = validateRequiredText(values.name, "이름", NAME_MAX_LENGTH);
   if (nameError) {
     errors.name = nameError;
-  }
-
-  const nicknameError = validateRequiredText(values.nickname, "닉네임", NICKNAME_MAX_LENGTH);
-  if (nicknameError) {
-    errors.nickname = nicknameError;
-  } else if (!nicknameChecked) {
-    errors.nickname = "닉네임 중복확인을 해 주세요.";
   }
 
   if (!values.phone) {
@@ -156,7 +142,6 @@ export function buildSignupRequest(
     password: values.password,
     passwordConfirmation: values.passwordConfirmation,
     name: values.name.trim(),
-    nickname: values.nickname.trim(),
     phone: values.phone,
     requiredTermsAgreed: true,
     ...(values.gender && { gender: values.gender }),

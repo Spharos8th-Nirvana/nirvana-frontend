@@ -2,7 +2,7 @@
  * 회원가입 타입.
  * 백엔드 회원가입 연동 문서와 API 명세 기준입니다.
  * - POST /signup/email-verification/send, POST /signup/email-verification/verify, POST /signup (Auth)
- * - POST /profiles/nickname-availability (Member)
+ * 닉네임은 가입할 때 받지 않습니다. 가입 후 백엔드가 랜덤으로 만들어 Member 프로필에 저장합니다.
  */
 
 /** DB ENUM('MALE', 'FEMALE') */
@@ -24,8 +24,6 @@ export type SignupFormValues = {
   passwordConfirmation: string;
   /** 필수. 공백만 불가, 최대 100자 */
   name: string;
-  /** 필수. 공백만 불가, 최대 30자 */
-  nickname: string;
   /** 필수. 숫자와 맨 앞 + 만, 최대 20자 */
   phone: string;
   /** 선택. "" 은 선택 안 함 */
@@ -44,7 +42,6 @@ export type SignupRequest = {
   password: string;
   passwordConfirmation: string;
   name: string;
-  nickname: string;
   phone: string;
   requiredTermsAgreed: true;
   gender?: SignupGender;
@@ -58,7 +55,6 @@ export type SignupErrorCode =
   | "INVALID_REQUEST"
   | "INVALID_JSON"
   | "EMAIL_ALREADY_USED"
-  | "NICKNAME_TAKEN"
   | "INVALID_EMAIL_VERIFICATION_CODE"
   | "INVALID_EMAIL_VERIFICATION_TOKEN"
   | "EMAIL_RESEND_TOO_SOON"
@@ -75,6 +71,13 @@ export type SignupError = {
   code: SignupErrorCode;
   message: string;
   details?: SignupErrorDetail[];
+};
+
+/** ④ 가입 완료 화면에 보여 줄 입력 정보 요약 */
+export type SignupSummary = {
+  email: string;
+  name: string;
+  phone: string;
 };
 
 /** API 호출 결과. 성공이면 data, 실패면 error */
