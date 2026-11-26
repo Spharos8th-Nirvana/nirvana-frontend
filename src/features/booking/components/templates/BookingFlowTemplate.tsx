@@ -1,7 +1,8 @@
 "use client";
 
 // 화면 상태 관리와 브라우저 이탈 이벤트 처리를 위한 React Hook
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import BookerInfoForm from "@/features/booking/components/organisms/BookerInfoForm";
 import BookingSummary from "@/features/booking/components/organisms/BookingSummary";
 // 예약 진행 단계 표시(2단계와 3단계 전환에 사용)
@@ -87,6 +88,10 @@ const participantFieldLabels: Record<string, string> = {
   email: "이메일",
 };
 
+/** 이전 단계로 돌아가는 보조 버튼 (2·3단계 같은 모양) */
+const backActionClass =
+  "inline-flex items-center gap-2 rounded-full border border-border bg-white px-5 py-3 text-sm font-bold text-ink transition-colors hover:border-primary hover:bg-subtle";
+
 // 예약 입력부터 결제 확인까지 전체 예약 흐름을 관리하는 Template
 export default function BookingFlowTemplate({
   selection,
@@ -110,6 +115,12 @@ export default function BookingFlowTemplate({
 
   // 실제 결제 연동이 없으므로 버튼 클릭 시 안내 메시지를 관리
   const [paymentNotice, setPaymentNotice] = useState<string | null>(null);
+
+  // 단계가 바뀔 때 이동할 위치(흐름 영역 맨 위)와 포커스를 받을 제목
+  const flowTopRef = useRef<HTMLDivElement>(null);
+  const stepHeadingRef = useRef<HTMLHeadingElement>(null);
+  // 버튼으로 단계를 바꿨을 때만 이동하도록 표시 (첫 화면에서는 이동하지 않음)
+  const shouldFocusStepRef = useRef(false);
 
   // 사용자가 예약 정보를 입력했거나 결제수단을 선택했는지 확인.
   // 입력값이 하나도 없다면 불필요한 이탈 경고를 표시하지 않는다.
@@ -146,6 +157,17 @@ export default function BookingFlowTemplate({
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [hasUnsavedInput]);
+
+  // 단계가 바뀌면 흐름 영역 맨 위로 이동하고, 단계 제목에 포커스를 줍니다.
+  // 키보드·화면 낭독기 사용자도 화면이 바뀐 것을 알 수 있습니다.
+  useEffect(() => {
+    if (!shouldFocusStepRef.current) {
+      return;
+    }
+    shouldFocusStepRef.current = false;
+    flowTopRef.current?.scrollIntoView({ block: "start" });
+    stepHeadingRef.current?.focus({ preventScroll: true });
+  }, [currentStep]);
 
   const isLinked = sameAsBooker && participants.length > 0;
 
@@ -239,12 +261,14 @@ export default function BookingFlowTemplate({
     // 예약 API 연동은 이번 범위가 아닙니다.
     // 개인정보가 포함되므로 콘솔이나 주소(URL)에 남기지 않습니다.
     setSubmitted(true);
+    shouldFocusStepRef.current = true;
     setCurrentStep(3);
   };
 
   // 이전 단계로 돌아가는 함수
   const handleBackToInfo = () => {
     setSubmitted(false);
+    shouldFocusStepRef.current = true;
     setCurrentStep(2);
   };
 
@@ -269,11 +293,16 @@ export default function BookingFlowTemplate({
     if (!paymentMethod) {
       return;
     }
-    setPaymentNotice("결제 연동 준비 중. 현재는 실제 결제가 진행되지 않습니다.");
+    setPaymentNotice("실제 결제 기능은 아직 연결되지 않았어요. 결제 연동을 준비 중입니다.");
   };
 
   return (
-    <div className="space-y-12">
+    <div ref={flowTopRef} className="scroll-mt-24 space-y-12">
+      {/* 화면에는 보이지 않고, 단계가 바뀌면 화면 낭독기가 읽는 제목 */}
+      <h2 ref={stepHeadingRef} tabIndex={-1} className="sr-only">
+        {currentStep === 2 ? "2단계 예약 정보 입력" : "3단계 결제 확인"}
+      </h2>
+
       {/* 현재 예약 진행 단계 표시*/}
       <BookingProgress
         currentStep={currentStep}
@@ -281,6 +310,12 @@ export default function BookingFlowTemplate({
         stepHrefs={{ 1: selection.editHref }}
         // 입력한 정보가 있다면 이동 전에 확인창 표시
         onBeforeNavigate={handleBeforeEdit}
+        // 3단계에서 '예약 정보 입력'을 누르면 화면 안에서 2단계로 돌아감
+        onStepClick={(step) => {
+          if (step === 2) {
+            handleBackToInfo();
+          }
+        }}
       />
       {/* 현재 단계가 2이면 예약 정보를 입력하고, 3이면 결제 확인 화면 보여줌 */}
       {currentStep === 2 ? (
@@ -311,6 +346,20 @@ export default function BookingFlowTemplate({
               refundRules={refundRules}
               onToggle={handleTermToggle}
             />
+
+            {/* 날짜·인원을 바꾸려면 1단계로 돌아갑니다. (3단계 돌아가기 버튼과 같은 자리·모양) */}
+            <Link
+              href={selection.editHref}
+              onClick={(event) => {
+                if (!handleBeforeEdit()) {
+                  event.preventDefault();
+                }
+              }}
+              className={backActionClass}
+            >
+              <span aria-hidden="true">←</span>
+              날짜·인원 다시 선택
+            </Link>
           </div>
 
           <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
@@ -320,8 +369,6 @@ export default function BookingFlowTemplate({
               missingItems={missingItems}
               submitted={submitted}
               onSubmit={handleSubmit}
-              // 날짜·인원 변경 전 상위 Template에서 확인합니다.
-              onBeforeEdit={handleBeforeEdit}
             />
 
             <div className="rounded-lg bg-subtle p-6">
@@ -354,11 +401,8 @@ export default function BookingFlowTemplate({
             <PaymentMethodSelector value={paymentMethod} onChange={handlePaymentMethodChange} />
 
             {/* 수정이 필요하면 2단계로 돌아갑니다. */}
-            <button
-              type="button"
-              onClick={handleBackToInfo}
-              className="rounded-full border border-border px-5 py-3 text-sm font-bold text-ink transition-colors hover:bg-subtle"
-            >
+            <button type="button" onClick={handleBackToInfo} className={backActionClass}>
+              <span aria-hidden="true">←</span>
               예약 정보 입력으로 돌아가기
             </button>
           </div>

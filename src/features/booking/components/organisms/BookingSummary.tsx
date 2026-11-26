@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { BookingSelection } from "@/features/booking/types/booking";
 import { formatWon } from "@/shared/utils/format";
 import Button from "@/shared/components/ui/Button";
@@ -11,8 +10,6 @@ type BookingSummaryProps = {
   missingItems: string[];
   submitted: boolean;
   onSubmit: () => void;
-  /** 날짜·인원 변경 전 입력값 유실 확인 결과를 전달받습니다. */
-  onBeforeEdit: () => boolean;
 };
 
 /** 오른쪽 예약 요약 + 다음 단계 버튼 */
@@ -22,7 +19,6 @@ export default function BookingSummary({
   missingItems,
   submitted,
   onSubmit,
-  onBeforeEdit,
 }: BookingSummaryProps) {
   const headcount = [
     selection.adultCount > 0 ? `성인 ${selection.adultCount}명` : null,
@@ -50,23 +46,9 @@ export default function BookingSummary({
       aria-labelledby="summary-title"
       className="rounded-lg border border-border bg-white p-6"
     >
-      <div className="flex items-center justify-between gap-3">
-        <h2 id="summary-title" className="text-xl font-bold text-ink">
-          선택한 체험
-        </h2>
-        <Link
-          href={selection.editHref}
-          onClick={(event) => {
-            // 상위 Template에서 확인을 거부하면 페이지 이동을 취소
-            if (!onBeforeEdit()) {
-              event.preventDefault();
-            }
-          }}
-          className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted transition-colors hover:border-primary hover:text-primary"
-        >
-          날짜·인원 변경
-        </Link>
-      </div>
+      <h2 id="summary-title" className="text-xl font-bold text-ink">
+        선택한 체험
+      </h2>
 
       <div className="relative mt-4 aspect-[360/170] overflow-hidden rounded-md bg-subtle">
         <Image
