@@ -1,4 +1,4 @@
-import { countryOptions } from "@/features/booking/data/countries";
+import { countryOptions } from "@/shared/data/countries";
 import type { BookerInfo, ParticipantInfo } from "@/features/booking/types/booking";
 
 type BookingReviewProps = {

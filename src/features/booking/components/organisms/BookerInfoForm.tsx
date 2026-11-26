@@ -1,6 +1,6 @@
 import FormField, { inputClassName } from "@/features/booking/components/atoms/FormField";
 import SelectField from "@/shared/components/ui/SelectField";
-import { countryOptions } from "@/features/booking/data/countries";
+import { countryOptions } from "@/shared/data/countries";
 import type { BookerInfo } from "@/features/booking/types/booking";
 import {
   EMAIL_MAX_LENGTH,
