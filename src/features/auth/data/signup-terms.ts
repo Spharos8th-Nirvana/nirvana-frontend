@@ -7,6 +7,11 @@ import type { SignupTerm } from "@/features/auth/types/signup";
  */
 export const signupTerms: SignupTerm[] = [
   {
+    id: "age",
+    title: "만 14세 이상입니다",
+    content: "만 14세 미만은 회원가입을 할 수 없습니다.",
+  },
+  {
     id: "service",
     title: "서비스 이용약관",
     content:
@@ -17,10 +22,5 @@ export const signupTerms: SignupTerm[] = [
     title: "개인정보 수집·이용",
     content:
       "회원 가입과 서비스 제공을 위해 이메일, 이름, 닉네임, 휴대전화 번호를 수집하며, 회원 탈퇴 시까지 보관합니다. (임시 약관 내용입니다.)",
-  },
-  {
-    id: "age",
-    title: "만 14세 이상입니다",
-    content: "만 14세 미만은 회원가입을 할 수 없습니다.",
   },
 ];
