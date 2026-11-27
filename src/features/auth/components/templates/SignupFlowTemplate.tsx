@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import EmailVerificationStep from "@/features/auth/components/organisms/EmailVerificationStep";
+import SignupComplete from "@/features/auth/components/organisms/SignupComplete";
 import SignupInfoForm from "@/features/auth/components/organisms/SignupInfoForm";
 import SignupProgress from "@/features/auth/components/organisms/SignupProgress";
 import SignupTermsStep from "@/features/auth/components/organisms/SignupTermsStep";
@@ -112,11 +113,7 @@ export default function SignupFlowTemplate({ terms }: SignupFlowTemplateProps) {
       )}
 
       {/* 다음 작업에서 가입 완료 화면으로 바꿉니다. */}
-      {step === 4 && signupSummary && (
-        <p className="text-sm text-muted">
-          {signupSummary.name}님, 가입 완료 화면은 다음 작업에서 만들어요.
-        </p>
-      )}
+      {step === 4 && signupSummary && <SignupComplete summary={signupSummary} />}
     </div>
   );
 }
