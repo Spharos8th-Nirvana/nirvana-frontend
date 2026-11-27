@@ -11,9 +11,10 @@ import type { ButtonHTMLAttributes } from "react";
  */
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
 
-const primaryClassName =
+/** 주요 버튼 모양. 링크(<Link>)를 버튼처럼 보이게 할 때도 씁니다. */
+export const primaryButtonClassName =
   "inline-flex items-center justify-center gap-2 rounded-full bg-action px-6 py-4 font-bold text-primary transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40";
 
 export default function Button({ type = "button", className = "", ...props }: ButtonProps) {
-  return <button type={type} className={`${primaryClassName} ${className}`} {...props} />;
+  return <button type={type} className={`${primaryButtonClassName} ${className}`} {...props} />;
 }
