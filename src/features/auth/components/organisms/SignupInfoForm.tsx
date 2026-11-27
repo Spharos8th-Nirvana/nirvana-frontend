@@ -222,7 +222,12 @@ export default function SignupInfoForm({
           />
         </FormField>
 
-        <hr className="border-border" />
+        <div className="space-y-2">
+          <p className="text-right text-xs text-muted">
+            <span className="text-error">*</span> 표시는 필수 입력 항목입니다.
+          </p>
+          <hr className="border-border" />
+        </div>
 
         <fieldset>
           <legend className="text-label-13 font-medium text-ink">
@@ -268,9 +273,6 @@ export default function SignupInfoForm({
           <Button type="submit" disabled={form.isSubmitting} className="w-full">
             {form.isSubmitting ? "가입 중…" : "가입 완료"}
           </Button>
-          <p className="mt-2 text-xs text-muted">
-            <span className="text-error">*</span> 표시는 필수 입력 항목입니다.
-          </p>
         </div>
       </form>
     </section>
