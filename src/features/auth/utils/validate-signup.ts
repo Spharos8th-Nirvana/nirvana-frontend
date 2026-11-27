@@ -110,6 +110,7 @@ export function getNameHint(countryCode: string): string {
   return countryCode === "KR"
     ? "한글로 띄어쓰기 없이 (예: 김민수)"
     : "여권에 적힌 이름 그대로 (As on passport)";
+}
 
 /**
  * 이름 검사. 선택한 국가에 따라 두 가지 규칙을 씁니다. (백엔드 가입 API와 같은 규칙)
