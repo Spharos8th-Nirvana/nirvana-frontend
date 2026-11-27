@@ -9,7 +9,10 @@ import type { SignupRequest, SignupResult } from "@/features/auth/types/signup";
 
 const MOCK_DELAY_MS = 500;
 const RESEND_WAIT_MS = 60 * 1000;
+/** 인증번호 유효시간: 발송 후 5분 */
 const CODE_VALID_MS = 5 * 60 * 1000;
+/** 가입 토큰 유효시간: 인증 성공 후 30분 */
+const SIGNUP_TOKEN_VALID_MS = 30 * 60 * 1000;
 
 /** 오류 화면을 확인하기 위한 임시 값 */
 export const MOCK_TAKEN_EMAIL = "taken@nirvana.test";
@@ -17,8 +20,8 @@ export const MOCK_WRONG_CODE = "000000";
 
 /** 이메일별 마지막 발송 시각 (임시 동작 전용) */
 const sentAtByEmail = new Map<string, number>();
-/** 발급한 인증 토큰 → 이메일 (임시 동작 전용) */
-const emailByToken = new Map<string, string>();
+/** 발급한 가입 토큰 → 인증된 이메일과 발급 시각 (임시 동작 전용. 실제로는 백엔드가 Redis에 저장) */
+const verifiedByToken = new Map<string, { email: string; verifiedAt: number }>();
 
 function waitForMockResponse() {
   return new Promise<void>((resolve) => setTimeout(resolve, MOCK_DELAY_MS));
@@ -65,22 +68,22 @@ export async function verifyCode(
   }
 
   const verificationToken = crypto.randomUUID();
-  emailByToken.set(verificationToken, email);
+  verifiedByToken.set(verificationToken, { email, verifiedAt: Date.now() });
   return { ok: true, data: { verificationToken } };
 }
 
 /**
- * POST /signup → 201 · data.userUuid
- * 닉네임은 보내지 않습니다. 성공 후 백엔드가 랜덤 닉네임을 만들어 Member 프로필에 저장합니다.
+ * POST /signup → 202 Accepted · data.userUuid
+ * 닉네임은 보내지 않습니다. 계정 저장 후 백엔드가 랜덤 닉네임을 만들어 Kafka로 Member 프로필에 저장합니다. (그래서 "접수됨" 202)
  */
 export async function signup(request: SignupRequest): Promise<SignupResult<{ userUuid: string }>> {
   await waitForMockResponse();
 
-  // 토큰은 인증번호 발송 시점부터 5분 동안만 쓸 수 있습니다.
-  const sentAt = sentAtByEmail.get(request.email);
-  const tokenExpired = !sentAt || Date.now() - sentAt > CODE_VALID_MS;
+  // 가입 토큰은 인증 성공 후 30분 동안, 인증한 이메일로 한 번만 쓸 수 있습니다.
+  const verified = verifiedByToken.get(request.verificationToken);
+  const tokenExpired = !verified || Date.now() - verified.verifiedAt > SIGNUP_TOKEN_VALID_MS;
 
-  if (emailByToken.get(request.verificationToken) !== request.email || tokenExpired) {
+  if (!verified || verified.email !== request.email || tokenExpired) {
     return {
       ok: false,
       error: {
@@ -90,6 +93,6 @@ export async function signup(request: SignupRequest): Promise<SignupResult<{ use
     };
   }
 
-  emailByToken.delete(request.verificationToken);
+  verifiedByToken.delete(request.verificationToken);
   return { ok: true, data: { userUuid: crypto.randomUUID() } };
 }

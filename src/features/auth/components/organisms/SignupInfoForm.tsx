@@ -2,6 +2,7 @@ import type { FormEvent } from "react";
 import { useSignupForm } from "@/features/auth/hooks/useSignupForm";
 import type { SignupGender, SignupSummary } from "@/features/auth/types/signup";
 import {
+  getNameHint,
   NAME_MAX_LENGTH,
   PHONE_MAX_LENGTH,
   normalizePhoneInput,
@@ -163,7 +164,13 @@ export default function SignupInfoForm({
         </FormField>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          <FormField label="이름" htmlFor="signup-name" required error={errors.name}>
+          <FormField
+            label="이름"
+            htmlFor="signup-name"
+            required
+            error={errors.name}
+            hint={getNameHint(values.countryCode)}
+          >
             <input
               id="signup-name"
               type="text"
