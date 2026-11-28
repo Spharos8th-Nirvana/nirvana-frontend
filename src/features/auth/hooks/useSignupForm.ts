@@ -23,7 +23,7 @@ const initialValues: SignupFormValues = {
 };
 
 /** 화면 위에서 아래 순서. 가입 실패 시 첫 번째 오류 칸으로 이동할 때 씁니다. */
-const formFieldOrder: SignupFormField[] = ["password", "passwordConfirmation", "name", "phone"];
+const formFieldOrder: SignupFormField[] = ["name", "phone", "password", "passwordConfirmation"];
 
 function isFormField(field: string): field is SignupFormField {
   return (formFieldOrder as string[]).includes(field);
