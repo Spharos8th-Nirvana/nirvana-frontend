@@ -67,7 +67,7 @@ export default function ReviewEditorToolbar({ editor }: ReviewEditorToolbarProps
 
   const toggleLink = () => {
     if (active.link) {
-      editor.chain().focus().unsetLink().run();
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
       return;
     }
 
@@ -148,6 +148,47 @@ export default function ReviewEditorToolbar({ editor }: ReviewEditorToolbarProps
         <circle cx="9" cy="10" r="1.5" />
         <path d="M21 16l-5-5-8 8" />
       </ToolbarButton>
+    </div>
+  );
+}
+
+/**
+ * 커서가 링크 위에 있으면 연결된 주소를 보여 주는 줄.
+ * 에디터 아래쪽에 겹쳐 띄우므로(absolute) 나타나거나 사라져도 내용 칸 크기가 바뀌지 않습니다.
+ */
+export function ReviewEditorLinkBar({ editor }: ReviewEditorToolbarProps) {
+  const link = useEditorState({
+    editor,
+    selector: ({ editor: current }) => ({
+      isActive: current.isActive("link"),
+      // 커서가 있는 링크의 주소 (링크가 아니면 빈 값)
+      href: (current.getAttributes("link").href as string | undefined) ?? "",
+    }),
+  });
+
+  if (!link.isActive || !link.href) {
+    return null;
+  }
+
+  return (
+    <div className="absolute inset-x-0 bottom-0 flex items-center gap-3 border-t border-border bg-subtle px-3 py-2 text-xs">
+      <span className="shrink-0 text-muted">연결된 주소</span>
+      {/* 주소를 누르면 새 탭에서 열어 확인할 수 있습니다. */}
+      <a
+        href={link.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="min-w-0 truncate text-primary underline"
+      >
+        {link.href}
+      </a>
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().extendMarkRange("link").unsetLink().run()}
+        className="ml-auto shrink-0 rounded-full border border-border bg-surface px-3 py-1 font-semibold text-ink-control transition hover:border-primary"
+      >
+        링크 빼기
+      </button>
     </div>
   );
 }

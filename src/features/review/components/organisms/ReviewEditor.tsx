@@ -3,7 +3,9 @@
 import { useEffect, useImperativeHandle, type Ref } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import ReviewEditorToolbar from "@/features/review/components/molecules/ReviewEditorToolbar";
+import ReviewEditorToolbar, {
+  ReviewEditorLinkBar,
+} from "@/features/review/components/molecules/ReviewEditorToolbar";
 import type { ReviewEditorHandle } from "@/features/review/types/review";
 
 type ReviewEditorProps = {
@@ -48,8 +50,9 @@ export default function ReviewEditor({
         "aria-multiline": "true",
         "aria-labelledby": labelId,
         // 에디터 안의 글 모양. Tailwind 기본값이 목록·제목 모양을 지우므로 여기서 다시 줍니다.
+        // 높이를 고정(h-80)하고 넘치면 안에서 스크롤합니다. 아래 pb-14는 "연결된 주소" 줄이 덮을 자리입니다.
         class:
-          "min-h-64 px-4 py-3.5 text-body-15 text-ink outline-none [&_a]:text-primary [&_a]:underline [&_blockquote]:my-2 [&_blockquote]:border-l-2 [&_blockquote]:border-sage-03 [&_blockquote]:pl-3 [&_blockquote]:text-muted [&_h3]:mt-3 [&_h3]:mb-1 [&_h3]:text-lg [&_h3]:font-bold [&_li]:my-0.5 [&_p]:my-1.5 [&_ul]:list-disc [&_ul]:pl-6",
+          "h-80 overflow-y-auto px-4 pt-3.5 pb-14 text-body-15 text-ink outline-none [&_a]:text-primary [&_a]:underline [&_blockquote]:my-2 [&_blockquote]:border-l-2 [&_blockquote]:border-sage-03 [&_blockquote]:pl-3 [&_blockquote]:text-muted [&_h3]:mt-3 [&_h3]:mb-1 [&_h3]:text-lg [&_h3]:font-bold [&_li]:my-0.5 [&_p]:my-1.5 [&_ul]:list-disc [&_ul]:pl-6",
       },
     },
     onUpdate: ({ editor: current }) => {
@@ -86,11 +89,14 @@ export default function ReviewEditor({
       {editor ? (
         <>
           <ReviewEditorToolbar editor={editor} />
-          <EditorContent editor={editor} />
+          <div className="relative">
+            <EditorContent editor={editor} />
+            <ReviewEditorLinkBar editor={editor} />
+          </div>
         </>
       ) : (
         // 브라우저에서 에디터가 준비되기 전까지 같은 높이의 자리를 둡니다.
-        <div className="min-h-[304px]" aria-hidden="true" />
+        <div className="h-[368px]" aria-hidden="true" />
       )}
     </div>
   );
