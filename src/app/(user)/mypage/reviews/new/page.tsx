@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ReviewWriteTemplate from "@/features/review/components/templates/ReviewWriteTemplate";
 import { getReviewEligibility } from "@/features/review/api/review-api";
+import { parseReviewWriteFrom } from "@/features/review/utils/review-navigation";
 
 export const metadata: Metadata = {
   title: "후기 작성",
@@ -11,9 +12,12 @@ type ReviewWritePageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-/** 후기 작성 화면. 주소의 booking(예약 번호)으로 작성 자격을 확인합니다. (임시 데이터) */
+/**
+ * 후기 작성 화면. 주소의 booking(예약 번호)으로 작성 자격을 확인합니다. (임시 데이터)
+ * from(bookings | reviews)은 뒤로 가기·취소가 돌아갈 곳입니다.
+ */
 export default async function ReviewWritePage({ searchParams }: ReviewWritePageProps) {
-  const { booking } = await searchParams;
+  const { booking, from } = await searchParams;
   const bookingUuid = typeof booking === "string" ? booking : "";
   const eligibility = bookingUuid ? await getReviewEligibility(bookingUuid) : null;
 
@@ -26,14 +30,14 @@ export default async function ReviewWritePage({ searchParams }: ReviewWritePageP
           체험을 마친 예약에 한 번만 쓸 수 있어요. 이미 후기를 썼는지 확인해 주세요.
         </p>
         <Link
-          href="/mypage"
+          href="/mypage/reviews"
           className="mt-6 inline-block text-sm font-semibold text-primary underline hover:opacity-70"
         >
-          예약 내역으로
+          후기 관리로
         </Link>
       </section>
     );
   }
 
-  return <ReviewWriteTemplate eligibility={eligibility} />;
+  return <ReviewWriteTemplate eligibility={eligibility} from={parseReviewWriteFrom(from)} />;
 }

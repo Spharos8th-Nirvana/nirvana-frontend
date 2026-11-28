@@ -3,21 +3,24 @@
 import Link from "next/link";
 import ReviewEditor from "@/features/review/components/organisms/ReviewEditor";
 import { useReviewForm } from "@/features/review/hooks/useReviewForm";
-import type { ReviewEligibility } from "@/features/review/types/review";
+import type { ReviewEligibility, ReviewWriteFrom } from "@/features/review/types/review";
+import { getReviewBackLink } from "@/features/review/utils/review-navigation";
 import { countCharacters, REVIEW_TITLE_MAX_LENGTH } from "@/features/review/utils/validate-review";
 import { primaryButtonClassName } from "@/shared/components/ui/Button";
 import { inputClassName } from "@/shared/components/ui/FormField";
 
 type ReviewWriteTemplateProps = {
   eligibility: ReviewEligibility;
+  /** 어디서 들어왔는지. 뒤로 가기·취소가 그곳으로 돌아갑니다. */
+  from: ReviewWriteFrom;
 };
 
-/** 보조 버튼 (취소, 예약 내역으로) */
+/** 보조 버튼 (취소) */
 const secondaryLinkClassName =
   "inline-flex items-center justify-center rounded-full border border-border bg-surface px-6 py-4 font-bold text-ink-control transition-colors hover:border-primary hover:bg-subtle";
 
 /** 후기 작성 화면: 체험 요약 + 제목 + HTML 에디터 + 등록 */
-export default function ReviewWriteTemplate({ eligibility }: ReviewWriteTemplateProps) {
+export default function ReviewWriteTemplate({ eligibility, from }: ReviewWriteTemplateProps) {
   const {
     values,
     errors,
@@ -29,6 +32,7 @@ export default function ReviewWriteTemplate({ eligibility }: ReviewWriteTemplate
     setContent,
     handleSubmit,
   } = useReviewForm(eligibility.bookingUuid);
+  const backLink = getReviewBackLink(from, eligibility.bookingUuid);
 
   if (status === "done") {
     return (
@@ -46,8 +50,8 @@ export default function ReviewWriteTemplate({ eligibility }: ReviewWriteTemplate
           {eligibility.templeName} · {eligibility.programTitle}
         </p>
         <p className="mt-4 text-xs text-muted/70">임시 화면이에요. 실제 등록은 아직 되지 않아요.</p>
-        <Link href="/mypage" className={`${primaryButtonClassName} mt-8`}>
-          예약 내역으로
+        <Link href="/mypage/reviews" className={`${primaryButtonClassName} mt-8`}>
+          후기 관리로
         </Link>
       </section>
     );
@@ -55,8 +59,8 @@ export default function ReviewWriteTemplate({ eligibility }: ReviewWriteTemplate
 
   return (
     <section>
-      <Link href="/mypage" className="text-label-13 text-muted hover:text-primary">
-        ← 예약 내역으로
+      <Link href={backLink.href} className="text-label-13 text-muted hover:text-primary">
+        ← {backLink.label}
       </Link>
       <h2 className="mt-2 text-xl font-bold text-ink">후기 작성</h2>
 
@@ -147,7 +151,7 @@ export default function ReviewWriteTemplate({ eligibility }: ReviewWriteTemplate
         )}
 
         <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-          <Link href="/mypage" className={secondaryLinkClassName}>
+          <Link href={backLink.href} className={secondaryLinkClassName}>
             취소
           </Link>
           <button

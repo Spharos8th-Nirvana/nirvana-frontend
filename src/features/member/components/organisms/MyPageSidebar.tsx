@@ -12,7 +12,7 @@ const myPageMenus = [
   { label: "예약 내역", href: "/mypage", ready: true },
   { label: "패스포트", href: "/mypage/passport", ready: false },
   { label: "즐겨찾기", href: "/mypage/favorites", ready: false },
-  { label: "후기 관리", href: "/mypage/reviews", ready: false },
+  { label: "후기 관리", href: "/mypage/reviews", ready: true },
   { label: "게시글", href: "/mypage/posts", ready: false },
   { label: "회원정보 수정", href: "/mypage/profile", ready: false },
 ];
