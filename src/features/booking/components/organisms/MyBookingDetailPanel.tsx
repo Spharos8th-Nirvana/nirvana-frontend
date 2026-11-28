@@ -110,27 +110,28 @@ export default function MyBookingDetailPanel({ booking, onClose }: MyBookingDeta
           isClosing ? "translate-x-full" : "translate-x-0"
         }`}
       >
-        <header className="flex items-start justify-between gap-4 border-b border-border px-6 py-5">
-          <div>
-            <p className="text-xs text-muted">{booking.templeName}</p>
-            <h2 id="booking-detail-title" className="mt-1 text-lg font-bold text-ink">
-              {booking.programTitle}
-            </h2>
-            <div className="mt-3">
-              <BookingStatusBadge status={booking.status} />
+        {/* 제목부터 참가자까지 이 칸 안에서 함께 스크롤합니다. min-h-0: 내용이 길거나 글자를 키워도 아래 버튼이 화면 밖으로 밀려나지 않습니다. */}
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          <header className="flex items-start justify-between gap-4 border-b border-border px-6 py-5">
+            <div>
+              <p className="text-xs text-muted">{booking.templeName}</p>
+              <h2 id="booking-detail-title" className="mt-1 text-lg font-bold text-ink">
+                {booking.programTitle}
+              </h2>
+              <div className="mt-3">
+                <BookingStatusBadge status={booking.status} />
+              </div>
             </div>
-          </div>
-          <button
-            ref={closeButtonRef}
-            type="button"
-            onClick={requestClose}
-            className="rounded-full px-3 py-1 text-sm text-muted transition hover:bg-subtle hover:text-ink"
-          >
-            닫기
-          </button>
-        </header>
+            <button
+              ref={closeButtonRef}
+              type="button"
+              onClick={requestClose}
+              className="shrink-0 rounded-full px-3 py-1 text-sm whitespace-nowrap text-muted transition hover:bg-subtle hover:text-ink"
+            >
+              닫기
+            </button>
+          </header>
 
-        <div className="flex-1 overflow-y-auto">
           <dl className="divide-y divide-border px-6">
             {detailRows.map((row) => (
               <div key={row.label} className="grid grid-cols-[88px_1fr] gap-4 py-3 text-sm">
@@ -148,15 +149,15 @@ export default function MyBookingDetailPanel({ booking, onClose }: MyBookingDeta
               {booking.participants.map((participant, index) => (
                 <li
                   key={`${participant.name}-${index}`}
-                  className="flex items-center justify-between rounded-default bg-subtle px-4 py-3 text-sm"
+                  className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 rounded-default bg-subtle px-4 py-3 text-sm"
                 >
-                  <span className="text-ink">
+                  <span className="min-w-0 break-words text-ink">
                     {participant.name}
                     {participant.isRepresentative && (
                       <span className="ml-2 text-xs font-semibold text-primary">대표</span>
                     )}
                   </span>
-                  <span className="text-muted">
+                  <span className="shrink-0 whitespace-nowrap text-muted">
                     {participant.type === "ADULT" ? "성인" : "청소년"} · {participant.age}세 ·{" "}
                     {formatWon(participant.price)}
                   </span>

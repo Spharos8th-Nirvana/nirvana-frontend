@@ -13,12 +13,20 @@ export function countCharacters(value: string): number {
  * 문단·목록이 끝나는 곳은 띄어 써서 미리보기에서 글자가 붙지 않게 합니다.
  */
 export function getPlainText(html: string): string {
-  return html
-    .replace(/<\/(p|li|h3|blockquote)>|<br\s*\/?>/g, " ")
-    .replace(/<[^>]*>/g, "")
-    .replace(/&nbsp;/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
+  return (
+    html
+      .replace(/<\/(p|li|h3|blockquote)>|<br\s*\/?>/g, " ")
+      .replace(/<[^>]*>/g, "")
+      // 에디터는 & < > " 같은 글자를 &amp; &lt; 처럼 바꿔 저장하므로 원래 글자로 되돌립니다. (&amp;는 맨 마지막에)
+      .replace(/&nbsp;/g, " ")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&amp;/g, "&")
+      .replace(/\s+/g, " ")
+      .trim()
+  );
 }
 
 /** 화면 검사 (사용자를 돕기 위한 것이고 최종 검증은 Backend가 합니다) */

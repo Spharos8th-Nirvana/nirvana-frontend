@@ -40,7 +40,7 @@ export default function MyReviewList({ reviews }: MyReviewListProps) {
                     {formatReviewDate(review.createdAt)}
                   </p>
                 </div>
-                <p className="mt-1 font-bold break-keep text-ink">{review.title}</p>
+                <p className="mt-1 line-clamp-2 font-bold break-keep text-ink">{review.title}</p>
                 <p className="mt-2 line-clamp-2 text-sm leading-6 text-ink-control">
                   {getPlainText(review.content)}
                 </p>
