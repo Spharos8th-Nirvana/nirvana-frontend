@@ -70,21 +70,27 @@
   --radius-default: 4px;
 }
 
-* {
-  box-sizing: border-box;
-}
+/*
+ * 기본(base) 스타일은 @layer base 안에 둡니다.
+ * 층(layer) 밖에 두면 Tailwind 클래스(text-muted, underline 등)보다 항상 우선해서 클래스가 화면에 안 보입니다.
+ */
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
 
-html {
-  background: var(--color-background);
-  scroll-behavior: smooth;
-}
+  html {
+    background: var(--color-background);
+    scroll-behavior: smooth;
+  }
 
-body {
-  min-height: 100vh;
-  margin: 0;
-  background: var(--color-background);
-  color: var(--color-ink);
-  font-family: var(--font-sans);
+  body {
+    min-height: 100vh;
+    margin: 0;
+    background: var(--color-background);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
 }
 
 /*
@@ -104,13 +110,15 @@ body:not(:has([data-page-hero])) {
   font-family: var(--font-sans);
 }
 
-/* 기본 링크 스타일 */
-a {
-  color: inherit;
-  text-decoration: none;
-}
+@layer base {
+  /* 기본 링크 스타일 */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 
-/* 버튼 기본 글꼴 */
-button {
-  font-family: inherit;
+  /* 버튼 기본 글꼴 */
+  button {
+    font-family: inherit;
+  }
 }
