@@ -33,3 +33,18 @@ export type CreateReviewResult = { ok: true } | { ok: false; reason: "not-eligib
 export type ReviewEditorHandle = {
   focus: () => void;
 };
+
+/** 내가 쓴 후기 하나. DB posts(제목·내용·작성일) + reviewDetails(예약 연결) 기준. 사찰명·체험명을 어떻게 받을지는 API 확정 후 맞춥니다. */
+export type MyReview = {
+  postUuid: string;
+  bookingUuid: string;
+  templeName: string;
+  programTitle: string;
+  title: string;
+  /** 정제된 HTML */
+  content: string;
+  createdAt: string;
+};
+
+/** 후기 작성 화면에 어디서 들어왔는지 (뒤로 가기·취소가 돌아갈 곳) */
+export type ReviewWriteFrom = "bookings" | "reviews";

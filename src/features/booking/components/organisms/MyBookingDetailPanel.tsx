@@ -170,9 +170,9 @@ export default function MyBookingDetailPanel({ booking, onClose }: MyBookingDeta
         {actionLabel && (
           <footer className="border-t border-border px-6 py-4">
             {booking.status === "COMPLETED" ? (
-              // 후기 작성은 후기 작성 화면으로 이동합니다.
+              // 후기 작성 화면으로 이동합니다. from=bookings: 뒤로 가기를 누르면 이 패널이 열린 예약 내역으로 돌아옵니다.
               <Link
-                href={`/mypage/reviews/new?booking=${booking.bookingUuid}`}
+                href={`/mypage/reviews/new?booking=${booking.bookingUuid}&from=bookings`}
                 className={`${primaryButtonClassName} w-full`}
               >
                 {actionLabel}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { useRouter } from "next/navigation";
 import MyBookingDetailPanel from "@/features/booking/components/organisms/MyBookingDetailPanel";
 import MyBookingList from "@/features/booking/components/organisms/MyBookingList";
 import type { BookingView } from "@/features/booking/types/booking-view";
@@ -12,16 +13,30 @@ import {
 
 type MyBookingsTemplateProps = {
   bookings: BookingView[];
+  /** 처음부터 상세 패널을 열어 둘 예약 번호 (주소의 ?booking=) */
+  initialBookingUuid?: string;
 };
 
 /** 마이페이지 예약 내역: 상태 탭 + 목록 + 상세 패널 */
-export default function MyBookingsTemplate({ bookings }: MyBookingsTemplateProps) {
+export default function MyBookingsTemplate({
+  bookings,
+  initialBookingUuid,
+}: MyBookingsTemplateProps) {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<BookingStatusTabId>("ALL");
-  const [selectedBooking, setSelectedBooking] = useState<BookingView | null>(null);
+  // 주소에 예약 번호가 있으면 그 예약의 패널을 연 채로 시작합니다. (없는 번호면 닫힌 상태)
+  const [selectedBooking, setSelectedBooking] = useState<BookingView | null>(
+    () => bookings.find((booking) => booking.bookingUuid === initialBookingUuid) ?? null,
+  );
 
   // 패널의 Esc 처리(useEffect)가 매번 다시 등록되지 않도록 같은 함수를 유지합니다.
-  const closeDetail = useCallback(() => setSelectedBooking(null), []);
-
+  const closeDetail = useCallback(() => {
+    setSelectedBooking(null);
+    // 주소의 ?booking=을 지워서, 새로고침해도 패널이 다시 열리지 않게 합니다.
+    if (initialBookingUuid) {
+      router.replace("/mypage", { scroll: false });
+    }
+  }, [initialBookingUuid, router]);
   const visibleBookings = filterBookingsByTab(bookings, activeTab);
   const activeLabel = bookingStatusTabs.find((tab) => tab.id === activeTab)?.label;
   const emptyMessage =

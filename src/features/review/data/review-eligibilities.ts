@@ -19,4 +19,12 @@ export const reviewEligibilities: ReviewEligibility[] = [
     programTitle: "새벽 숲, 나를 깨우는 시간",
     consumedAt: "2026-11-16T10:20:00",
   },
+
+  {
+    // 이미 후기를 씀 → 쓸 수 없음 (내가 쓴 후기 임시 데이터와 같은 예약)
+    bookingUuid: "b-0098",
+    templeName: "불국사",
+    programTitle: "스님과 함께 빚는 사찰의 맛",
+    consumedAt: "2026-09-21T15:40:00",
+  },
 ];
