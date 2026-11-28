@@ -1,6 +1,6 @@
 # Booking Feature
 
-예약 흐름 중 예약 정보 입력(2단계) 화면과 입력 검사를 관리합니다.
+예약 흐름 중 예약 정보 입력(2단계) 화면과 입력 검사, 마이페이지의 예약 내역 화면을 관리합니다.
 1단계(회차·인원 선택)는 프로그램 상세의 `features/program`이 맡고, 선택한 회차와 인원만 주소로 넘겨받습니다.
 
 ## 데이터 기준
@@ -16,3 +16,13 @@
 - `components/organisms`: 진행 단계, 예약자 정보, 참가자 정보, 약관·환불 규정, 예약 요약
 - `components/templates`: organism을 화면 순서로 조립하고 입력 상태와 검사를 연결
 - `app/(user)/programs/[id]/booking`: 1단계에서 넘어온 회차·인원 확인과 서버 데이터 조립
+
+## 마이페이지 예약 내역
+
+- 데이터 기준: DB 예약 화면용 조회 테이블 `nirvana_booking_query.bookingViews`. 타입(`types/booking-view.ts`)과 임시 데이터(`data/my-bookings.ts`)는 칸 이름을 그대로 씁니다.
+- 상태 이름, 상태 탭, 날짜·인원 표시는 `utils/booking-status.ts`에 모았습니다. 미참석(`NOSHOW`)은 탭 없이 '전체'에서만 보입니다.
+- `components/molecules/BookingStatusBadge`: 목록과 상세 패널이 함께 쓰는 상태 배지
+- `components/organisms/MyBookingList`: 예약 목록. 줄 어디를 눌러도 상세 패널이 열립니다.
+- `components/organisms/MyBookingDetailPanel`: 오른쪽에서 밀려 나오는 예약 상세 패널(읽기 전용). 결제하기·예약 취소·후기 작성 버튼은 자리만 있고 동작은 다음 Issue에서 연결합니다.
+- `components/templates/MyBookingsTemplate`: 상태 탭, 목록, 상세 패널을 묶고 고른 탭과 열린 예약을 기억합니다.
+- 화면 조립은 `app/(user)/mypage/page.tsx`가 맡습니다. 예약 API가 정해지면 임시 데이터 대신 서버에서 조회합니다.
