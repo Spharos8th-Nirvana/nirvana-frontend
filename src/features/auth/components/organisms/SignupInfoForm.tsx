@@ -1,14 +1,14 @@
 import type { FormEvent } from "react";
 import { useSignupForm } from "@/features/auth/hooks/useSignupForm";
 import type { SignupGender, SignupSummary } from "@/features/auth/types/signup";
+import type { SignupFormField } from "@/features/auth/utils/validate-signup";
 import {
   getNameHint,
   NAME_MAX_LENGTH,
-  PHONE_MAX_LENGTH,
   normalizePhoneInput,
   passwordRules,
-  type SignupFormField,
-} from "@/features/auth/utils/validate-signup";
+  PHONE_MAX_LENGTH,
+} from "@/shared/utils/validate-user";
 import Button from "@/shared/components/ui/Button";
 import FormField, { inputBaseClassName } from "@/shared/components/ui/FormField";
 import SelectField from "@/shared/components/ui/SelectField";
