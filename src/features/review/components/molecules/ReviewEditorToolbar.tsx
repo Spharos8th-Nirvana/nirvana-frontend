@@ -21,7 +21,7 @@ function ToolbarButton({ label, isActive, disabled, onClick, children }: Toolbar
       aria-pressed={isActive}
       disabled={disabled}
       onClick={onClick}
-      className={`flex size-9 items-center justify-center rounded-default transition ${
+      className={`flex size-8 items-center justify-center rounded-default transition md:size-9 ${
         isActive ? "bg-primary text-white" : "text-ink-control hover:bg-subtle"
       } disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent`}
     >
@@ -43,7 +43,7 @@ function ToolbarButton({ label, isActive, disabled, onClick, children }: Toolbar
 }
 
 function Divider() {
-  return <span aria-hidden="true" className="mx-1 h-5 w-px bg-border" />;
+  return <span aria-hidden="true" className="mx-0.5 h-5 w-px bg-border md:mx-1" />;
 }
 
 type ReviewEditorToolbarProps = {
@@ -89,7 +89,7 @@ export default function ReviewEditorToolbar({ editor }: ReviewEditorToolbarProps
     <div
       role="toolbar"
       aria-label="글 서식"
-      className="flex flex-wrap items-center gap-0.5 border-b border-border bg-surface px-2 py-1.5"
+      className="flex flex-wrap items-center gap-0 border-b border-border bg-surface px-2 py-1.5 md:gap-0.5"
     >
       <ToolbarButton
         label="굵게"
