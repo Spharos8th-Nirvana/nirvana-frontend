@@ -82,20 +82,84 @@ export default function SignupInfoForm({
       </h3>
       <p className="mt-2 text-sm text-muted">서비스 이용에 필요한 정보를 입력해 주세요.</p>
 
+      {/* 순서: 이름·성별 → 국가·휴대폰 → 비밀번호 → 이메일(②에서 인증한 값, 보기만) */}
       <form onSubmit={handleSubmit} noValidate className="mt-8 space-y-8">
-        <FormField label="국가" htmlFor="signup-country">
-          <SelectField
-            id="signup-country"
-            value={values.countryCode}
-            onChange={(event) => form.changeValue("countryCode", event.target.value)}
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <FormField
+            label="이름"
+            htmlFor="signup-name"
+            required
+            error={errors.name}
+            hint={getNameHint(values.countryCode)}
           >
-            {countryOptions.map((country) => (
-              <option key={country.code} value={country.code}>
-                {country.label}
-              </option>
-            ))}
-          </SelectField>
-        </FormField>
+            <input
+              id="signup-name"
+              type="text"
+              autoComplete="name"
+              maxLength={NAME_MAX_LENGTH}
+              value={values.name}
+              onChange={(event) => form.changeValue("name", event.target.value)}
+              placeholder="이름"
+              aria-invalid={Boolean(errors.name)}
+              aria-describedby={describedBy(errors.name && "signup-name-error")}
+              className={signupInputClass}
+            />
+          </FormField>
+
+          <FormField label="성별" htmlFor="signup-gender">
+            <SelectField
+              id="signup-gender"
+              value={values.gender}
+              onChange={(event) =>
+                form.changeValue("gender", event.target.value as SignupGender | "")
+              }
+            >
+              <option value="">선택 안 함</option>
+              <option value="MALE">남성</option>
+              <option value="FEMALE">여성</option>
+            </SelectField>
+          </FormField>
+        </div>
+
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          <FormField label="국가" htmlFor="signup-country">
+            <SelectField
+              id="signup-country"
+              value={values.countryCode}
+              onChange={(event) => form.changeValue("countryCode", event.target.value)}
+            >
+              {countryOptions.map((country) => (
+                <option key={country.code} value={country.code}>
+                  {country.label}
+                </option>
+              ))}
+            </SelectField>
+          </FormField>
+
+          <FormField
+            label="휴대폰"
+            htmlFor="signup-phone"
+            required
+            error={errors.phone}
+            hint="하이픈(-)은 자동으로 빠져요."
+          >
+            <input
+              id="signup-phone"
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
+              maxLength={PHONE_MAX_LENGTH}
+              value={values.phone}
+              onChange={(event) =>
+                form.changeValue("phone", normalizePhoneInput(event.target.value))
+              }
+              placeholder="01012345678"
+              aria-invalid={Boolean(errors.phone)}
+              aria-describedby={describedBy(errors.phone && "signup-phone-error")}
+              className={signupInputClass}
+            />
+          </FormField>
+        </div>
 
         <FormField label="이메일" htmlFor="signup-info-email" required>
           <div className="flex gap-2">
@@ -159,65 +223,6 @@ export default function SignupInfoForm({
             aria-describedby={describedBy(
               errors.passwordConfirmation && "signup-password-confirm-error",
             )}
-            className={signupInputClass}
-          />
-        </FormField>
-
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          <FormField
-            label="이름"
-            htmlFor="signup-name"
-            required
-            error={errors.name}
-            hint={getNameHint(values.countryCode)}
-          >
-            <input
-              id="signup-name"
-              type="text"
-              autoComplete="name"
-              maxLength={NAME_MAX_LENGTH}
-              value={values.name}
-              onChange={(event) => form.changeValue("name", event.target.value)}
-              placeholder="이름"
-              aria-invalid={Boolean(errors.name)}
-              aria-describedby={describedBy(errors.name && "signup-name-error")}
-              className={signupInputClass}
-            />
-          </FormField>
-
-          <FormField label="성별" htmlFor="signup-gender">
-            <SelectField
-              id="signup-gender"
-              value={values.gender}
-              onChange={(event) =>
-                form.changeValue("gender", event.target.value as SignupGender | "")
-              }
-            >
-              <option value="">선택 안 함</option>
-              <option value="MALE">남성</option>
-              <option value="FEMALE">여성</option>
-            </SelectField>
-          </FormField>
-        </div>
-
-        <FormField
-          label="휴대폰"
-          htmlFor="signup-phone"
-          required
-          error={errors.phone}
-          hint="하이픈(-)은 자동으로 빠져요."
-        >
-          <input
-            id="signup-phone"
-            type="tel"
-            inputMode="tel"
-            autoComplete="tel"
-            maxLength={PHONE_MAX_LENGTH}
-            value={values.phone}
-            onChange={(event) => form.changeValue("phone", normalizePhoneInput(event.target.value))}
-            placeholder="01012345678"
-            aria-invalid={Boolean(errors.phone)}
-            aria-describedby={describedBy(errors.phone && "signup-phone-error")}
             className={signupInputClass}
           />
         </FormField>
