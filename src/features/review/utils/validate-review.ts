@@ -8,11 +8,16 @@ export function countCharacters(value: string): number {
   return Array.from(value).length;
 }
 
-/** 에디터 HTML에서 태그를 걷어 낸 글자만 남깁니다. 빈 에디터("<p></p>")는 빈 문자열이 됩니다. */
+/**
+ * 에디터 HTML에서 태그를 걷어 낸 글자만 남깁니다. 빈 에디터("<p></p>")는 빈 문자열이 됩니다.
+ * 문단·목록이 끝나는 곳은 띄어 써서 미리보기에서 글자가 붙지 않게 합니다.
+ */
 export function getPlainText(html: string): string {
   return html
+    .replace(/<\/(p|li|h3|blockquote)>|<br\s*\/?>/g, " ")
     .replace(/<[^>]*>/g, "")
     .replace(/&nbsp;/g, " ")
+    .replace(/\s+/g, " ")
     .trim();
 }
 

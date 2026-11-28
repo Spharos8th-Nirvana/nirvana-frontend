@@ -1,7 +1,9 @@
+import { myReviews } from "@/features/review/data/my-reviews";
 import { reviewEligibilities } from "@/features/review/data/review-eligibilities";
 import type {
   CreateReviewRequest,
   CreateReviewResult,
+  MyReview,
   ReviewEligibility,
 } from "@/features/review/types/review";
 
@@ -22,6 +24,16 @@ function wait(ms: number) {
 /** 예약 번호로 후기 작성 자격을 찾습니다. 없으면 null */
 export async function getReviewEligibility(bookingUuid: string): Promise<ReviewEligibility | null> {
   return reviewEligibilities.find((item) => item.bookingUuid === bookingUuid) ?? null;
+}
+
+/** 아직 후기를 쓰지 않은(작성할 수 있는) 예약 목록 */
+export async function getWritableEligibilities(): Promise<ReviewEligibility[]> {
+  return reviewEligibilities.filter((item) => item.consumedAt === null);
+}
+
+/** 내가 쓴 후기 목록 (최근에 쓴 순서) */
+export async function getMyReviews(): Promise<MyReview[]> {
+  return [...myReviews].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
 /** 후기를 등록합니다. 예약 한 건에 후기 하나만 쓸 수 있습니다. */
