@@ -72,6 +72,11 @@ export function formatDateTime(dateTime: string): string {
   return `${formatDate(date)} ${formatTime(time)}`.trim();
 }
 
+/** "2026-11-28T21:30:00" → "11.28 21:30" (목록처럼 좁은 곳에서 연도를 뺄 때) */
+export function formatShortDateTime(dateTime: string): string {
+  return formatDateTime(dateTime).slice(5);
+}
+
 /** 성인 2 · 청소년 1 (0명인 쪽은 뺍니다) */
 export function formatHeadcount(booking: BookingView): string {
   const parts = [`성인 ${booking.adultCount}`];
