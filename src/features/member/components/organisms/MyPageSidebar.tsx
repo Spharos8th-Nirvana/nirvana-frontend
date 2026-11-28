@@ -17,6 +17,15 @@ const myPageMenus = [
   { label: "회원정보 수정", href: "/mypage/profile", ready: false },
 ];
 
+/** 지금 주소가 이 메뉴이거나 그 하위 주소인지. 예약 내역(/mypage)은 정확히 같을 때만 강조합니다. */
+function isMenuActive(pathname: string, href: string): boolean {
+  if (href === "/mypage") {
+    return pathname === href;
+  }
+
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export default function MyPageSidebar() {
   const pathname = usePathname();
 
@@ -28,6 +37,22 @@ export default function MyPageSidebar() {
       {/* 휴대폰: 위쪽 가로 목록(옆으로 밀기) / 넓은 화면: 왼쪽 세로 목록 */}
       <ul className="-mx-6 flex gap-2 overflow-x-auto px-6 pb-1 md:mx-0 md:flex-col md:gap-0 md:divide-y md:divide-border md:overflow-visible md:px-0 md:pb-0">
         {myPageMenus.map((menu) => {
+          const isActive = isMenuActive(pathname, menu.href);
+
+          // 메뉴 화면은 아직 없지만 그 하위 화면(예: 후기 작성)에 있을 때: 강조만 하고 누를 수는 없습니다.
+          if (!menu.ready && isActive) {
+            return (
+              <li key={menu.href} className="shrink-0">
+                <span
+                  aria-current="page"
+                  className="flex rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white md:rounded-none md:py-3"
+                >
+                  {menu.label}
+                </span>
+              </li>
+            );
+          }
+
           if (!menu.ready) {
             return (
               <li key={menu.href} className="shrink-0">
@@ -41,17 +66,13 @@ export default function MyPageSidebar() {
             );
           }
 
-          const isActive = pathname === menu.href;
-
           return (
-            // 글자색은 <li>에 둡니다. globals.css의 a { color: inherit } 규칙이
-            // 링크에 직접 준 text-* 색보다 우선해서, 링크는 부모 색을 물려받게 합니다.
-            <li key={menu.href} className={`shrink-0 ${isActive ? "text-white" : "text-ink"}`}>
+            <li key={menu.href} className="shrink-0">
               <Link
                 href={menu.href}
                 aria-current={isActive ? "page" : undefined}
                 className={`flex rounded-full px-4 py-2 text-sm font-semibold transition md:rounded-none md:py-3 ${
-                  isActive ? "bg-primary" : "hover:bg-subtle"
+                  isActive ? "bg-primary text-white" : "text-ink hover:bg-subtle"
                 }`}
               >
                 {menu.label}

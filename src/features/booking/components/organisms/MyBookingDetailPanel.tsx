@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import BookingStatusBadge from "@/features/booking/components/molecules/BookingStatusBadge";
 import type { BookingStatus, BookingView } from "@/features/booking/types/booking-view";
@@ -13,7 +14,7 @@ import {
 import { primaryButtonClassName } from "@/shared/components/ui/Button";
 import { formatWon } from "@/shared/utils/format";
 
-/** 상태별 다음 행동 버튼. 동작은 다음 Issue에서 연결하므로 지금은 비활성입니다. */
+/** 상태별 다음 행동 버튼. 후기 작성만 연결했고, 결제하기·예약 취소는 다음 Issue에서 연결하므로 지금은 비활성입니다. */
 const statusActionLabels: Partial<Record<BookingStatus, string>> = {
   PENDING_PAYMENT: "결제하기",
   CONFIRMED: "예약 취소",
@@ -168,10 +169,22 @@ export default function MyBookingDetailPanel({ booking, onClose }: MyBookingDeta
         {/* 상태에 맞는 다음 행동 버튼. 패널 아래쪽에 고정됩니다. */}
         {actionLabel && (
           <footer className="border-t border-border px-6 py-4">
-            <button type="button" disabled className={`${primaryButtonClassName} w-full`}>
-              {actionLabel}
-            </button>
-            <p className="mt-2 text-center text-xs text-muted">준비 중인 기능이에요.</p>
+            {booking.status === "COMPLETED" ? (
+              // 후기 작성은 후기 작성 화면으로 이동합니다.
+              <Link
+                href={`/mypage/reviews/new?booking=${booking.bookingUuid}`}
+                className={`${primaryButtonClassName} w-full`}
+              >
+                {actionLabel}
+              </Link>
+            ) : (
+              <>
+                <button type="button" disabled className={`${primaryButtonClassName} w-full`}>
+                  {actionLabel}
+                </button>
+                <p className="mt-2 text-center text-xs text-muted">준비 중인 기능이에요.</p>
+              </>
+            )}
           </footer>
         )}
       </section>
