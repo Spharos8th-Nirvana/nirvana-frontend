@@ -14,7 +14,7 @@ const myPageMenus = [
   { label: "즐겨찾기", href: "/mypage/favorites", ready: false },
   { label: "후기 관리", href: "/mypage/reviews", ready: true },
   { label: "게시글", href: "/mypage/posts", ready: false },
-  { label: "회원정보 수정", href: "/mypage/profile", ready: false },
+  { label: "회원정보 수정", href: "/mypage/profile", ready: true },
 ];
 
 /** 지금 주소가 이 메뉴이거나 그 하위 주소인지. 예약 내역(/mypage)은 정확히 같을 때만 강조합니다. */
