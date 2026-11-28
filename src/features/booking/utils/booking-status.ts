@@ -77,12 +77,15 @@ export function formatShortDateTime(dateTime: string): string {
   return formatDateTime(dateTime).slice(5);
 }
 
-/** 성인 2 · 청소년 1 (0명인 쪽은 뺍니다) */
+/**
+ * 성인 2 · 청소년 1 (0명인 쪽은 뺍니다)
+ * "성인 2" 안의 띄어쓰기는 줄이 바뀌지 않는 공백(\u00a0)이라, 칸이 좁으면 " · " 앞뒤에서만 줄이 바뀝니다.
+ */
 export function formatHeadcount(booking: BookingView): string {
-  const parts = [`성인 ${booking.adultCount}`];
+  const parts = [`성인\u00a0${booking.adultCount}`];
 
   if (booking.youthCount > 0) {
-    parts.push(`청소년 ${booking.youthCount}`);
+    parts.push(`청소년\u00a0${booking.youthCount}`);
   }
 
   return parts.join(" · ");
